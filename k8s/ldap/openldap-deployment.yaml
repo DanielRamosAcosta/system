@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  labels:
+    managed-by: iac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      containers:
+      - name: openldap
+        image: osixia/openldap:stable
+        ports:
+          - containerPort: 389
+          - containerPort: 636
+        env:
+          - name: LDAP_ORGANISATION
+            value: "Casa"
+          - name: LDAP_DOMAIN
+            value: "casa.danielramos.me"
+          - name: LDAP_ADMIN_PASSWORD
+            value: "changeme"
+        volumeMounts:
+          - name: ldap-data
+            mountPath: /var/lib/ldap
+          - name: ldap-config
+            mountPath: /etc/ldap/slapd.d
+      volumes:
+        - name: ldap-data
+          hostPath:
+            # path: /home/dani/storage/ldap-data
+            path: /Users/danielramos/Documents/storage/ssd/ldap-data
+            type: DirectoryOrCreate
+        - name: ldap-config
+          hostPath:
+            # path: /home/dani/storage/ldap-config
+            path: /Users/danielramos/Documents/storage/ssd/ldap-config
+            type: DirectoryOrCreate

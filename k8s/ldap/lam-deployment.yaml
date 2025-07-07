@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lam
+  labels:
+    managed-by: iac
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lam
+  template:
+    metadata:
+      labels:
+        app: lam
+    spec:
+      containers:
+      - name: lam
+        image: ldapaccountmanager/lam:8.3
+        ports:
+          - containerPort: 80
+        env:
+          - name: LDAP_SERVER
+            value: "ldap://openldap"
+          - name: LDAP_BASE_DN
+            value: "dc=casa,dc=danielramos,dc=me"
+          - name: LDAP_LOGIN_DN
+            value: "cn=admin,dc=casa,dc=danielramos,dc=me"
+          - name: LDAP_PASSWORD
+            value: "changeme"

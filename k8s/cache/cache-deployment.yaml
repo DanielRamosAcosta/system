@@ -1,16 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: immich-cache
+  name: cache
+  labels:
+    managed-by: iac
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: immich-cache
+      app: cache
   template:
     metadata:
       labels:
-        app: immich-cache
+        app: cache
     spec:
       containers:
         - name: redis

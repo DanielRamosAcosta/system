@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: immich-ml
+  labels:
+    managed-by: iac
 spec:
   replicas: 1
   selector:
@@ -32,5 +34,5 @@ spec:
         - name: model-cache
           hostPath:
             # path: /home/dani/storage/immich-cache
-            path: /Users/danielramos/Documents/storage/ssd/immich-cache
+            path: /Users/danielramos/Documents/storage/ssd/immich-ml-model-cache
             type: DirectoryOrCreate

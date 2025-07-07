@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: immich-server
+  labels:
+    managed-by: iac
 spec:
   replicas: 1
   selector:
@@ -16,16 +18,16 @@ spec:
         - name: immich-server
           image: ghcr.io/immich-app/immich-server:release
           env:
-            - name: DB_PASSWORD
-              value: "immich"
             - name: DB_USERNAME
               value: "immich"
             - name: DB_DATABASE_NAME
               value: "immich"
+            - name: DB_PASSWORD
+              value: "c0aec791-f4a4-4873-aed7-1e343daee907"
             - name: DB_HOSTNAME
-              value: "immich-db"
+              value: "postgres"
             - name: REDIS_HOSTNAME
-              value: "immich-cache"
+              value: "cache"
             - name: IMMICH_PORT
               value: "2283"
           ports:

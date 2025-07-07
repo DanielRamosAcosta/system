@@ -1,10 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: immich-cache
+  name: postgres
+  labels:
+    managed-by: iac
 spec:
   selector:
-    app: immich-cache
+    app: postgres
   ports:
     - protocol: TCP
-      port: 6379
+      port: 5432
