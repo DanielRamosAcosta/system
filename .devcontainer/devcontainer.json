@@ -1,0 +1,26 @@
+{
+  "name": "Nix Flake Dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/sh"
+      },
+      "extensions": [
+        "tamasfe.even-better-toml",
+        "jnoortheen.nix-ide"
+      ]
+    }
+  },
+  "remoteUser": "dani",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind",
+    "source=/Users/danielramos/.ssh/id_mac,target=/home/dani/.ssh/id_ed25519,type=bind",
+    "source=/Users/danielramos/.ssh/id_mac.pub,target=/home/dani/.ssh/id_ed25519.pub,type=bind",
+    "source=/Users/danielramos/.ssh/known_hosts,target=/home/dani/.ssh/known_hosts,type=bind",
+    "source=/Users/danielramos/.secrets/kubeconfig-k3s.yaml,target=/home/dani/.kube/config,type=bind"
+  ],
+  "workspaceFolder": "/workspace"
+}

@@ -1,0 +1,167 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-db
+spec:
+  selector:
+    app: immich-db
+  ports:
+    - protocol: TCP
+      port: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-db
+  template:
+    metadata:
+      labels:
+        app: immich-db
+    spec:
+      containers:
+        - name: postgres
+          image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "immich"
+            - name: POSTGRES_USER
+              value: "immich"
+            - name: POSTGRES_DB
+              value: "immich"
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: db-data
+          hostPath:
+            path: /home/dani/storage/immich-db
+            type: DirectoryOrCreate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-redis
+spec:
+  selector:
+    app: immich-redis
+  ports:
+    - protocol: TCP
+      port: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-redis
+  template:
+    metadata:
+      labels:
+        app: immich-redis
+    spec:
+      containers:
+        - name: redis
+          image: docker.io/valkey/valkey:8-bookworm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+spec:
+  selector:
+    app: immich
+  ports:
+    - protocol: TCP
+      port: 2283
+      targetPort: 2283
+      nodePort: 32283
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:release
+          env:
+            - name: DB_PASSWORD
+              value: "immich"
+            - name: DB_USERNAME
+              value: "immich"
+            - name: DB_DATABASE_NAME
+              value: "immich"
+            - name: DB_HOSTNAME
+              value: "immich-db"
+            - name: REDIS_HOSTNAME
+              value: "immich-redis"
+            - name: IMMICH_PORT
+              value: "2283"
+          ports:
+            - containerPort: 2283
+          volumeMounts:
+            - name: upload-data
+              mountPath: /usr/src/app/upload
+      volumes:
+        - name: upload-data
+          hostPath:
+            path: /mnt/data/media/library
+            type: DirectoryOrCreate
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-ml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-ml
+  template:
+    metadata:
+      labels:
+        app: immich-ml
+    spec:
+      containers:
+        - name: immich-ml
+          image: ghcr.io/immich-app/immich-machine-learning:release
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          env:
+            - name: IMMICH_PORT
+              value: "2283"
+          volumeMounts:
+            - name: model-cache
+              mountPath: /cache
+      volumes:
+        - name: model-cache
+          hostPath:
+            path: /home/dani/storage/immich-cache
+            type: DirectoryOrCreate
