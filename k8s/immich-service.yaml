@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich
+spec:
+  selector:
+    app: immich
+  ports:
+    - protocol: TCP
+      port: 2283
+      targetPort: 2283
+      nodePort: 32283
+  type: NodePort

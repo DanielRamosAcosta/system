@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-cache
+  template:
+    metadata:
+      labels:
+        app: immich-cache
+    spec:
+      containers:
+        - name: redis
+          image: docker.io/valkey/valkey:8-bookworm

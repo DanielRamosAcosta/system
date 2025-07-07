@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich
+  template:
+    metadata:
+      labels:
+        app: immich
+    spec:
+      containers:
+        - name: immich-server
+          image: ghcr.io/immich-app/immich-server:release
+          env:
+            - name: DB_PASSWORD
+              value: "immich"
+            - name: DB_USERNAME
+              value: "immich"
+            - name: DB_DATABASE_NAME
+              value: "immich"
+            - name: DB_HOSTNAME
+              value: "immich-db"
+            - name: REDIS_HOSTNAME
+              value: "immich-cache"
+            - name: IMMICH_PORT
+              value: "2283"
+          ports:
+            - containerPort: 2283
+          volumeMounts:
+            - name: upload-data
+              mountPath: /usr/src/app/upload
+      volumes:
+        - name: upload-data
+          hostPath:
+            # path: /mnt/data/media/library
+            path: /Users/danielramos/Documents/storage/hdd/library
+            type: DirectoryOrCreate

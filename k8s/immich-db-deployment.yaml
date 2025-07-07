@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-db
+  template:
+    metadata:
+      labels:
+        app: immich-db
+    spec:
+      containers:
+        - name: postgres
+          image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "immich"
+            - name: POSTGRES_USER
+              value: "immich"
+            - name: POSTGRES_DB
+              value: "immich"
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: db-data
+          hostPath:
+            # path: /home/dani/storage/immich-db
+            path: /Users/danielramos/Documents/storage/ssd/immich-db
+            type: DirectoryOrCreate
