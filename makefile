@@ -6,7 +6,7 @@ AGE_PUBLIC_KEY = age1g6uakqgvlp0jhw2hst0w0sja60rcpqffknx3vr5cds37pfv3l5zsd4c6ky
 SECRETS_SRC = hosts/nas-vm/secrets/secrets.priv.yaml
 SECRETS_ENC = hosts/nas-vm/secrets/secrets.yaml
 
-.PHONY: docs encrypt-secrets deploy
+.PHONY: docs encrypt-secrets deploy dashboard
 
 docs: $(DOC_PDF)
 
@@ -23,3 +23,6 @@ deploy:
 	  --use-remote-sudo \
 	  --build-host dani@192.168.65.3 \
 	  --target-host dani@192.168.65.3
+
+dashboard:
+	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443

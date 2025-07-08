@@ -1,0 +1,6 @@
+releases:
+  - name: kubernetes-dashboard
+    namespace: kubernetes-dashboard
+    createNamespace: true
+    chart: kubernetes-dashboard/kubernetes-dashboard
+    version: "7.13.0"
