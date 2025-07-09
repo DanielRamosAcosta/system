@@ -1,5 +1,3 @@
-namespaceOverride: postgres
-
 image:
   registry: ghcr.io
   repository: danielramosacosta/bitnami-postgresql-vectorchord-pgvectors

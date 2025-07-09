@@ -1,0 +1,7 @@
+releases:
+  - name: valkey
+    namespace: valkey
+    chart: oci://registry-1.docker.io/bitnamicharts/valkey
+    version: 3.0.17
+    values:
+      - ./valkey/values.yaml
