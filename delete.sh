@@ -1,12 +1,22 @@
-kubectl delete all --all -n default
-kubectl delete pvc --all -n default
-kubectl delete configmap --all -n default
-kubectl delete secret --all -n default
-kubectl delete ingress --all -n default
-kubectl delete serviceaccount --all -n default
-kubectl delete cronjobs --all -n default
-kubectl delete jobs --all -n default
-kubectl delete role --all -n default
-kubectl delete rolebinding --all -n default
-kubectl delete networkpolicy --all -n default
-kubectl delete horizontalpodautoscaler --all -n default
+#!/bin/bash
+
+# Check if namespace argument is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <namespace>"
+  exit 1
+fi
+
+NAMESPACE=$1
+
+kubectl delete all --all -n $NAMESPACE
+kubectl delete pvc --all -n $NAMESPACE
+kubectl delete configmap --all -n $NAMESPACE
+kubectl delete secret --all -n $NAMESPACE
+kubectl delete ingress --all -n $NAMESPACE
+kubectl delete serviceaccount --all -n $NAMESPACE
+kubectl delete cronjobs --all -n $NAMESPACE
+kubectl delete jobs --all -n $NAMESPACE
+kubectl delete role --all -n $NAMESPACE
+kubectl delete rolebinding --all -n $NAMESPACE
+kubectl delete networkpolicy --all -n $NAMESPACE
+kubectl delete horizontalpodautoscaler --all -n $NAMESPACE

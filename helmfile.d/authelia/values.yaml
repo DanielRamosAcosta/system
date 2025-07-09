@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/authelia/chartrepo/refs/tags/authelia-0.10.37/charts/authelia/values.schema.json
+
+image:
+  tag: '4.39.4'
+
+configMap:
+  session:
+    cookies:
+      - domain: 'danielramos.me'
+        subdomain: 'auth'
+
+  storage:
+    postgres:
+      enabled: true
+      address: 'tcp://postgres-postgresql.databases.svc.cluster.local:5432'
+      password:
+        value: 'd9a14e19-2495-4598-820e-21a50c0f5f10'
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  rulesOverride:
+    - host: auth.danielramos.me
+      path: /
+  traefikCRD:
+    enabled: true
+    entryPoints:
+      - web

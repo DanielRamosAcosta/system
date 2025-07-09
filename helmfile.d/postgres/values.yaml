@@ -28,10 +28,10 @@ primary:
       cpu: 500m
   extraEnvVars:
     - name: DATABASE_USERS
-      value: "immich,authentik"
+      value: "immich,authelia"
     - name: USER_PASSWORD_IMMICH
       value: "c0aec791-f4a4-4873-aed7-1e343daee907"
-    - name: USER_PASSWORD_AUTHENTIK
+    - name: USER_PASSWORD_AUTHELIA
       value: "d9a14e19-2495-4598-820e-21a50c0f5f10"
   initdb:
     scripts:
