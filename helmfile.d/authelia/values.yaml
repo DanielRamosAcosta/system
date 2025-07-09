@@ -16,6 +16,81 @@ configMap:
       password:
         value: 'd9a14e19-2495-4598-820e-21a50c0f5f10'
 
+    # @schema
+  identity_providers:
+    oidc:
+      enabled: true
+      clients:
+        - client_id: 'immich'
+          client_name: 'immich'
+          client_secret: '$pbkdf2-sha512$310000$c8p78n7pUMln0jzvd4aK4Q$JNRBzwAo0ek5qKn50cFzzvE9RXV88h1wJn5KGiHrD0YKtZaR/nCb2CJPOsKaPK0hjf.9yHxzQGZziziccp6Yng'  # The digest of 'insecure_secret'.
+          public: false
+          authorization_policy: 'one_factor'
+          require_pkce: false
+          pkce_challenge_method: ''
+          redirect_uris:
+            - 'http://photos.danielramos.me/auth/login'
+            - 'http://photos.danielramos.me/user-settings'
+            - 'app.immich:///oauth-callback'
+          scopes:
+            - 'openid'
+            - 'profile'
+            - 'email'
+          response_types:
+            - 'code'
+          grant_types:
+            - 'authorization_code'
+          access_token_signed_response_alg: 'none'
+          userinfo_signed_response_alg: 'none'
+          token_endpoint_auth_method: 'client_secret_post'
+      jwks:
+        - key_id: 'authelia-oidc-key-1'
+          algorithm: 'RS256'
+          use: 'sig'
+          key:
+            value: |
+              -----BEGIN PRIVATE KEY-----
+              MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCoZHMPOV6w2Nem
+              v0JQpv5XKUitCY2/Ak9w1KLgiskaZggvmMUazD50ci/jUaMvAdwkl2ZpyLnbpQcG
+              Il43+Czz9f9jSj/UpPD65YAg/9N8tovrxSiGBuP9B75JAbRvUwLZcbKGhZidK7s7
+              wH9a+bO7Tsx44rW1e54+eGlVOlmWiQMrTgL79XIQTIXNnaAjXI/U4vSaSqyhtvCP
+              6xMH/VVAPeJfEIiJ2Cy2Z2bHOp8gg2jfmmDUZBdruwjuxAWoYR07M7EsZPq86UT5
+              yY4O5TnerBFhSd97sLc34PRt5OyNWFQPhryGTUav/LOq7qfVkzzq/ruuyJs9c/D2
+              qBozM0FvAgMBAAECggEAFyY0ASBIabRttREu+ypx5aaZxJv/HgahyCebOpYpvlTP
+              hEeStTPl1BlMhwoWjmRJkMg1fo5nKpBdzlSUMkqOV312ff5blw6TyFIbkq3Is6je
+              xGtGvmIdHpBdcujmlrVJO35bZg3gpJ657yVv/KA+Op5DEs1L4KadYwYnqN1MKprz
+              NYD2EVIjYRQkLe8o1NC0WtLFW6+7RPW0uLdBRn/KBhxpZuVhko7GzK0MzGQH9nyW
+              I3Uma1YIEhZrppInuVkdHjstf7ZyHDbJZSNeCXY46Nv8GIcUc6aQviYUv07Zg7nH
+              4eDqoBbRbrpGeUgkcxRWWWYO56RDEKfHfIGKlwTq9QKBgQDV519W+fZAwHbtEzXU
+              clueRuwRjQqXdjuNBmMJLnZNtJrKgk9p/5pTUn6LbAHSQByr6cgtyJNmzAVEsz9U
+              H1zWHHLDEqehBV5B3X/kvfjNIbMA5n2Fh1a3/fuAUO+2aCmBXp/w+mFmi1QU+44S
+              TtwhYFOr4Tekb4X+bWFy5nNJawKBgQDJiC3SLLKqtNjfAldZsX/60R5Oi3qeIuMn
+              OtL0E7fqd1KUm3Mt6fljfGDzhkZNI462tTLMPjlM5mQnSRd9BnT4ceZuPRa7r3nq
+              8jZywEIZFW4a0nrxzxmHEc77Dna3JQvw8qiGVCyA7NGApj0dxGi6dP2Y2rtLtYpD
+              9sUxzehVDQKBgFtdhaqoABguXV3sO6zv39ReZM0mWmTRmqQlGz47u0p7nzZqrLMQ
+              +4EllmnFC44b1mNT6y4rI1LgSEvM6HrtHoFSC27pU/KCUX1+t/cjcddk0onK6ciU
+              Q2U5tihb6dgW68uXeGe8+seLMbH4tPl696nF9FdRTqwM+sXvQJWMe6fbAoGBAI5v
+              V+s2uiQaYzjin7f90rUDfYcH32bKw37jfVsSYKcvJEdxwqsNtbwRmTgki6VTXzdU
+              w41E4RyvrNNzPk2X9a3uWm1Jcbq+380k2USrC0xNMB926Xvj4mfrNz2LUG5KmbD2
+              4BLohPet6LgjRgi220oFC4Mv/LYanZlBXMfBftY1AoGAcsZ8IuvrsjegvcNvrJko
+              LfWZMVCy9yokguvIH5gKmPsUc2Nt9FeCnKMFWXMX91PaJWLMPCalCLdROaeIYxHP
+              s6cdJEX3X1d/0vA/WHcE7+EPdLnsCidEaRtqej7XUeolmg3PQ64XbaGbWQK5Mr1C
+              e5nDB9rjPFD2avQElKkEBtU=
+              -----END PRIVATE KEY-----
+
+  authentication_backend:
+    file:
+      enabled: true
+      password:
+        algorithm: argon2
+
+  notifier:
+    filesystem:
+      enabled: true
+
+persistence:
+  enabled: true
+
 ingress:
   enabled: true
   annotations:

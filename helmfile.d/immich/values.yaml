@@ -20,6 +20,11 @@ immich:
     storageTemplate:
       enabled: true
       template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+    oauth:
+      enabled: true
+      clientId: 'immich'
+      clientSecret: 'insecure_secret'
+      issuerUrl: 'http://auth.danielramos.me/.well-known/openid-configuration'
 
 server:
   ingress:
