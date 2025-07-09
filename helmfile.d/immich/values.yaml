@@ -20,3 +20,19 @@ immich:
     storageTemplate:
       enabled: true
       template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+
+server:
+  ingress:
+    main:
+      enabled: true
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - host: photos.danielramos.me
+          paths:
+            - path: "/"
+      tls:
+        - hosts:
+            - photos.danielramos.me
+          secretName: immich-tls
