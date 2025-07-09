@@ -1,0 +1,7 @@
+releases:
+  - name: immich
+    namespace: immich
+    chart: oci://ghcr.io/immich-app/immich-charts/immich
+    version: "0.9.3"
+    values:
+      - ./immich/values.yaml

@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bitnami/charts/refs/tags/postgresql/16.7.15/bitnami/valkey/values.schema.json
+
 image:
   registry: ghcr.io
   repository: danielramosacosta/bitnami-postgresql-vectorchord-pgvectors
