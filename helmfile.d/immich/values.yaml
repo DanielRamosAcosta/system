@@ -26,13 +26,9 @@ server:
     main:
       enabled: true
       annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        cert-manager.io/cluster-issuer: letsencrypt-prod
+        traefik.ingress.kubernetes.io/router.entrypoints: web
       hosts:
         - host: photos.danielramos.me
           paths:
             - path: "/"
-      tls:
-        - hosts:
-            - photos.danielramos.me
-          secretName: immich-tls
+      tls: []
