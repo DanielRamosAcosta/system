@@ -3,7 +3,7 @@
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/sda";
+      device = "/dev/sdd";
       content = {
         type = "gpt";
         partitions = {
@@ -19,14 +19,14 @@
           };
 
           swap = {
-            size = "8G";
+            size = "36G";
             content = {
               type = "swap";
             };
           };
 
           root = {
-            size = "256G";
+            size = "128G";
             content = {
               type = "filesystem";
               format = "ext4";
@@ -36,9 +36,6 @@
 
           cache = {
             size = "100%";
-            content = {
-              type = "empty";
-            };
           };
         };
       };

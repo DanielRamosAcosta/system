@@ -94,7 +94,8 @@ persistence:
 ingress:
   enabled: true
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls.certresolver: default
   rulesOverride:
     - host: auth.danielramos.me
       path: /
@@ -102,3 +103,7 @@ ingress:
     enabled: true
     entryPoints:
       - web
+      - websecure
+    tls:
+      certResolver: default
+

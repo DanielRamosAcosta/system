@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/djjudas21/charts/refs/tags/navidrome-6.7.4/charts/navidrome/values.schema.json
+
+image:
+  tag: 0.57.0
+
+env:
+  ND_ENABLESHARING: "true"
+  ND_REVERSEPROXYWHITELIST: 0.0.0.0/0
+  ND_ENABLEUSEREDITING: false
+
+ingress:
+  main:
+    enabled: true
+    annotations:
+      traefik.http.routers.navidrome.rule: Host(`music.danielramos.me`)
+      traefik.http.routers.navidrome.entrypoints: https
+      traefik.http.routers.navidrome.middlewares: authelia@docker
+      traefik.http.routers.navidrome-subsonic.rule: Host(`music.danielramos.me`) && PathPrefix(`/rest/`) && !Query(`c`, `NavidromeUI`)
+      traefik.http.routers.navidrome-subsonic.entrypoints: https
+      traefik.http.routers.navidrome-subsonic.middlewares: authelia-basicauth@docker
+
+persistence:
+  config:
+    enabled: true
+  music:
+    enabled: true

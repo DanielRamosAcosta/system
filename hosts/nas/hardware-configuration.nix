@@ -12,15 +12,4 @@
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  fileSystems."/mnt/data" = {
-    device = "UUID=dcb4f9c4-f025-43eb-9a26-c93d770f54b1";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "noatime" ];
-  };
-
-  fileSystems."/mnt/data/media/library" = {
-    device = "UUID=dcb4f9c4-f025-43eb-9a26-c93d770f54b1";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "noatime" "subvol=media/library" ];
-  };
 }

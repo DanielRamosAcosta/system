@@ -1,5 +1,0 @@
-releases:
-  - name: traefik
-    namespace: traefik
-    chart: oci://ghcr.io/traefik/helm/traefik
-    version: "36.3.0"
