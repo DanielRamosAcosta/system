@@ -1,13 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 {
   imports = [
-    <nixpkgs/nixos/modules/virtualisation/google-compute-image.nix>
+    (modulesPath + "/virtualisation/google-compute-image.nix")
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;  
 
   environment.systemPackages = with pkgs; [
     btrfs-progs
