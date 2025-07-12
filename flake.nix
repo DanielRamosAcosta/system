@@ -39,5 +39,13 @@
           agenix.nixosModules.default
         ];
       };
+
+      nixosConfigurations.nas-gce = nixpkgs.lib.nixosSystem {
+        system = remoteSystem;
+        modules = [
+          ./hosts/nas-gce
+          agenix.nixosModules.default
+        ];
+      };
     };
 }
