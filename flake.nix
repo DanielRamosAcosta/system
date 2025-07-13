@@ -31,21 +31,22 @@
         '';
       };
 
-      nixosConfigurations.nas-vm = nixpkgs.lib.nixosSystem {
-        system = remoteSystem;
-        modules = [
-          ./hosts/nas
-          disko.nixosModules.disko
-          agenix.nixosModules.default
-        ];
-      };
+      nixosConfigurations = {
+        nas = nixpkgs.lib.nixosSystem {
+          system = remoteSystem;
+          modules = [
+            ./hosts/nas
+            disko.nixosModules.disko
+            agenix.nixosModules.default
+          ];
+        };
 
-      nixosConfigurations.nas-gce = nixpkgs.lib.nixosSystem {
-        system = remoteSystem;
-        modules = [
-          ./hosts/nas-gce
-          agenix.nixosModules.default
-        ];
+        iso = nixpkgs.lib.nixosSystem {
+          system = remoteSystem;
+          modules = [
+            ./hosts/iso
+          ];
+        };
       };
     };
 }
