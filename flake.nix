@@ -45,6 +45,7 @@
           system = remoteSystem;
           modules = [
             ./hosts/iso
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ];
         };
       };
