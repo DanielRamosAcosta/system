@@ -17,7 +17,10 @@ RUN curl -L https://nixos.org/nix/install | bash -s -- --no-daemon
 
 # Activa flakes y nix-command
 RUN mkdir -p /home/dani/.config/nix && \
-    echo 'experimental-features = nix-command flakes' >> /home/dani/.config/nix/nix.conf
+    echo 'experimental-features = nix-command flakes' >> /home/dani/.config/nix/nix.conf && \
+    mkdir -p /home/dani/.ssh && \
+    chown dani:dani /home/dani/.ssh && \
+    chmod 700 /home/dani/.ssh
 
 # Entorno y PATH
 ENV NIX_CONF_DIR=/home/dani/.config/nix

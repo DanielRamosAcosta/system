@@ -3,7 +3,7 @@
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/sdd";
+      device = "/dev/sda";
       content = {
         type = "gpt";
         partitions = {
@@ -26,7 +26,7 @@
           };
 
           root = {
-            size = "128G";
+            size = "256G";
             content = {
               type = "filesystem";
               format = "ext4";

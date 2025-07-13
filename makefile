@@ -27,7 +27,7 @@ install:
 	nix run github:nix-community/nixos-anywhere -- \
 	--flake .#nas \
 	--generate-hardware-config nixos-generate-config ./hosts/nas/hardware-configuration.nix \
-	--target-host dani@192.168.65.3
+	--target-host dani@nas.danielramos.me
 
 iso:
 	nix build .#nixosConfigurations.iso.config.system.build.isoImage
