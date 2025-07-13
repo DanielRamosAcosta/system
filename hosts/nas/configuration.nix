@@ -7,6 +7,7 @@
 
   environment.systemPackages = with pkgs; [
     btrfs-progs
+    git
   ];
 
   system.stateVersion = "25.05";

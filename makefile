@@ -12,10 +12,10 @@ $(DOC_PDF): $(DOC_SRC)
 deploy:
 	nixos-rebuild switch \
 	  --fast \
-	  --flake .#nas-gce \
+	  --flake .#nas \
 	  --use-remote-sudo \
-	  --build-host dani@nas.danielramos.me \
-	  --target-host dani@nas.danielramos.me
+	  --build-host dani@192.168.65.3 \
+	  --target-host dani@192.168.65.3
 
 dashboard:
 	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
@@ -27,4 +27,4 @@ install:
 	nix run github:nix-community/nixos-anywhere -- \
 	--flake .#nas \
 	--generate-hardware-config nixos-generate-config ./hosts/nas/hardware-configuration.nix \
-	--target-host dani@nas.danielramos.me
+	--target-host dani@192.168.65.3
