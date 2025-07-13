@@ -2,7 +2,7 @@ TYPST = typst
 DOC_SRC = docs/NAS\ DIY.typ
 DOC_PDF = docs/NAS\ DIY.pdf
 
-.PHONY: docs encrypt-secrets deploy dashboard
+.PHONY: docs encrypt-secrets deploy dashboard iso
 
 docs: $(DOC_PDF)
 
@@ -28,3 +28,6 @@ install:
 	--flake .#nas \
 	--generate-hardware-config nixos-generate-config ./hosts/nas/hardware-configuration.nix \
 	--target-host dani@192.168.65.3
+
+iso:
+	nix build .#nixosConfigurations.iso.config.system.build.isoImage
