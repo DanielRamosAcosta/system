@@ -28,9 +28,6 @@ deploy-playground:
 dashboard:
 	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 
-copy-users:
-	kubectl cp ./k8s/secrets/users_database.yml authelia/authelia-8vkv6:/config/users_database.yml
-
 install:
 	nix run github:nix-community/nixos-anywhere -- \
 	--flake .#nas \
