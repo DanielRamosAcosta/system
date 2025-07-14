@@ -1,6 +1,6 @@
 {
   imports = [
-    ./dashboard.nix
+    ./charts/dashboard.nix
     ./accounts/admin.nix
   ];
 }
