@@ -1,6 +1,7 @@
 {
   imports = [
-    # ./k3s.nix
+    ./k3s.nix
+    ./cluster
     ./ssh.nix
   ];
 }
