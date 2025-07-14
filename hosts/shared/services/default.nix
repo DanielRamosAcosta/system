@@ -1,6 +1,6 @@
 {
   imports = [
-    ./k3s.nix
+    # ./k3s.nix
     ./ssh.nix
   ];
 }

@@ -41,6 +41,14 @@
           ];
         };
 
+        playground = nixpkgs.lib.nixosSystem {
+          system = remoteSystem;
+          modules = [
+            ./hosts/playground
+            agenix.nixosModules.default
+          ];
+        };
+
         iso = nixpkgs.lib.nixosSystem {
           system = remoteSystem;
           modules = [

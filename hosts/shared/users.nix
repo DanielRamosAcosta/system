@@ -1,7 +1,7 @@
 { config, ... }:
 {
-  age.secrets.dani-hashed-password.file = ../../secrets/dani-hashed-password.age;
-  
+  # age.secrets.dani-hashed-password.file = "${self}/secrets/dani-hashed-password.age";
+
   users = {
     mutableUsers = false;
 
@@ -9,7 +9,8 @@
       dani = {
         isNormalUser = true;
         extraGroups = [ "wheel" ];
-        hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
+        # hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
+        password = "changeme";
         openssh.authorizedKeys.keys = [
           (builtins.readFile ../../id_dani.pub)
         ];

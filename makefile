@@ -9,13 +9,21 @@ docs: $(DOC_PDF)
 $(DOC_PDF): $(DOC_SRC)
 	$(TYPST) compile "$<"
 
-deploy:
+deploy-nas:
 	nixos-rebuild switch \
 	  --fast \
 	  --flake .#nas \
 	  --use-remote-sudo \
 	  --build-host dani@192.168.65.3 \
 	  --target-host dani@192.168.65.3
+
+deploy-playground:
+	nixos-rebuild switch \
+	  --fast \
+	  --flake .#playground \
+	  --use-remote-sudo \
+	  --build-host dani@192.168.1.44 \
+	  --target-host dani@192.168.1.44
 
 dashboard:
 	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
@@ -27,7 +35,7 @@ install:
 	nix run github:nix-community/nixos-anywhere -- \
 	--flake .#nas \
 	--generate-hardware-config nixos-generate-config ./hosts/nas/hardware-configuration.nix \
-	--target-host dani@nas.danielramos.me
+	--target-host root@192.168.1.44
 
 iso:
 	nix build .#nixosConfigurations.iso.config.system.build.isoImage
