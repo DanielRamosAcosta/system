@@ -27,6 +27,7 @@
         packages = [
           nixpkgs.legacyPackages.${localSystem}.nixos-rebuild
           agenix.packages.${localSystem}.default
+          nixpkgs.legacyPackages.${localSystem}.kubeseal
         ];
 
         shellHook = ''
