@@ -75,8 +75,8 @@
         };
         type = "Opaque";
         data = {
-          USER_PASSWORD_IMMICH = (utilities.toBase64 "c0aec791-f4a4-4873-aed7-1e343daee907");
-          USER_PASSWORD_AUTHELIA = "ZDlhMTRlMTktMjQ5NS00NTk4LTgyMGUtMjFhNTBjMGY1ZjEw";
+          USER_PASSWORD_IMMICH = (utilities.toBase64 (builtins.readFile config.age.secrets.immich-password.path));
+          USER_PASSWORD_AUTHELIA = (utilities.toBase64 (builtins.readFile config.age.secrets.authelia-password.path));
         };
       }
     ];
