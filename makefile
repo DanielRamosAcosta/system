@@ -2,7 +2,7 @@ TYPST = typst
 DOC_SRC = docs/NAS\ DIY.typ
 DOC_PDF = docs/NAS\ DIY.pdf
 
-.PHONY: docs encrypt-secrets deploy dashboard iso
+.PHONY: docs encrypt-secrets deploy dashboard iso test
 
 docs: $(DOC_PDF)
 
@@ -22,8 +22,8 @@ deploy-playground:
 	  --fast \
 	  --flake .#playground \
 	  --use-remote-sudo \
-	  --build-host dani@playground.danielramos.me \
-	  --target-host dani@playground.danielramos.me
+	  --build-host dani@192.168.1.44 \
+	  --target-host dani@192.168.1.44
 
 dashboard:
 	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
@@ -36,3 +36,6 @@ install:
 
 iso:
 	nix build .#nixosConfigurations.iso.config.system.build.isoImage
+
+test:
+	nix eval --impure --expr 'import ./utils/utils.test.nix {}'

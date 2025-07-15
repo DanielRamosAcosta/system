@@ -19,6 +19,9 @@
     let
       localSystem = "aarch64-linux";
       remoteSystem = "x86_64-linux";
+      utilities = import ./utilities/utilities.nix {
+        lib = nixpkgs.lib;
+      };
     in {
       devShells.${localSystem}.default = nixpkgs.legacyPackages.${localSystem}.mkShell {
         packages = [
@@ -47,6 +50,9 @@
             ./hosts/playground
             agenix.nixosModules.default
           ];
+          specialArgs = {
+            inherit utilities;
+          };
         };
 
         iso = nixpkgs.lib.nixosSystem {

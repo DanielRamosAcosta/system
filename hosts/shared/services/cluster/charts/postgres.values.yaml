@@ -17,8 +17,7 @@ postgresqlSharedPreloadLibraries: "pgaudit,vchord"
 primary:
   persistence:
     enabled: true
-    size: 20Gi
-    storageClass: local-path
+    existingClaim: "postgres-pvc"
   resources:
     requests:
       memory: 512Mi

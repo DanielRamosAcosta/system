@@ -1,9 +1,9 @@
-{ config, ... }:
+{ config, utilities, ... }:
 {
   services.k3s = {
     # autoDeployCharts.postgres = {
     #   name = "oci://registry-1.docker.io/bitnamicharts/postgresql";
-    #   targetNamespace = "database";
+    #   targetNamespace = "databases";
     #   version = "7.13.0";
     #   values = ./postgres.values.yaml;
     # };
@@ -14,6 +14,7 @@
         kind = "PersistentVolume";
         metadata = {
           name = "postgres-pv";
+          namespace = "databases";
         };
         spec = {
           capacity = {
@@ -50,6 +51,7 @@
         kind = "PersistentVolumeClaim";
         metadata = {
           name = "postgres-pvc";
+          namespace = "databases";
         };
         spec = {
           volumeName = "postgres-pv";
@@ -62,6 +64,19 @@
               storage = "20Gi";
             };
           };
+        };
+      }
+      {
+        apiVersion = "v1";
+        kind = "Secret";
+        metadata = {
+          name = "user-passwords";
+          namespace = "databases";
+        };
+        type = "Opaque";
+        data = {
+          USER_PASSWORD_IMMICH = (utilities.toBase64 "c0aec791-f4a4-4873-aed7-1e343daee907");
+          USER_PASSWORD_AUTHELIA = "ZDlhMTRlMTktMjQ5NS00NTk4LTgyMGUtMjFhNTBjMGY1ZjEw";
         };
       }
     ];
