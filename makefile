@@ -22,8 +22,8 @@ deploy-playground:
 	  --fast \
 	  --flake .#playground \
 	  --use-remote-sudo \
-	  --build-host dani@192.168.1.44 \
-	  --target-host dani@192.168.1.44
+	  --build-host dani@playground.danielramos.me \
+	  --target-host dani@playground.danielramos.me
 
 dashboard:
 	kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
