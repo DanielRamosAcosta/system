@@ -5,6 +5,4 @@ let
 in
 {
   "dani-hashed-password.age".publicKeys = [ nas playground dani ];
-  "immich-password.age".publicKeys = [ nas playground dani ];
-  "authelia-password.age".publicKeys = [ nas playground dani ];
 }

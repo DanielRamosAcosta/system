@@ -29,4 +29,33 @@
     tail = convertLastSlice (tripletAt nFullSlices);
   in
     join (head ++ [tail]);
+    
+  createSealedSecret = {
+    name,
+    namespace,
+    encryptedData,
+  }: {
+    apiVersion = "bitnami.com/v1alpha1";
+    kind = "SealedSecret";
+    metadata = {
+      name = name;
+      namespace = namespace;
+      annotations = {
+        "sealedsecrets.bitnami.com/cluster-wide" = "true";
+      };
+    };
+    spec = {
+      encryptedData = encryptedData;
+      template = {
+        metadata = {
+          name = name;
+          namespace = namespace;
+          annotations = {
+            "sealedsecrets.bitnami.com/cluster-wide" = "true";
+          };
+        };
+        type = "Opaque";
+      };
+    };
+  };
 }

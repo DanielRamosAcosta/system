@@ -67,31 +67,22 @@
       };
     };
 
-    manifests.postgres-secrets.content = {
-      apiVersion = "bitnami.com/v1alpha1";
-      kind = "SealedSecret";
-      metadata = {
-        name = "postgres-secrets";
-        namespace = "databases";
-      };
-      spec = {
-        encryptedData = {
-          AUTHELIA_PASSWORD = "AgBLE6t7SrV5RckR4q0bYQblemQh9Jc+YwUEHUEv8hiqou8aD486O/4ke/iDGOPxmrr0OXii+hKBlocHixFZp8pMIyjFtiK11q0UYzpFWJ6F/3VMQ/EpAt2ztqHcxtHO0jSsbczxMbbjhblZvASR9fW+Nl0tZaiefi9wV6h3ZKxYsupubfzKExrDSS6x5wXRRWQrr9LvIsAUYkpYAEpPX7jlpGQEsZBxIpD9XYYRvPePi+K/+Gq3Cy0QyvdJM+bNsx50TyCL9G1BEz0x7sOT0xOGBW+DmlRQFLBxfn2FWRYyvPtMraCvM/USiqkGYEaIprugpPP5Er3LpWQka7dFKJfh0i5OkP7RTGma82aNGBdYjSQqfDTPNKjtD8D4yFvZAGBHKPCCJW3xfguF/7Su17KDWAKz3b6mc9/XqDGB0aIsBIAqqBLcaVNAYbXQP4UiMdgbVPqxH+CxUdFpgp+1YIIMGggKVH0VDzArEfpm8Q4bSNbVsSDbG+WRTlb5hw2KA/fDJMjXnTo4oeiYKDincFdem9tiYaYHTst5B0JNtbiHHh6Zb9cKOHr8YNtbjtugWE2AldDAiogrPXpcmHgsYOhOHQYpoLNwUlB2tWPWsfI6RfBBYHfoBStLtvEKm9Oy2vpDF8WXmZheF6MCzt2qLl/15aeS7+Wee11L3FGM5oLIzGQQDcOEmjWcEWIPfTVCqpNH5tK2CXqX46ZWa6OMyAnZ79L2wQiswOw+9JAog/Sbd0xHuvQ=";
-          IMMICH_PASSWORD = "AgCnPv05aPCCS/FhHKQ6sx52j9358ADjW+8b/8mQJEGlNb+vWNqvRzCDPwAnF0sYuWoThWI5tuJLRmQy4fJ7Uzd/AuzXl9v0vJbCntKKBTUOG/Hktvk4WcSOpkMcmQBpJkHLy3BkoxMNBvt34I8vTtg1czD0SZjvX3TnQlry85Dmu2RKrDeV0gY9rLHcDI/+zgDMLsi28OIzYW6Y2gsP1LYlbRTiVzL2Nr2EziA04f9tXMZTyK0efvkEq4ZeSKlGk6mRpWq/jkX4bKzHv/ZVcNuVlCUAS/aqUSRo5/bNJaMv0PWAtyErIG/+ci+d4uXZKiNsN7+rofLImLdQV8LvBewBdclnZpwf9EYGbesVzO6yHXm1ZLTshnMWL2nyrqwqeOqqudlnbZZPUx76rCmFaVEE3ki6SGYPNkaLlIpMVrUtTrxVgfDBk040tstSIMsXVM41PXxsE9UhrnbJL3iLDFQUGpfV1DLOVSAd2/YIED0zwTQ8N03yf70lE+pXp2EmTNSTJHYOSsiglMigKzjKXtKHIiH4ujlmrOGuJ7z/af6V4IEKIxmKG+CwC5P/3REBpt23OFgBBj/00dnxVmzI0Fz5/P1XLacToMfHdUcW4+lDEkJvzDPT+Cbb0Q6Wuf0A/4IPidHW5fYi35opQ3LoOQ970+9ZaAqsI/y0OP2HEhSbNB0YUM3Ku5o4zaqwWL5FkPpLukHhXxDUzXaWFaFt1d0F+s7rlHYFMq0OnWIj8su6ZYiaiW0=";
-        };
-        template = {
-          metadata = {
-            name = "postgres-secrets";
-            namespace = "databases";
-          };
-          type = "Opaque";
-        };
+    manifests.postgres-secrets.content = utilities.createSealedSecret {
+      name = "postgres-secrets";
+      namespace = "databases";
+      encryptedData = {
+        AUTHELIA_PASSWORD = "AgAYBMIy/Nhm5ucWjmbqroKyAdhy0SFJqM+3aUXNoakoP4fZpduB7UDmR0IlTpGhu2BkmymBrvr3crGae7LlJVic9SrNZkvk9eLVRMEAwRFzez9QEJyOih2xsXPgWunpFhKAGAdfT5AbCupmUUJ0FFzXgSsBVY9QRr2GJxMam06Rr5mHm7+gugG/MbajRlxcuZ2zCChcqlqaa+EKrJOJOUQErZ1YjmLxnB7MVesOuo4riVn9wUqnOX4A9wId4nhElybO8C1C3DAM0zblphmdinoAAA0lPBdcOwsc5oerurCbkPEeaxyFMY6BVsaRa2uuBCw/J2uCRosbv88+4wWqWjjKb8KbjfqCebNIBDtZ0pNaMkWWKKkShp9bfht4ej/avxHsE7CdEyfP9lh0bMWKrb6DwzPMjxAKYrl5dvLmW/h1eYSYjNtqzKiS6cR5qBlvcUuFV6Dal2j+lfRZRkd/7XyPzSFML7ZzFZLJBp6GGrug+R8Mqse7XSuGW6bkyWAfUnUH2PIhgfEPJU4uwVburZzdbr7Og3vw7VOGZW35a3z2pxoFOw/7vGyC0JgyWahOPl+oHGYSlVnQZmDAIYmv4q761BSYo+k6Y68Rz6Gf4rZwPWjK3pXB82nRIFiyRC9E8OnkGSW46maDh4MJvYHGuZyw0DoR0QNKfGtvMTohOIx9dGNaP8EnJWj1fE3SP13n4QHdogdYkdhu4epcnxylC3kN6z5GBcWPBZYTI+n/coqPylIr7eY=";
+        IMMICH_PASSWORD = "AgCV+Lt1yns+hXYH1VWDlHwKPmqfjoKv71L/abA6kIX2wuapEp7IyNoNj2NZwVaQKSKnPGfAKbTftcwvgUJc5ex4sDohH7lyCbr4EXV3Ij+sI67nn1hL9Qgga+Jx7NV0RG43rr0NP+7reUCDoaagRYcwHLrsExIf2JLwAADZfS+n5PsSbtTrv0LDKUCweU6whE+iosjpcIRG0OGKJjcxk1T3kYyPdGpNeruczo7jdh5ZEsLN0mLLKRUZ4Q+z4Byytm7LBZrlK0+wpyg73Ac+JH2r5rgrxW7/6wj15N5CASrDtJec1tUb9joEOne+0qwaJXALzYf4f1kR4FCB93q4sbySiRmi4NnrNuyfTLnSHjc74R4pC2QTuwpL3bDaT5i1wPrAzHKF35+tBhiJAWmFK7ZtUqIH1iwKRttjwO61AiUiLGf5SwdcogVTQP8r6bfUhKuztfYeq6nifpjaxz8n414aDUoJngf//nDYVzQHkWNinh/U8yihmTwd6TLptyHRtNPIkIANxfNf0ZV8gFFIzURb8zcol3avdqcdKd+jdiKOlOS25mn01uKj/CzLmE81NcpqvPfVqFgnRdCLU5Z8uM+8qyHqYaynQqqNZwyfSIdneJNoVOdGsZt6VIb2a2dr1ILihF1K/XHrFA8bW7XtoiucVXI2f1Bac6jCnfQMHWpk0xAajp4XTH88akt7qSJRhCbGE2R/2NQlEJf2SDYUMnA8fSRg5CP4plA04LXZLr92AhPYtsk=";
+        POSTGRES_PASSWORD = "AgCcFkh1axqWWEgmnVk6vEoSPuNkjxKxx6+j55QK1NsA/sqcPLXKIx0Ki4HyqZSOQpYdl63BVYnFK/IkpfVZEICexy0WadDfvYfN36TI39og6olEi2nPxKZ4bxJwcUc3AOPgrYWOGPPUqY59ermjgvGPO3Ow+53VHpn/fMFjdoGjVqHeMi4KdhWgnhiWMeW1bAcOETIpYGbdSvPuQKonq9sXuLRsI605JtZ3Rk7bKTwq1+V4px6P9sbMO3Z1IMk58FOSI5NTAepOxYsaHENXA/NssbDEPXBk2TfJGRSGoXb5KAJvb1l6dyGoBDVZ2z25B/ScjSss/rbCiY487hQMGwBYMOEQQn+5vGiZIaI7aw/jRXdembr+A7crqGHYLwPFK95Wgp8Ysogtp1QAtsca9XeCLMbiv3CMnoIDHDJQBkftjbn6uJPdzIkdx/Iizw2howyilAr+syZlde5AzjFY71LeI4sPszzf4Rz0KTq5GJSfQx0FF0oz5FXWOSSq50hXNKUtJp2BSwRSPRKiU/Z4SUMPDFlhxBMBcnoMjO4CgQBNsoos7weu6Ohdm9psCGsTtsYvf5YxDxotR9LzNKrUv9UgS1193qpD5tI2kR8091sdd5RFrfPejoEykdW+MXG9gkzuV0QdbDXzzsXJ/AnLFQcWlMdpdNMNtBZwskHyB40vGzjVxydIs30QFSMbJWGQlo+ltiTQ+49xYAQqOW/KfHW9j5awcBMuptt7904OXNW6Y3QWb5g=";
       };
     };
 
-    manifests.default-secrets.content = lib.recursiveUpdate config.services.k3s.manifests.postgres-secrets.content {
-      manifests.metadata.namespace = "default";
-      manifests.spec.template.metadata.namespace = "default";
+    manifests.default-secrets.content = utilities.createSealedSecret {
+      name = "postgres-secrets";
+      namespace = "default";
+      encryptedData = {
+        IMMICH_PASSWORD = config.services.k3s.manifests.postgres-secrets.content.spec.encryptedData.IMMICH_PASSWORD;
+      };
     };
   };
 }
