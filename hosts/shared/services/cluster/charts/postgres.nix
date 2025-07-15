@@ -1,4 +1,4 @@
-{ config, utilities, ... }:
+{ config, utilities, lib, ... }:
 {
   services.k3s = {
     # autoDeployCharts.postgres = {
@@ -87,6 +87,11 @@
           type = "Opaque";
         };
       };
+    };
+
+    manifests.default-secrets.content = lib.recursiveUpdate config.services.k3s.manifests.postgres-secrets.content {
+      manifests.metadata.namespace = "default";
+      manifests.spec.template.metadata.namespace = "default";
     };
   };
 }
