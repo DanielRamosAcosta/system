@@ -7,7 +7,6 @@ local u = import 'utils.libsonnet';
   local statefulSet = k.apps.v1.statefulSet,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
-  local envVar = k.core.v1.envVar,
   local secret = k.core.v1.secret,
   local volume = k.core.v1.volume,
   local volumeMount = k.core.v1.volumeMount,
