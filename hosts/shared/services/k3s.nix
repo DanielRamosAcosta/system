@@ -5,9 +5,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    extraFlags = toString [
-      "--disable"
-      "default-secrets-2"
-    ];
+    extraFlags = toString [ ];
   };
 }
+

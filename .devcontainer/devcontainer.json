@@ -10,7 +10,8 @@
       },
       "extensions": [
         "tamasfe.even-better-toml",
-        "jnoortheen.nix-ide"
+        "jnoortheen.nix-ide",
+        "grafana.vscode-jsonnet"
       ]
     }
   },

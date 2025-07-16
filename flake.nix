@@ -26,8 +26,10 @@
       devShells.${localSystem}.default = nixpkgs.legacyPackages.${localSystem}.mkShell {
         packages = [
           nixpkgs.legacyPackages.${localSystem}.nixos-rebuild
-          agenix.packages.${localSystem}.default
           nixpkgs.legacyPackages.${localSystem}.kubeseal
+          nixpkgs.legacyPackages.${localSystem}.tanka
+          nixpkgs.legacyPackages.${localSystem}.jsonnet-bundler
+          agenix.packages.${localSystem}.default
         ];
 
         shellHook = ''
