@@ -29,6 +29,9 @@
           nixpkgs.legacyPackages.${localSystem}.kubeseal
           nixpkgs.legacyPackages.${localSystem}.tanka
           nixpkgs.legacyPackages.${localSystem}.jsonnet-bundler
+          nixpkgs.legacyPackages.${localSystem}.just
+          nixpkgs.legacyPackages.${localSystem}.watchexec
+          nixpkgs.legacyPackages.${localSystem}.kubectl
           agenix.packages.${localSystem}.default
         ];
 

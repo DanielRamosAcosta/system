@@ -1,0 +1,2 @@
+build-databases:
+  tk export dist environments/databases --merge-strategy replace-envs
