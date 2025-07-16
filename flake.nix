@@ -32,6 +32,7 @@
           nixpkgs.legacyPackages.${localSystem}.just
           nixpkgs.legacyPackages.${localSystem}.watchexec
           nixpkgs.legacyPackages.${localSystem}.kubectl
+          nixpkgs.legacyPackages.${localSystem}.age
           agenix.packages.${localSystem}.default
         ];
 
