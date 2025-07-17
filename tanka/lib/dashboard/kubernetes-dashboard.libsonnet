@@ -4,16 +4,14 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
 local helm = tanka.helm.new(std.thisFile);
 local serviceAccount = k.core.v1.serviceAccount;
 local clusterRoleBinding = k.rbac.v1.clusterRoleBinding;
-local roleBinding = k.rbac.v1.clusterRoleBinding;
-local roleRef = k.rbac.v1.roleRef;
 local subject = k.rbac.v1.subject;
 
 {
-  dashboard: helm.template("kubernetes-dashboard", "../../charts/kubernetes-dashboard", {
-    namespace: "kubernetes-dashboard",
+  new():: helm.template("kubernetes-dashboard", "../../charts/kubernetes-dashboard", {
+    namespace: "dashboard",
   }),
 
-  admin: {
+  createAdmin():: {
     adminSa: serviceAccount.new("admin-user"),
 
     adminCrb: clusterRoleBinding.new("admin-user") + 
@@ -23,7 +21,7 @@ local subject = k.rbac.v1.subject;
       clusterRoleBinding.withSubjects([
         subject.withKind("ServiceAccount") +
         subject.withName("admin-user") +
-        subject.withNamespace("kubernetes-dashboard"),
+        subject.withNamespace("dashboard"),
       ]),
-  }
+  },
 }
