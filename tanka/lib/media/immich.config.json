@@ -1,0 +1,6 @@
+{
+    "$schema": "./immich.config.schema.json",
+    "storageTemplate": {
+        "enabled": true
+    }
+}

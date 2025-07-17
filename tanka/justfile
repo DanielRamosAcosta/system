@@ -1,6 +1,9 @@
 build-databases:
   tk export dist environments/databases --merge-strategy replace-envs
 
+build-media:
+  tk export dist environments/media --merge-strategy replace-envs
+
 encrypt-secrets:
   age --encrypt --recipients-file ../id_dani.pub --output ./lib/secrets.json.age ./lib/secrets.json
 

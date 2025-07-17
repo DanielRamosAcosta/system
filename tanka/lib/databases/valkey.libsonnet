@@ -7,12 +7,12 @@ local u = import 'utils.libsonnet';
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
 
-  new(image = 'valkey/valkey', version):: {
+  new(image='valkey/valkey', version):: {
     statefulSet: statefulSet.new('valkey', replicas=1, containers=[
       container.new('valkey', u.image(image, version)) +
       container.withPorts(
         [containerPort.new('valkey', 6379)]
-      )
+      ),
     ]),
 
     service: k.util.serviceFor(self.statefulSet),

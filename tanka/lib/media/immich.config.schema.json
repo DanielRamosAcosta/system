@@ -1,0 +1,860 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Immich Configuration Schema",
+  "description": "Configuration schema for Immich photo management server. All settings are optional and will use sensible defaults if not specified.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to the JSON schema for validation",
+      "default": "./immich.config.schema.json"
+    },
+    "ffmpeg": {
+      "type": "object",
+      "description": "Video transcoding settings using FFmpeg. Controls how videos are processed and converted.",
+      "additionalProperties": false,
+      "properties": {
+        "crf": {
+          "type": "number",
+          "description": "Constant Rate Factor (0-51). Lower values = higher quality, larger files. Recommended: 23-28",
+          "minimum": 0,
+          "maximum": 51,
+          "default": 23
+        },
+        "threads": {
+          "type": "number",
+          "description": "Number of CPU threads to use for video encoding. 0 = auto-detect",
+          "minimum": 0,
+          "default": 0
+        },
+        "preset": {
+          "type": "string",
+          "description": "Encoding speed preset. Faster presets = quicker encoding but larger files",
+          "enum": ["ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow"],
+          "default": "fast"
+        },
+        "targetVideoCodec": {
+          "type": "string",
+          "description": "Video codec to use for transcoding (e.g., h264, h265, vp9)",
+          "enum": ["h264", "hevc", "vp9", "av1"],
+          "default": "h264"
+        },
+        "acceptedVideoCodecs": {
+          "type": "array",
+          "description": "List of video codecs that don't need transcoding",
+          "items": {
+            "type": "string"
+          },
+          "default": ["h264", "hevc", "vp9"]
+        },
+        "targetAudioCodec": {
+          "type": "string",
+          "description": "Audio codec to use for transcoding",
+          "enum": ["aac", "mp3", "opus"],
+          "default": "aac"
+        },
+        "acceptedAudioCodecs": {
+          "type": "array",
+          "description": "List of audio codecs that don't need transcoding",
+          "items": {
+            "type": "string"
+          },
+          "default": ["aac", "mp3", "opus"]
+        },
+        "acceptedContainers": {
+          "type": "array",
+          "description": "List of video container formats that are accepted",
+          "items": {
+            "type": "string"
+          },
+          "default": ["mov", "ogg", "webm"]
+        },
+        "targetResolution": {
+          "type": "string",
+          "description": "Target resolution for transcoded videos (e.g., '1080p', '720p')",
+          "pattern": "^\\d+p$",
+          "default": "720p"
+        },
+        "maxBitrate": {
+          "type": "string",
+          "description": "Maximum bitrate for transcoded videos (e.g., '5M', '2000k')",
+          "default": "0"
+        },
+        "bframes": {
+          "type": "number",
+          "description": "Number of B-frames for video encoding (0-16)",
+          "minimum": 0,
+          "maximum": 16,
+          "default": -1
+        },
+        "refs": {
+          "type": "number",
+          "description": "Number of reference frames (1-16)",
+          "minimum": 1,
+          "maximum": 16,
+          "default": 0
+        },
+        "gopSize": {
+          "type": "number",
+          "description": "Group of Pictures size. Affects seeking accuracy",
+          "minimum": 1,
+          "default": 0
+        },
+        "temporalAQ": {
+          "type": "boolean",
+          "description": "Enable temporal adaptive quantization for better quality",
+          "default": false
+        },
+        "cqMode": {
+          "type": "string",
+          "description": "Constant quality mode setting",
+          "enum": ["auto", "crf", "icq"],
+          "default": "auto"
+        },
+        "twoPass": {
+          "type": "boolean",
+          "description": "Enable two-pass encoding for better quality (slower)",
+          "default": false
+        },
+        "preferredHwDevice": {
+          "type": "string",
+          "description": "Preferred hardware acceleration device (e.g., 'auto', 'vaapi', 'nvenc')",
+          "default": "auto"
+        },
+        "transcode": {
+          "type": "string",
+          "description": "When to transcode videos",
+          "enum": ["all", "optimal", "required", "disabled"],
+          "default": "required"
+        },
+        "tonemap": {
+          "type": "string",
+          "description": "HDR to SDR tone mapping algorithm",
+          "enum": ["hable", "mobius", "reinhard", "disabled"],
+          "default": "hable"
+        },
+        "accel": {
+          "type": "string",
+          "description": "Hardware acceleration method",
+          "enum": ["disabled", "nvenc", "qsv", "vaapi", "rkmpp"],
+          "default": "disabled"
+        },
+        "accelDecode": {
+          "type": "boolean",
+          "description": "Enable hardware-accelerated decoding",
+          "default": true
+        }
+      }
+    },
+    "backup": {
+      "type": "object",
+      "description": "Automated backup settings for the Immich database",
+      "additionalProperties": false,
+      "properties": {
+        "database": {
+          "type": "object",
+          "description": "Database backup configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable automatic database backups",
+              "default": true
+            },
+            "cronExpression": {
+              "type": "string",
+              "description": "Cron expression for backup schedule (e.g., '0 1 * * *' for daily at 1 AM)",
+              "pattern": "^(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\\d+(ns|us|µs|ms|s|m|h))+)|((((\\d+,)+\\d+|(\\d+(\\/|-)\\d+)|\\d+|\\*) ?){5,7})$",
+              "default": "0 1 * * *"
+            },
+            "keepLastAmount": {
+              "type": "number",
+              "description": "Number of backup files to keep (older ones are deleted)",
+              "minimum": 1,
+              "default": 14
+            }
+          }
+        }
+      }
+    },
+    "job": {
+      "type": "object",
+      "description": "Job queue configuration for various background tasks. Controls how many jobs run simultaneously.",
+      "additionalProperties": false,
+      "properties": {
+        "backgroundTask": {
+          "type": "object",
+          "description": "General background tasks",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of background tasks to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "smartSearch": {
+          "type": "object",
+          "description": "AI-powered search indexing jobs",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of smart search jobs to run simultaneously",
+              "minimum": 1,
+              "default": 2
+            }
+          }
+        },
+        "metadataExtraction": {
+          "type": "object",
+          "description": "EXIF and metadata extraction from photos/videos",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of metadata extraction jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "faceDetection": {
+          "type": "object",
+          "description": "Face detection and recognition processing",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of face detection jobs to run simultaneously",
+              "minimum": 1,
+              "default": 2
+            }
+          }
+        },
+        "search": {
+          "type": "object",
+          "description": "Search index building and maintenance",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of search indexing jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "sidecar": {
+          "type": "object",
+          "description": "Sidecar file processing (XMP, etc.)",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of sidecar processing jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "library": {
+          "type": "object",
+          "description": "Library scanning and management",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of library scanning jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "migration": {
+          "type": "object",
+          "description": "Database migration and upgrade tasks",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of migration jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        },
+        "thumbnailGeneration": {
+          "type": "object",
+          "description": "Thumbnail and preview image generation",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of thumbnail generation jobs to run simultaneously",
+              "minimum": 1,
+              "default": 3
+            }
+          }
+        },
+        "videoConversion": {
+          "type": "object",
+          "description": "Video transcoding and conversion",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of video conversion jobs to run simultaneously. Keep low to avoid overwhelming CPU",
+              "minimum": 1,
+              "default": 1
+            }
+          }
+        },
+        "notifications": {
+          "type": "object",
+          "description": "Email and push notification delivery",
+          "additionalProperties": false,
+          "properties": {
+            "concurrency": {
+              "type": "number",
+              "description": "Number of notification jobs to run simultaneously",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "description": "Application logging configuration",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable detailed logging",
+          "default": true
+        },
+        "level": {
+          "type": "string",
+          "description": "Logging level - debug shows all messages, error shows only problems",
+          "enum": ["verbose", "debug", "log", "warn", "error"],
+          "default": "log"
+        }
+      }
+    },
+    "machineLearning": {
+      "type": "object",
+      "description": "AI and machine learning features configuration (face recognition, object detection, etc.)",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable machine learning features. Requires separate ML container",
+          "default": true
+        },
+        "urls": {
+          "type": "array",
+          "description": "URLs of machine learning service endpoints",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "default": ["http://immich-machine-learning:3003"]
+        },
+        "clip": {
+          "type": "object",
+          "description": "CLIP model for semantic search (search photos by describing them)",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable semantic search using CLIP",
+              "default": true
+            },
+            "modelName": {
+              "type": "string",
+              "description": "CLIP model to use. ViT-B-32 is fast, ViT-L-14 is more accurate",
+              "enum": ["ViT-B-32", "ViT-L-14", "ViT-B-16"],
+              "default": "ViT-B-32"
+            }
+          }
+        },
+        "duplicateDetection": {
+          "type": "object",
+          "description": "Automatic detection of duplicate photos",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable duplicate photo detection",
+              "default": true
+            },
+            "maxDistance": {
+              "type": "number",
+              "description": "Maximum distance threshold for duplicates (0.01-0.1, lower = more strict)",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.03
+            }
+          }
+        },
+        "facialRecognition": {
+          "type": "object",
+          "description": "Facial recognition to group photos by person",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable facial recognition",
+              "default": true
+            },
+            "modelName": {
+              "type": "string",
+              "description": "Face recognition model. buffalo_l is more accurate, buffalo_s is faster",
+              "enum": ["buffalo_l", "buffalo_s"],
+              "default": "buffalo_l"
+            },
+            "minScore": {
+              "type": "number",
+              "description": "Minimum confidence score for face detection (0.0-1.0)",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.7
+            },
+            "maxDistance": {
+              "type": "number",
+              "description": "Maximum distance for face matching (0.2-1.0, lower = more strict)",
+              "minimum": 0,
+              "maximum": 2,
+              "default": 0.5
+            },
+            "minFaces": {
+              "type": "number",
+              "description": "Minimum number of faces needed to create a person",
+              "minimum": 1,
+              "default": 3
+            }
+          }
+        }
+      }
+    },
+    "map": {
+      "type": "object",
+      "description": "Map integration for displaying photo locations",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable map view for geotagged photos",
+          "default": true
+        },
+        "lightStyle": {
+          "type": "string",
+          "description": "Map style for light theme (Mapbox style URL)",
+          "default": ""
+        },
+        "darkStyle": {
+          "type": "string",
+          "description": "Map style for dark theme (Mapbox style URL)",
+          "default": ""
+        }
+      }
+    },
+    "reverseGeocoding": {
+      "type": "object",
+      "description": "Convert GPS coordinates to readable location names",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable automatic location name lookup for geotagged photos",
+          "default": true
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Photo and video metadata handling",
+      "additionalProperties": false,
+      "properties": {
+        "faces": {
+          "type": "object",
+          "description": "Face metadata in XMP files",
+          "additionalProperties": false,
+          "properties": {
+            "import": {
+              "type": "boolean",
+              "description": "Import face regions from XMP metadata",
+              "default": true
+            }
+          }
+        }
+      }
+    },
+    "oauth": {
+      "type": "object",
+      "description": "OAuth/OpenID Connect authentication with external providers (Google, Keycloak, etc.)",
+      "additionalProperties": false,
+      "properties": {
+        "autoLaunch": {
+          "type": "boolean",
+          "description": "Automatically redirect to OAuth provider on login page",
+          "default": false
+        },
+        "autoRegister": {
+          "type": "boolean",
+          "description": "Automatically create user accounts for new OAuth users",
+          "default": true
+        },
+        "buttonText": {
+          "type": "string",
+          "description": "Text displayed on the OAuth login button",
+          "default": "Login with OAuth"
+        },
+        "clientId": {
+          "type": "string",
+          "description": "OAuth client ID from your identity provider"
+        },
+        "clientSecret": {
+          "type": "string",
+          "description": "OAuth client secret from your identity provider (keep secure!)"
+        },
+        "defaultStorageQuota": {
+          "description": "Default storage quota for new OAuth users (in bytes, or null for unlimited)",
+          "oneOf": [
+            { "type": "number", "minimum": 0 },
+            { "type": "null" }
+          ],
+          "default": null
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable OAuth authentication",
+          "default": false
+        },
+        "issuerUrl": {
+          "type": "string",
+          "description": "OAuth provider's issuer URL (e.g., https://accounts.google.com)",
+          "format": "uri"
+        },
+        "mobileOverrideEnabled": {
+          "type": "boolean",
+          "description": "Use different OAuth settings for mobile apps",
+          "default": false
+        },
+        "mobileRedirectUri": {
+          "type": "string",
+          "description": "Redirect URI for mobile OAuth flow",
+          "format": "uri"
+        },
+        "scope": {
+          "type": "string",
+          "description": "OAuth scopes to request (space-separated)",
+          "default": "openid email profile"
+        },
+        "signingAlgorithm": {
+          "type": "string",
+          "description": "JWT signing algorithm expected from provider",
+          "enum": ["RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "PS256", "PS384", "PS512"],
+          "default": "RS256"
+        },
+        "profileSigningAlgorithm": {
+          "type": "string",
+          "description": "Profile JWT signing algorithm",
+          "enum": ["RS256", "RS384", "RS512", "ES256", "ES384", "ES512", "PS256", "PS384", "PS512"],
+          "default": "none"
+        },
+        "storageLabelClaim": {
+          "type": "string",
+          "description": "JWT claim containing user's storage label",
+          "default": "preferred_username"
+        },
+        "storageQuotaClaim": {
+          "type": "string",
+          "description": "JWT claim containing user's storage quota",
+          "default": "immich_quota"
+        }
+      }
+    },
+    "passwordLogin": {
+      "type": "object",
+      "description": "Traditional username/password authentication",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Allow users to login with username and password",
+          "default": true
+        }
+      }
+    },
+    "storageTemplate": {
+      "type": "object",
+      "description": "Template for organizing uploaded files in storage",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Use custom storage template instead of random UUIDs",
+          "default": false
+        },
+        "hashVerificationEnabled": {
+          "type": "boolean",
+          "description": "Verify file integrity using checksums",
+          "default": true
+        },
+        "template": {
+          "type": "string",
+          "description": "Storage path template using variables like {{y}}/{{MM}}/{{dd}}",
+          "default": "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "description": "Image processing and thumbnail generation settings",
+      "additionalProperties": false,
+      "properties": {
+        "thumbnail": {
+          "type": "object",
+          "description": "Small thumbnail images for quick loading",
+          "additionalProperties": false,
+          "properties": {
+            "format": {
+              "type": "string",
+              "description": "Image format for thumbnails",
+              "enum": ["jpeg", "webp"],
+              "default": "webp"
+            },
+            "size": {
+              "type": "number",
+              "description": "Thumbnail size in pixels",
+              "minimum": 32,
+              "maximum": 1024,
+              "default": 250
+            },
+            "quality": {
+              "type": "number",
+              "description": "JPEG/WebP quality (1-100, higher = better quality, larger file)",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 80
+            }
+          }
+        },
+        "preview": {
+          "type": "object",
+          "description": "Larger preview images for viewing",
+          "additionalProperties": false,
+          "properties": {
+            "format": {
+              "type": "string",
+              "description": "Image format for previews",
+              "enum": ["jpeg", "webp"],
+              "default": "jpeg"
+            },
+            "size": {
+              "type": "number",
+              "description": "Preview size in pixels",
+              "minimum": 256,
+              "maximum": 4096,
+              "default": 1440
+            },
+            "quality": {
+              "type": "number",
+              "description": "JPEG/WebP quality (1-100)",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 80
+            }
+          }
+        },
+        "colorspace": {
+          "type": "string",
+          "description": "Color space for image processing",
+          "enum": ["srgb", "p3"],
+          "default": "p3"
+        },
+        "extractEmbedded": {
+          "type": "boolean",
+          "description": "Extract embedded thumbnails from RAW files when available",
+          "default": false
+        }
+      }
+    },
+    "newVersionCheck": {
+      "type": "object",
+      "description": "Check for new Immich releases",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable automatic checking for new versions",
+          "default": true
+        }
+      }
+    },
+    "trash": {
+      "type": "object",
+      "description": "Trash/recycle bin for deleted photos",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable trash feature (deleted items go to trash instead of permanent deletion)",
+          "default": true
+        },
+        "days": {
+          "type": "number",
+          "description": "Days to keep items in trash before permanent deletion",
+          "minimum": 1,
+          "default": 30
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "UI customization and theming",
+      "additionalProperties": false,
+      "properties": {
+        "customCss": {
+          "type": "string",
+          "description": "Custom CSS to inject into the web interface",
+          "default": ""
+        }
+      }
+    },
+    "library": {
+      "type": "object",
+      "description": "External library scanning (for photos stored outside of uploads)",
+      "additionalProperties": false,
+      "properties": {
+        "scan": {
+          "type": "object",
+          "description": "Scheduled library scanning",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable automatic library scanning",
+              "default": true
+            },
+            "cronExpression": {
+              "type": "string",
+              "description": "Cron expression for scan schedule",
+              "pattern": "^(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\\d+(ns|us|µs|ms|s|m|h))+)|((((\\d+,)+\\d+|(\\d+(\\/|-)\\d+)|\\d+|\\*) ?){5,7})$",
+              "default": "0 1 * * *"
+            }
+          }
+        },
+        "watch": {
+          "type": "object",
+          "description": "Real-time library watching for changes",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable real-time watching for library changes",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "server": {
+      "type": "object",
+      "description": "Server and web interface settings",
+      "additionalProperties": false,
+      "properties": {
+        "externalDomain": {
+          "type": "string",
+          "description": "External domain where Immich is accessible (e.g., https://photos.example.com)",
+          "format": "uri",
+          "default": ""
+        },
+        "loginPageMessage": {
+          "type": "string",
+          "description": "Custom message to display on the login page",
+          "default": ""
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Email notification settings",
+      "additionalProperties": false,
+      "properties": {
+        "smtp": {
+          "type": "object",
+          "description": "SMTP email configuration",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable email notifications",
+              "default": false
+            },
+            "from": {
+              "type": "string",
+              "description": "From email address for notifications",
+              "format": "email"
+            },
+            "replyTo": {
+              "type": "string",
+              "description": "Reply-to email address",
+              "format": "email"
+            },
+            "transport": {
+              "type": "object",
+              "description": "SMTP server connection details",
+              "additionalProperties": false,
+              "properties": {
+                "ignoreCert": {
+                  "type": "boolean",
+                  "description": "Ignore SSL certificate errors (not recommended for production)",
+                  "default": false
+                },
+                "host": {
+                  "type": "string",
+                  "description": "SMTP server hostname"
+                },
+                "port": {
+                  "type": "number",
+                  "description": "SMTP server port (usually 587 for TLS, 465 for SSL, 25 for plain)",
+                  "minimum": 1,
+                  "maximum": 65535,
+                  "default": 587
+                },
+                "username": {
+                  "type": "string",
+                  "description": "SMTP username for authentication"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "SMTP password for authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "description": "User account management settings",
+      "additionalProperties": false,
+      "properties": {
+        "deleteDelay": {
+          "type": "number",
+          "description": "Days to wait before permanently deleting user accounts",
+          "minimum": 1,
+          "default": 7
+        }
+      }
+    }
+  }
+}

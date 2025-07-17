@@ -3,6 +3,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
 {
   image(name, version):: name + ':' + version,
   secretRef(secretName, key):: k.core.v1.envVar.fromSecretRef(key, secretName, key),
+  extractConfig(configMapName, keys):: [
+    k.core.v1.envVar.withName(key) +
+    k.core.v1.envVar.valueFrom.configMapKeyRef.withKey(key) +
+    k.core.v1.envVar.valueFrom.configMapKeyRef.withName(configMapName)
+    for key in keys
+  ],
   extractSecrets(secretName, keys):: [
     self.secretRef(secretName, key)
     for key in keys

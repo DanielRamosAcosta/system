@@ -33,6 +33,7 @@
           nixpkgs.legacyPackages.${localSystem}.watchexec
           nixpkgs.legacyPackages.${localSystem}.kubectl
           nixpkgs.legacyPackages.${localSystem}.age
+          nixpkgs.legacyPackages.${localSystem}.kubernetes-helm
           agenix.packages.${localSystem}.default
         ];
 

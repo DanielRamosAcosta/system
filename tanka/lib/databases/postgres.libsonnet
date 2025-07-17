@@ -21,11 +21,11 @@ local u = import 'utils.libsonnet';
   local initScriptConfigMapName = initScriptVolumeName,
   local initScriptData = importstr './postgres.init.sh',
 
-  new(image = 'ghcr.io/immich-app/postgres', version):: {
+  new(image='ghcr.io/immich-app/postgres', version):: {
     statefulSet: statefulSet.new('postgres', replicas=1, containers=[
       container.new('postgres', u.image(image, version)) +
       container.withPorts(
-        [containerPort.new('db', 5432)]
+        [containerPort.new('postgres', 5432)]
       ) +
       container.withEnv(
         u.joinedEnv('DATABASE_USERS', [
@@ -44,7 +44,7 @@ local u = import 'utils.libsonnet';
       ]),
     ]) + statefulSet.spec.template.spec.withVolumes([
       volume.fromPersistentVolumeClaim(dataVolumeName, dataPvc),
-      volume.fromConfigMap(initScriptVolumeName, initScriptConfigMapName) + volume.configMap.withDefaultMode(std.parseOctal("755")),
+      volume.fromConfigMap(initScriptVolumeName, initScriptConfigMapName) + volume.configMap.withDefaultMode(std.parseOctal('755')),
     ]),
 
     service: k.util.serviceFor(self.statefulSet),

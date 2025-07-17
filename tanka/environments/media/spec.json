@@ -2,11 +2,11 @@
   "apiVersion": "tanka.dev/v1alpha1",
   "kind": "Environment",
   "metadata": {
-    "name": "environments/auth"
+    "name": "environments/media"
   },
   "spec": {
     "apiServer": "https://192.168.1.44:6443",
-    "namespace": "auth",
+    "namespace": "media",
     "resourceDefaults": {},
     "expectVersions": {}
   }
