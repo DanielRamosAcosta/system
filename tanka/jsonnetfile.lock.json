@@ -14,6 +14,16 @@
     {
       "source": {
         "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "tanka-util"
+        }
+      },
+      "version": "1cd23af7f31e8ee2f4e6abe16b466c7bfc0ce82a",
+      "sum": "ShSIissXdvCy1izTCDZX6tY7qxCoepE5L+WJ52Hw7ZQ="
+    },
+    {
+      "source": {
+        "git": {
           "remote": "https://github.com/jsonnet-libs/docsonnet.git",
           "subdir": "doc-util"
         }
