@@ -6,3 +6,6 @@ encrypt-secrets:
 
 decrypt-secrets:
   age --decrypt --identity ~/.ssh/id_ed25519 --output ./lib/secrets.json ./lib/secrets.json.age
+
+deploy:
+  tk apply environments/databases

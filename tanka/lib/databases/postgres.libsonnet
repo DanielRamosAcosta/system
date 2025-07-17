@@ -3,7 +3,6 @@ local s = import 'secrets.json';
 local u = import 'utils.libsonnet';
 
 {
-  local deployment = k.apps.v1.deployment,
   local statefulSet = k.apps.v1.statefulSet,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
@@ -23,7 +22,7 @@ local u = import 'utils.libsonnet';
   local initScriptData = importstr './postgres.init.sh',
 
   new(image):: {
-    deployment: statefulSet.new('postgres', replicas=1, containers=[
+    statefulSet: statefulSet.new('postgres', replicas=1, containers=[
       container.new('postgres', image) +
       container.withPorts(
         [containerPort.new('db', 5432)]
@@ -48,7 +47,7 @@ local u = import 'utils.libsonnet';
       volume.fromConfigMap(initScriptVolumeName, initScriptConfigMapName) + volume.configMap.withDefaultMode(std.parseOctal("755")),
     ]),
 
-    service: k.util.serviceFor(self.deployment),
+    service: k.util.serviceFor(self.statefulSet),
 
     secrets: secret.new(secretsName, u.base64Keys({
       POSTGRES_PASSWORD: s.POSTGRES_PASSWORD,
