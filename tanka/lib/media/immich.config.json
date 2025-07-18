@@ -2,5 +2,11 @@
     "$schema": "./immich.config.schema.json",
     "storageTemplate": {
         "enabled": true
+    },
+    "passwordLogin": {
+        "enabled": false
+    },
+    "oauth": {
+        "enabled": true
     }
 }
