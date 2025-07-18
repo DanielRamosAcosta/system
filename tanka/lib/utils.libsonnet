@@ -61,6 +61,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   joinedEnv(name, elements):: [
     k.core.v1.envVar.new(name, std.join(',', elements)),
   ],
+  withoutSchema(object):: std.prune(std.mergePatch(object, { '$schema': null })),
   ingressRoute(name, host, serviceName, port):: {
     apiVersion: 'traefik.io/v1alpha1',
     kind: 'IngressRoute',

@@ -94,10 +94,10 @@ local immichConfig = importstr './immich.config.json';
     pvc: u.localPvc(dataPvc, dataPv, dataStorage),
 
     ingressRoute: u.ingressRoute(
-      name = "immich-ingressroute",
-      host = "pphotos.danielramos.me",
-      serviceName = "immich",
-      port = 2283
+      name='immich-ingressroute',
+      host='pphotos.danielramos.me',
+      serviceName='immich',
+      port=2283
     ),
   },
 }

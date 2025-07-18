@@ -29,22 +29,23 @@ local autheliaConfig = import './authelia.config.json';
                    container.withEnv(
                      u.extractSecrets(secretsName, [
                        'AUTHELIA_STORAGE_POSTGRES_PASSWORD',
+                       'AUTHELIA_STORAGE_ENCRYPTION_KEY',
                      ]),
                    ) +
                    container.withVolumeMounts([
                      volumeMount.new('authelia-config', '/config/configuration.yml') + volumeMount.withSubPath('configuration.yml'),
-                     volumeMount.new('authelia-config', '/config/users_database.yml') + volumeMount.withSubPath('users_database.yml'),
+                     volumeMount.new('users-secret', '/config/users_database.yml') + volumeMount.withSubPath('users_database.yml'),
                    ]),
                  ]) +
                  deployment.spec.template.spec.withVolumes([
                    volume.fromConfigMap('authelia-config', 'authelia-config'),
                    volume.fromSecret('users-secret', 'users-secret'),
-                 ]),
+                 ]) + deployment.spec.template.spec.withEnableServiceLinks(false),
 
     service: k.util.serviceFor(self.statefulSet),
 
     configMap: configMap.new('authelia-config', {
-      'configuration.yml': std.manifestYamlDoc(autheliaConfig),
+      'configuration.yml': std.manifestYamlDoc(u.withoutSchema(autheliaConfig)),
     }),
 
     usersSecret: secret.new('users-secret', {
@@ -66,13 +67,14 @@ local autheliaConfig = import './authelia.config.json';
 
     secrets: secret.new(secretsName, u.base64Keys({
       AUTHELIA_STORAGE_POSTGRES_PASSWORD: s.POSTGRES_PASSWORD_AUTHELIA,
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: s.AUTHELIA_STORAGE_ENCRYPTION_KEY,
     })),
 
     ingressRoute: u.ingressRoute(
-      name = "auth-ingressroute",
-      host = "pauth.danielramos.me",
-      serviceName = "authelia",
-      port = 9091
+      name='auth-ingressroute',
+      host='pauth.danielramos.me',
+      serviceName='authelia',
+      port=9091
     ),
   },
 }

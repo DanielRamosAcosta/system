@@ -4,6 +4,11 @@
     "description": "Configuration schema for Authelia authentication and authorization server. All properties are optional and will use sensible defaults if not specified.",
     "type": "object",
     "additionalProperties": false,
+    "required": [
+        "notifier",
+        "session",
+        "authentication_backend"
+    ],
     "properties": {
         "$schema": {
             "type": "string",
@@ -739,112 +744,387 @@
             ]
         },
         "authentication_backend": {
-            "type": "object",
-            "properties": {
-                "password_change": {
+            "allOf": [
+                {
                     "type": "object",
                     "properties": {
-                        "disable": {
-                            "type": "boolean"
-                        }
-                    },
-                    "required": [
-                        "disable"
-                    ]
-                },
-                "password_reset": {
-                    "type": "object",
-                    "properties": {
-                        "disable": {
-                            "type": "boolean"
-                        },
-                        "custom_url": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "disable",
-                        "custom_url"
-                    ]
-                },
-                "refresh_interval": {
-                    "type": "string"
-                },
-                "file": {
-                    "type": "object",
-                    "properties": {
-                        "path": {
-                            "type": "string"
-                        },
-                        "watch": {
-                            "type": "boolean"
-                        },
-                        "search": {
+                        "password_change": {
                             "type": "object",
                             "properties": {
-                                "email": {
-                                    "type": "boolean"
-                                },
-                                "case_insensitive": {
+                                "disable": {
                                     "type": "boolean"
                                 }
                             },
                             "required": [
-                                "email",
-                                "case_insensitive"
+                                "disable"
                             ]
                         },
-                        "password": {
+                        "password_reset": {
                             "type": "object",
                             "properties": {
-                                "algorithm": {
-                                    "type": "string"
+                                "disable": {
+                                    "type": "boolean"
                                 },
-                                "argon2": {
+                                "custom_url": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "disable"
+                            ]
+                        },
+                        "refresh_interval": {
+                            "type": "string"
+                        }
+                    }
+                },
+                {
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "required": [
+                                "file"
+                            ],
+                            "properties": {
+                                "file": {
                                     "type": "object",
                                     "properties": {
-                                        "variant": {
+                                        "path": {
                                             "type": "string"
                                         },
-                                        "iterations": {
-                                            "type": "number"
+                                        "watch": {
+                                            "type": "boolean"
                                         },
-                                        "memory": {
-                                            "type": "number"
+                                        "search": {
+                                            "type": "object",
+                                            "properties": {
+                                                "email": {
+                                                    "type": "boolean"
+                                                },
+                                                "case_insensitive": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "email",
+                                                "case_insensitive"
+                                            ]
                                         },
-                                        "parallelism": {
-                                            "type": "number"
-                                        },
-                                        "key_length": {
-                                            "type": "number"
-                                        },
-                                        "salt_length": {
-                                            "type": "number"
+                                        "password": {
+                                            "type": "object",
+                                            "properties": {
+                                                "algorithm": {
+                                                    "type": "string"
+                                                },
+                                                "argon2": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "variant": {
+                                                            "type": "string"
+                                                        },
+                                                        "iterations": {
+                                                            "type": "number"
+                                                        },
+                                                        "memory": {
+                                                            "type": "number"
+                                                        },
+                                                        "parallelism": {
+                                                            "type": "number"
+                                                        },
+                                                        "key_length": {
+                                                            "type": "number"
+                                                        },
+                                                        "salt_length": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "variant",
+                                                        "iterations",
+                                                        "memory",
+                                                        "parallelism",
+                                                        "key_length",
+                                                        "salt_length"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "algorithm",
+                                                "argon2"
+                                            ]
                                         }
                                     },
                                     "required": [
-                                        "variant",
-                                        "iterations",
-                                        "memory",
-                                        "parallelism",
-                                        "key_length",
-                                        "salt_length"
+                                        "path"
                                     ]
                                 }
-                            },
+                            }
+                        },
+                        {
+                            "type": "object",
                             "required": [
-                                "algorithm",
-                                "argon2"
-                            ]
+                                "ldap"
+                            ],
+                            "properties": {
+                                "ldap": {
+                                    "type": "object",
+                                    "properties": {
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "implementation": {
+                                            "type": "string"
+                                        },
+                                        "timeout": {
+                                            "type": "string"
+                                        },
+                                        "start_tls": {
+                                            "type": "boolean"
+                                        },
+                                        "tls": {
+                                            "type": "object",
+                                            "properties": {
+                                                "server_name": {
+                                                    "type": "string"
+                                                },
+                                                "skip_verify": {
+                                                    "type": "boolean"
+                                                },
+                                                "minimum_version": {
+                                                    "type": "string"
+                                                },
+                                                "maximum_version": {
+                                                    "type": "string"
+                                                },
+                                                "certificate_chain": {
+                                                    "type": "string"
+                                                },
+                                                "private_key": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "server_name",
+                                                "skip_verify",
+                                                "minimum_version",
+                                                "maximum_version",
+                                                "certificate_chain",
+                                                "private_key"
+                                            ]
+                                        },
+                                        "pooling": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enable": {
+                                                    "type": "boolean"
+                                                },
+                                                "count": {
+                                                    "type": "number"
+                                                },
+                                                "retries": {
+                                                    "type": "number"
+                                                },
+                                                "timeout": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "enable",
+                                                "count",
+                                                "retries",
+                                                "timeout"
+                                            ]
+                                        },
+                                        "base_dn": {
+                                            "type": "string"
+                                        },
+                                        "additional_users_dn": {
+                                            "type": "string"
+                                        },
+                                        "users_filter": {
+                                            "type": "string"
+                                        },
+                                        "additional_groups_dn": {
+                                            "type": "string"
+                                        },
+                                        "groups_filter": {
+                                            "type": "string"
+                                        },
+                                        "group_search_mode": {
+                                            "type": "string"
+                                        },
+                                        "permit_referrals": {
+                                            "type": "boolean"
+                                        },
+                                        "permit_unauthenticated_bind": {
+                                            "type": "boolean"
+                                        },
+                                        "permit_feature_detection_failure": {
+                                            "type": "boolean"
+                                        },
+                                        "user": {
+                                            "type": "string"
+                                        },
+                                        "password": {
+                                            "type": "string"
+                                        },
+                                        "attributes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "distinguished_name": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                },
+                                                "display_name": {
+                                                    "type": "string"
+                                                },
+                                                "family_name": {
+                                                    "type": "string"
+                                                },
+                                                "given_name": {
+                                                    "type": "string"
+                                                },
+                                                "middle_name": {
+                                                    "type": "string"
+                                                },
+                                                "nickname": {
+                                                    "type": "string"
+                                                },
+                                                "gender": {
+                                                    "type": "string"
+                                                },
+                                                "birthdate": {
+                                                    "type": "string"
+                                                },
+                                                "website": {
+                                                    "type": "string"
+                                                },
+                                                "profile": {
+                                                    "type": "string"
+                                                },
+                                                "picture": {
+                                                    "type": "string"
+                                                },
+                                                "zoneinfo": {
+                                                    "type": "string"
+                                                },
+                                                "locale": {
+                                                    "type": "string"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string"
+                                                },
+                                                "phone_extension": {
+                                                    "type": "string"
+                                                },
+                                                "street_address": {
+                                                    "type": "string"
+                                                },
+                                                "locality": {
+                                                    "type": "string"
+                                                },
+                                                "region": {
+                                                    "type": "string"
+                                                },
+                                                "postal_code": {
+                                                    "type": "string"
+                                                },
+                                                "country": {
+                                                    "type": "string"
+                                                },
+                                                "mail": {
+                                                    "type": "string"
+                                                },
+                                                "member_of": {
+                                                    "type": "string"
+                                                },
+                                                "group_name": {
+                                                    "type": "string"
+                                                },
+                                                "extra": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "extra_example": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "multi_valued": {
+                                                                    "type": "boolean"
+                                                                },
+                                                                "value_type": {
+                                                                    "type": "string"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "name",
+                                                                "multi_valued",
+                                                                "value_type"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "extra_example"
+                                                    ]
+                                                }
+                                            },
+                                            "required": [
+                                                "distinguished_name",
+                                                "username",
+                                                "display_name",
+                                                "family_name",
+                                                "given_name",
+                                                "middle_name",
+                                                "nickname",
+                                                "gender",
+                                                "birthdate",
+                                                "website",
+                                                "profile",
+                                                "picture",
+                                                "zoneinfo",
+                                                "locale",
+                                                "phone_number",
+                                                "phone_extension",
+                                                "street_address",
+                                                "locality",
+                                                "region",
+                                                "postal_code",
+                                                "country",
+                                                "mail",
+                                                "member_of",
+                                                "group_name",
+                                                "extra"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "address",
+                                        "implementation",
+                                        "timeout",
+                                        "start_tls",
+                                        "tls",
+                                        "pooling",
+                                        "base_dn",
+                                        "additional_users_dn",
+                                        "users_filter",
+                                        "additional_groups_dn",
+                                        "groups_filter",
+                                        "group_search_mode",
+                                        "permit_referrals",
+                                        "permit_unauthenticated_bind",
+                                        "permit_feature_detection_failure",
+                                        "user",
+                                        "password",
+                                        "attributes"
+                                    ]
+                                }
+                            }
                         }
-                    },
-                    "required": [
-                        "path"
                     ]
                 }
-            },
-            "required": [
-                "file"
             ]
         },
         "password_policy": {
@@ -929,7 +1209,7 @@
             "type": "object",
             "properties": {
                 "default_policy": {
-                    "type": "string"
+                    "enum": ["deny", "bypass", "one_factor", "two_factor"]
                 },
                 "rules": {
                     "type": "array",
@@ -966,8 +1246,7 @@
                 }
             },
             "required": [
-                "default_policy",
-                "rules"
+                "default_policy"
             ]
         },
         "session": {
@@ -982,6 +1261,12 @@
                         "type": "object",
                         "properties": {
                             "domain": {
+                                "type": "string"
+                            },
+                            "authelia_url": {
+                                "type": "string"
+                            },
+                            "default_redirection_url": {
                                 "type": "string"
                             },
                             "name": {
@@ -1002,11 +1287,10 @@
                         },
                         "required": [
                             "domain",
-                            "name",
-                            "inactivity",
-                            "expiration"
+                            "authelia_url"
                         ]
-                    }
+                    },
+                    "minItems": 1
                 },
                 "redis": {
                     "type": "object",
@@ -1208,108 +1492,127 @@
                         }
                     },
                     "required": [
-
+                        "username",
+                        "password",
+                        "database"
                     ]
                 }
             },
             "required": [
-                
+                "encryption_key"
             ]
         },
         "notifier": {
-            "type": "object",
-            "properties": {
-                "filesystem": {
+            "oneOf": [
+                {
                     "type": "object",
-                    "properties": {
-                        "filename": {
-                            "type": "string"
-                        }
-                    },
                     "required": [
-                        "filename"
-                    ]
-                },
-                "disable_startup_check": {
-                    "type": "boolean"
-                },
-                "smtp": {
-                    "type": "object",
+                        "filesystem"
+                    ],
                     "properties": {
-                        "address": {
-                            "type": "string"
-                        },
-                        "timeout": {
-                            "type": "string"
-                        },
-                        "username": {
-                            "type": "string"
-                        },
-                        "password": {
-                            "type": "string"
-                        },
-                        "sender": {
-                            "type": "string"
-                        },
-                        "identifier": {
-                            "type": "string"
-                        },
-                        "subject": {
-                            "type": "string"
-                        },
-                        "startup_check_address": {
-                            "type": "string"
-                        },
-                        "disable_html_emails": {
-                            "type": "boolean"
-                        },
-                        "disable_require_tls": {
-                            "type": "boolean"
-                        },
-                        "disable_starttls": {
-                            "type": "boolean"
-                        },
-                        "tls": {
+                        "filesystem": {
                             "type": "object",
                             "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                },
-                                "skip_verify": {
-                                    "type": "boolean"
-                                },
-                                "minimum_version": {
-                                    "type": "string"
-                                },
-                                "maximum_version": {
+                                "filename": {
                                     "type": "string"
                                 }
                             },
                             "required": [
-                                "enabled",
-                                "skip_verify",
-                                "minimum_version",
-                                "maximum_version"
+                                "filename"
+                            ]
+                        },
+                        "disable_startup_check": {
+                            "type": "boolean"
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "required": [
+                        "smtp"
+                    ],
+                    "properties": {
+                        "disable_startup_check": {
+                            "type": "boolean"
+                        },
+                        "smtp": {
+                            "type": "object",
+                            "properties": {
+                                "address": {
+                                    "type": "string"
+                                },
+                                "timeout": {
+                                    "type": "string"
+                                },
+                                "username": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                },
+                                "sender": {
+                                    "type": "string"
+                                },
+                                "identifier": {
+                                    "type": "string"
+                                },
+                                "subject": {
+                                    "type": "string"
+                                },
+                                "startup_check_address": {
+                                    "type": "string"
+                                },
+                                "disable_html_emails": {
+                                    "type": "boolean"
+                                },
+                                "disable_require_tls": {
+                                    "type": "boolean"
+                                },
+                                "disable_starttls": {
+                                    "type": "boolean"
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "skip_verify": {
+                                            "type": "boolean"
+                                        },
+                                        "minimum_version": {
+                                            "type": "string"
+                                        },
+                                        "maximum_version": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "enabled",
+                                        "skip_verify",
+                                        "minimum_version",
+                                        "maximum_version"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "address",
+                                "timeout",
+                                "username",
+                                "password",
+                                "sender",
+                                "identifier",
+                                "subject",
+                                "startup_check_address",
+                                "disable_html_emails",
+                                "disable_require_tls",
+                                "disable_starttls",
+                                "tls"
                             ]
                         }
-                    },
-                    "required": [
-                        "address",
-                        "timeout",
-                        "username",
-                        "password",
-                        "sender",
-                        "identifier",
-                        "subject",
-                        "startup_check_address",
-                        "disable_html_emails",
-                        "disable_require_tls",
-                        "disable_starttls",
-                        "tls"
-                    ]
+                    }
                 }
-            },
-            "required": []
+            ]
         },
         "identity_providers": {
             "type": "object",
