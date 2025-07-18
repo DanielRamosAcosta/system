@@ -5,7 +5,7 @@
     "name": "environments/media"
   },
   "spec": {
-    "apiServer": "https://192.168.1.44:6443",
+    "apiServer": "https://192.168.1.41:6443",
     "namespace": "media",
     "resourceDefaults": {},
     "expectVersions": {}
