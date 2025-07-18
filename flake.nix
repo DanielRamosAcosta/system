@@ -22,18 +22,19 @@
       utilities = import ./utilities/utilities.nix {
         lib = nixpkgs.lib;
       };
+      localPkgs = nixpkgs.legacyPackages.${localSystem};
     in {
-      devShells.${localSystem}.default = nixpkgs.legacyPackages.${localSystem}.mkShell {
-        packages = [
-          nixpkgs.legacyPackages.${localSystem}.nixos-rebuild
-          nixpkgs.legacyPackages.${localSystem}.kubeseal
-          nixpkgs.legacyPackages.${localSystem}.tanka
-          nixpkgs.legacyPackages.${localSystem}.jsonnet-bundler
-          nixpkgs.legacyPackages.${localSystem}.just
-          nixpkgs.legacyPackages.${localSystem}.watchexec
-          nixpkgs.legacyPackages.${localSystem}.kubectl
-          nixpkgs.legacyPackages.${localSystem}.age
-          nixpkgs.legacyPackages.${localSystem}.kubernetes-helm
+      devShells.${localSystem}.default = localPkgs.mkShell {
+        packages = with localPkgs; [
+          nixos-rebuild
+          kubeseal
+          tanka
+          jsonnet-bundler
+          just
+          watchexec
+          kubectl
+          age
+          kubernetes-helm
           agenix.packages.${localSystem}.default
         ];
 

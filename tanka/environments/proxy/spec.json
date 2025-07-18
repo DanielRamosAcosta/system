@@ -1,0 +1,13 @@
+{
+  "apiVersion": "tanka.dev/v1alpha1",
+  "kind": "Environment",
+  "metadata": {
+    "name": "environments/proxy"
+  },
+  "spec": {
+    "apiServer": "https://192.168.1.41:6443",
+    "namespace": "proxy",
+    "resourceDefaults": {},
+    "expectVersions": {}
+  }
+}

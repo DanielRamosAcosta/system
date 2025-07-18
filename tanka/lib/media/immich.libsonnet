@@ -82,17 +82,17 @@ local immichConfig = importstr './immich.config.json';
     }),
 
     immichConfigSecret: secret.new('immich-config-secret', {
-      'secret.json': std.base64(std.manifestJsonEx({
+      'secret.json': std.base64(u.jsonStringify({
         oauth: {
           clientId: 'example',
           clientSecret: 'something',
         },
-      }, '  ')),
+      })),
     }),
 
     pv: u.localPv(dataPv, dataStorage, '/mnt/data/services/immich/upload'),
     pvc: u.localPvc(dataPvc, dataPv, dataStorage),
 
-    ingressRoute: u.ingressRoute()
+    ingressRoute: u.ingressRoute(),
   },
 }

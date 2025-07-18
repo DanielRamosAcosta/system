@@ -17,6 +17,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     [key]: std.base64(object[key])
     for key in std.objectFields(object)
   },
+  jsonStringify(object):: std.manifestJsonEx(object, '  '),
   localPv(name, storage, path):: {
     apiVersion: 'v1',
     kind: 'PersistentVolume',
@@ -61,19 +62,18 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     k.core.v1.envVar.new(name, std.join(',', elements)),
   ],
   ingressRoute():: {
-    apiVersion: 'traefik.containo.us/v1alpha1',
+    apiVersion: 'traefik.io/v1alpha1',
     kind: 'IngressRoute',
     metadata: {
       name: 'immich-ingressroute',
     },
     spec: {
       entryPoints: [
-        'web',
         'websecure',
       ],
       routes: [
         {
-          match: 'Host(`playground.danielramos.me`) && PathPrefix(`/photos`)',
+          match: 'Host(`pphotos.danielramos.me`)',
           kind: 'Rule',
           services: [
             {
@@ -84,7 +84,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
         },
       ],
       tls: {
-        certResolver: 'default',
+        certResolver: 'le',
       },
     },
   },
