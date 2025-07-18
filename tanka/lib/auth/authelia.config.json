@@ -1,0 +1,13 @@
+{
+    "$schema": "./authelia.config.schema.json",
+    "storage": {
+        "postgres": {
+            "address": "tcp://postgres.databases.svc.cluster.local:5432"
+        }
+    },
+    "notifier": {
+        "filesystem": {
+            "filename": "/config/notification.txt"
+        }
+    }
+}

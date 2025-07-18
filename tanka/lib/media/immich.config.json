@@ -7,6 +7,7 @@
         "enabled": false
     },
     "oauth": {
-        "enabled": true
+        "enabled": true,
+        "autoRegister": true
     }
 }

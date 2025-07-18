@@ -61,11 +61,11 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   joinedEnv(name, elements):: [
     k.core.v1.envVar.new(name, std.join(',', elements)),
   ],
-  ingressRoute():: {
+  ingressRoute(name, host, serviceName, port):: {
     apiVersion: 'traefik.io/v1alpha1',
     kind: 'IngressRoute',
     metadata: {
-      name: 'immich-ingressroute',
+      name: name,
     },
     spec: {
       entryPoints: [
@@ -73,12 +73,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       ],
       routes: [
         {
-          match: 'Host(`pphotos.danielramos.me`)',
+          match: 'Host(`' + host + '`)',
           kind: 'Rule',
           services: [
             {
-              name: 'immich',
-              port: 2283,
+              name: serviceName,
+              port: port,
             },
           ],
         },

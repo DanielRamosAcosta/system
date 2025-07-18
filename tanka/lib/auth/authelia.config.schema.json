@@ -1,0 +1,1513 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Authelia Configuration Schema",
+    "description": "Configuration schema for Authelia authentication and authorization server. All properties are optional and will use sensible defaults if not specified.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "Path to the JSON schema for Authelia configuration",
+            "default": "./authelia.config.schema.json"
+        },
+        "certificates_directory": {
+            "type": "string",
+            "description": "Directory where Authelia will load trusted certificates from, in addition to system certificates. Files should be in base64 format with extensions: *.cer, *.crt, *.pem",
+            "default": "/config/certificates/"
+        },
+        "theme": {
+            "type": "string",
+            "description": "UI theme for the authentication portal",
+            "enum": [
+                "light",
+                "dark",
+                "grey",
+                "auto"
+            ],
+            "default": "light"
+        },
+        "default_2fa_method": {
+            "type": "string",
+            "description": "Default 2FA method for new users and when a user's preferred method is disabled",
+            "enum": [
+                "totp",
+                "webauthn",
+                "mobile_push",
+                ""
+            ],
+            "default": "totp"
+        },
+        "server": {
+            "type": "object",
+            "description": "HTTP server configuration for the main Authelia service",
+            "additionalProperties": false,
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "description": "Address for the server to listen on. Format: [scheme://]hostname[:port][/path]. Default scheme is 'tcp', default port is '9091'",
+                    "pattern": "^(tcp|tcp4|tcp6|unix|fd)://.*|.*:\\d+.*|.*$",
+                    "default": "tcp://:9091/"
+                },
+                "asset_path": {
+                    "type": "string",
+                    "description": "Path on disk to Authelia static assets. Useful for overriding specific assets",
+                    "default": "/config/assets/"
+                },
+                "disable_healthcheck": {
+                    "type": "boolean",
+                    "description": "Disable writing health check vars to /app/.healthcheck.env",
+                    "default": false
+                },
+                "tls": {
+                    "type": "object",
+                    "description": "TLS configuration for HTTPS connections",
+                    "additionalProperties": false,
+                    "properties": {
+                        "key": {
+                            "type": "string",
+                            "description": "Path to the DER base64/PEM format private key file"
+                        },
+                        "certificate": {
+                            "type": "string",
+                            "description": "Path to the DER base64/PEM format public certificate file"
+                        },
+                        "client_certificates": {
+                            "type": "array",
+                            "description": "List of certificates for client authentication",
+                            "items": {
+                                "type": "string"
+                            },
+                            "default": []
+                        }
+                    }
+                },
+                "headers": {
+                    "type": "object",
+                    "description": "HTTP headers configuration and customization",
+                    "additionalProperties": false,
+                    "properties": {
+                        "csp_template": {
+                            "type": "string",
+                            "description": "Content Security Policy template. See Authelia docs for template variables",
+                            "default": ""
+                        }
+                    }
+                },
+                "buffers": {
+                    "type": "object",
+                    "description": "Server buffer configuration for incoming/outgoing requests",
+                    "additionalProperties": false,
+                    "properties": {
+                        "read": {
+                            "type": "number",
+                            "description": "Read buffer size in bytes (max incoming request size)",
+                            "minimum": 1024,
+                            "default": 4096
+                        },
+                        "write": {
+                            "type": "number",
+                            "description": "Write buffer size in bytes (max outgoing response size)",
+                            "minimum": 1024,
+                            "default": 4096
+                        }
+                    }
+                },
+                "timeouts": {
+                    "type": "object",
+                    "description": "Server timeout configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "read": {
+                            "type": "string",
+                            "description": "Read timeout in duration format (e.g., '6 seconds', '1m')",
+                            "default": "6 seconds"
+                        },
+                        "write": {
+                            "type": "string",
+                            "description": "Write timeout in duration format",
+                            "default": "6 seconds"
+                        },
+                        "idle": {
+                            "type": "string",
+                            "description": "Idle timeout in duration format",
+                            "default": "30 seconds"
+                        }
+                    }
+                },
+                "endpoints": {
+                    "type": "object",
+                    "description": "Advanced server endpoints configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "enable_pprof": {
+                            "type": "boolean",
+                            "description": "Enable pprof endpoint for Go profiling (development only)",
+                            "default": false
+                        },
+                        "enable_expvars": {
+                            "type": "boolean",
+                            "description": "Enable expvars endpoint for Go runtime variables",
+                            "default": false
+                        },
+                        "authz": {
+                            "type": "object",
+                            "description": "Authorization endpoints configuration",
+                            "additionalProperties": false,
+                            "properties": {
+                                "forward-auth": {
+                                    "type": "object",
+                                    "description": "Forward authentication configuration for reverse proxies",
+                                    "additionalProperties": false,
+                                    "properties": {
+                                        "implementation": {
+                                            "type": "string",
+                                            "description": "Forward auth implementation type",
+                                            "enum": [
+                                                "ForwardAuth",
+                                                "ExtAuthz"
+                                            ],
+                                            "default": "ForwardAuth"
+                                        },
+                                        "authn_strategies": {
+                                            "type": "array",
+                                            "description": "Authentication strategies for forward auth",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Strategy name",
+                                                        "enum": [
+                                                            "HeaderProxyAuthorization",
+                                                            "CookieSession"
+                                                        ]
+                                                    },
+                                                    "schemes": {
+                                                        "type": "array",
+                                                        "description": "Authentication schemes for this strategy",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "Basic",
+                                                                "Bearer"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "log": {
+            "type": "object",
+            "description": "Logging configuration for Authelia application logs",
+            "additionalProperties": false,
+            "properties": {
+                "level": {
+                    "type": "string",
+                    "description": "Logging level - controls verbosity of log output",
+                    "enum": [
+                        "trace",
+                        "debug",
+                        "info",
+                        "warn",
+                        "error"
+                    ],
+                    "default": "info"
+                },
+                "format": {
+                    "type": "string",
+                    "description": "Log output format",
+                    "enum": [
+                        "json",
+                        "text"
+                    ],
+                    "default": "text"
+                },
+                "file_path": {
+                    "type": "string",
+                    "description": "File path where logs will be written. If not set, logs go to stdout",
+                    "default": "/config/authelia.log"
+                },
+                "keep_stdout": {
+                    "type": "boolean",
+                    "description": "Also log to stdout when file_path is defined",
+                    "default": false
+                }
+            }
+        },
+        "telemetry": {
+            "type": "object",
+            "description": "Telemetry and monitoring configuration",
+            "additionalProperties": false,
+            "properties": {
+                "metrics": {
+                    "type": "object",
+                    "description": "Prometheus metrics configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable Prometheus metrics endpoint",
+                            "default": false
+                        },
+                        "address": {
+                            "type": "string",
+                            "description": "Address for metrics server to listen on",
+                            "pattern": "^(tcp|tcp4|tcp6|unix|fd)://.*|.*:\\d+.*",
+                            "default": "tcp://:9959/metrics"
+                        },
+                        "buffers": {
+                            "type": "object",
+                            "description": "Metrics server buffer configuration",
+                            "additionalProperties": false,
+                            "properties": {
+                                "write": {
+                                    "type": "number",
+                                    "description": "Write buffer size for metrics endpoint",
+                                    "minimum": 1024,
+                                    "default": 4096
+                                }
+                            }
+                        },
+                        "timeouts": {
+                            "type": "object",
+                            "description": "Metrics server timeout configuration",
+                            "additionalProperties": false,
+                            "properties": {
+                                "idle": {
+                                    "type": "string",
+                                    "description": "Idle timeout for metrics endpoint",
+                                    "default": "30 seconds"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "totp": {
+            "type": "object",
+            "description": "Time-based One-Time Password (TOTP) configuration for 2FA",
+            "additionalProperties": false,
+            "properties": {
+                "disable": {
+                    "type": "boolean",
+                    "description": "Disable TOTP authentication method",
+                    "default": false
+                },
+                "issuer": {
+                    "type": "string",
+                    "description": "Issuer name displayed in authenticator apps (Google Authenticator, Authy, etc.)",
+                    "default": "authelia.com"
+                },
+                "algorithm": {
+                    "type": "string",
+                    "description": "TOTP algorithm - CRITICAL: read docs before changing",
+                    "enum": [
+                        "SHA1",
+                        "SHA256",
+                        "SHA512"
+                    ],
+                    "default": "SHA1"
+                },
+                "digits": {
+                    "type": "number",
+                    "description": "Number of digits in TOTP codes (6 or 8) - only affects new configurations",
+                    "enum": [
+                        6,
+                        8
+                    ],
+                    "default": 6
+                },
+                "period": {
+                    "type": "number",
+                    "description": "Period in seconds for TOTP validity - only affects new configurations",
+                    "minimum": 15,
+                    "maximum": 300,
+                    "default": 30
+                },
+                "skew": {
+                    "type": "number",
+                    "description": "Number of periods either side of current one that are valid (for clock drift)",
+                    "minimum": 0,
+                    "maximum": 5,
+                    "default": 1
+                },
+                "secret_size": {
+                    "type": "number",
+                    "description": "Size of generated shared secrets in bytes (minimum 20, default 32)",
+                    "minimum": 20,
+                    "maximum": 128,
+                    "default": 32
+                },
+                "allowed_algorithms": {
+                    "type": "array",
+                    "description": "Algorithms users can choose from when registering new TOTP devices",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "SHA1",
+                            "SHA256",
+                            "SHA512"
+                        ]
+                    },
+                    "default": [
+                        "SHA1"
+                    ]
+                },
+                "allowed_digits": {
+                    "type": "array",
+                    "description": "Digit counts users can choose from",
+                    "items": {
+                        "type": "number",
+                        "enum": [
+                            6,
+                            8
+                        ]
+                    },
+                    "default": [
+                        6
+                    ]
+                },
+                "allowed_periods": {
+                    "type": "array",
+                    "description": "Periods users can choose from",
+                    "items": {
+                        "type": "number",
+                        "minimum": 15,
+                        "maximum": 300
+                    },
+                    "default": [
+                        30
+                    ]
+                },
+                "disable_reuse_security_policy": {
+                    "type": "boolean",
+                    "description": "Disable security policy that prevents TOTP code reuse",
+                    "default": false
+                }
+            }
+        },
+        "webauthn": {
+            "type": "object",
+            "description": "WebAuthn (FIDO2) configuration for modern passwordless and 2FA authentication",
+            "additionalProperties": false,
+            "properties": {
+                "disable": {
+                    "type": "boolean",
+                    "description": "Disable WebAuthn authentication method",
+                    "default": false
+                },
+                "enable_passkey_login": {
+                    "type": "boolean",
+                    "description": "Enable passwordless login with passkeys (WebAuthn without first factor)",
+                    "default": false
+                },
+                "display_name": {
+                    "type": "string",
+                    "description": "Display name for the relying party shown to users",
+                    "default": "Authelia"
+                },
+                "attestation_conveyance_preference": {
+                    "type": "string",
+                    "description": "How much attestation info to request from authenticator",
+                    "enum": [
+                        "none",
+                        "indirect",
+                        "direct",
+                        "enterprise"
+                    ],
+                    "default": "indirect"
+                },
+                "timeout": {
+                    "type": "string",
+                    "description": "Duration for WebAuthn ceremony timeout (e.g., '60s', '2m')",
+                    "default": "60s"
+                },
+                "filtering": {
+                    "type": "object",
+                    "description": "Filtering options for allowed/prohibited authenticators",
+                    "additionalProperties": false,
+                    "properties": {
+                        "prohibit_backup_eligibility": {
+                            "type": "boolean",
+                            "description": "Prevent authenticators that can be backed up (like cloud synced keys)",
+                            "default": false
+                        },
+                        "permitted_aaguids": {
+                            "type": "array",
+                            "description": "List of allowed Authenticator Attestation GUIDs (empty = allow all)",
+                            "items": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            }
+                        },
+                        "prohibited_aaguids": {
+                            "type": "array",
+                            "description": "List of prohibited Authenticator Attestation GUIDs",
+                            "items": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            }
+                        }
+                    }
+                },
+                "selection_criteria": {
+                    "type": "object",
+                    "description": "Criteria for authenticator selection during registration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "attachment": {
+                            "type": "string",
+                            "description": "Preferred authenticator attachment type",
+                            "enum": [
+                                "platform",
+                                "cross-platform",
+                                ""
+                            ],
+                            "default": ""
+                        },
+                        "discoverability": {
+                            "type": "string",
+                            "description": "Whether the authenticator should be discoverable (for passkeys)",
+                            "enum": [
+                                "required",
+                                "preferred",
+                                "discouraged"
+                            ],
+                            "default": "preferred"
+                        },
+                        "user_verification": {
+                            "type": "string",
+                            "description": "Whether user verification (PIN/biometric) is required",
+                            "enum": [
+                                "required",
+                                "preferred",
+                                "discouraged"
+                            ],
+                            "default": "preferred"
+                        }
+                    }
+                },
+                "metadata": {
+                    "type": "object",
+                    "description": "Metadata Service validation via MDS3",
+                    "additionalProperties": false,
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Enable the metadata fetch behaviour",
+                            "default": false
+                        },
+                        "cache_policy": {
+                            "type": "string",
+                            "description": "Configure the Cache Policy for the Metadata Service.",
+                            "default": "strict"
+                        },
+                        "validate_trust_anchor": {
+                            "type": "boolean",
+                            "description": "Validate the trust anchor of the metadata",
+                            "default": true
+                        },
+                        "validate_entry": {
+                            "type": "boolean",
+                            "description": "Validate individual metadata entries",
+                            "default": true
+                        },
+                        "validate_entry_permit_zero_aaguid": {
+                            "type": "boolean",
+                            "description": "Allow metadata entries with zero AAGUID",
+                            "default": false
+                        },
+                        "validate_status": {
+                            "type": "boolean",
+                            "description": "Validate the status of authenticators",
+                            "default": true
+                        }
+                    }
+                }
+            }
+        },
+        "duo_api": {
+            "type": "object",
+            "description": "Duo Security API configuration for push notifications and phone-based 2FA",
+            "additionalProperties": false,
+            "properties": {
+                "disable": {
+                    "type": "boolean",
+                    "description": "Disable Duo API authentication method",
+                    "default": true
+                },
+                "hostname": {
+                    "type": "string",
+                    "description": "Duo API hostname (e.g., api-xxxxxxxx.duosecurity.com)",
+                    "pattern": "^api-[a-zA-Z0-9]+\\.duosecurity\\.com$"
+                },
+                "integration_key": {
+                    "type": "string",
+                    "description": "Duo integration key from your Duo application",
+                    "minLength": 20
+                },
+                "secret_key": {
+                    "type": "string",
+                    "description": "Duo secret key (store securely, consider using environment variable)",
+                    "minLength": 40
+                },
+                "enable_self_enrollment": {
+                    "type": "boolean",
+                    "description": "Allow users to self-enroll in Duo",
+                    "default": false
+                }
+            }
+        },
+        "identity_validation": {
+            "type": "object",
+            "description": "Configuration for identity validation processes (password reset, account elevation)",
+            "additionalProperties": false,
+            "properties": {
+                "reset_password": {
+                    "type": "object",
+                    "description": "Password reset token configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                        "jwt_lifespan": {
+                            "type": "string",
+                            "description": "JWT token lifespan for password reset (e.g., '5m', '1h')",
+                            "default": "5m"
+                        },
+                        "jwt_algorithm": {
+                            "type": "string",
+                            "description": "JWT signing algorithm for password reset tokens",
+                            "enum": [
+                                "HS256",
+                                "HS384",
+                                "HS512"
+                            ],
+                            "default": "HS256"
+                        },
+                        "jwt_secret": {
+                            "type": "string",
+                            "description": "Secret for signing JWT tokens (use a strong random value)"
+                        }
+                    }
+                },
+                "elevated_session": {
+                    "type": "object",
+                    "description": "Elevated session configuration for sensitive operations",
+                    "additionalProperties": false,
+                    "properties": {
+                        "code_lifespan": {
+                            "type": "string",
+                            "description": "Lifespan of elevation codes (e.g., '5m', '15m')",
+                            "default": "5m"
+                        },
+                        "elevation_lifespan": {
+                            "type": "string",
+                            "description": "How long elevated sessions last (e.g., '5m', '1h')",
+                            "default": "5m"
+                        },
+                        "characters": {
+                            "type": "number",
+                            "description": "Number of characters in elevation codes",
+                            "minimum": 4,
+                            "maximum": 20,
+                            "default": 8
+                        },
+                        "require_second_factor": {
+                            "type": "boolean",
+                            "description": "Require 2FA for elevation (recommended for security)",
+                            "default": false
+                        },
+                        "skip_second_factor": {
+                            "type": "boolean",
+                            "description": "Skip 2FA requirement for elevation (not recommended)",
+                            "default": false
+                        }
+                    }
+                }
+            }
+        },
+        "ntp": {
+            "type": "object",
+            "description": "Network Time Protocol configuration for time synchronization validation",
+            "additionalProperties": false,
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "description": "NTP server address (hostname:port format)",
+                    "default": "time.cloudflare.com:123"
+                },
+                "version": {
+                    "type": "number",
+                    "description": "NTP version to use",
+                    "enum": [
+                        3,
+                        4
+                    ],
+                    "default": 4
+                },
+                "max_desync": {
+                    "type": "string",
+                    "description": "Maximum allowed time desync before failure (duration format)",
+                    "default": "3s"
+                },
+                "disable_startup_check": {
+                    "type": "boolean",
+                    "description": "Disable NTP time check at startup",
+                    "default": false
+                },
+                "disable_failure": {
+                    "type": "boolean",
+                    "description": "Don't fail startup if NTP check fails",
+                    "default": false
+                }
+            }
+        },
+        "definitions": {
+            "type": "object",
+            "properties": {
+                "user_attributes": {
+                    "type": "object",
+                    "properties": {
+                        "admin_user": {
+                            "type": "object",
+                            "properties": {
+                                "expression": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "expression"
+                            ]
+                        },
+                        "developer_group": {
+                            "type": "object",
+                            "properties": {
+                                "expression": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "expression"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "admin_user",
+                        "developer_group"
+                    ]
+                },
+                "network": {
+                    "type": "object",
+                    "properties": {
+                        "internal": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "vpn": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "trusted": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": [
+                        "internal",
+                        "vpn",
+                        "trusted"
+                    ]
+                }
+            },
+            "required": [
+                "user_attributes",
+                "network"
+            ]
+        },
+        "authentication_backend": {
+            "type": "object",
+            "properties": {
+                "password_change": {
+                    "type": "object",
+                    "properties": {
+                        "disable": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "disable"
+                    ]
+                },
+                "password_reset": {
+                    "type": "object",
+                    "properties": {
+                        "disable": {
+                            "type": "boolean"
+                        },
+                        "custom_url": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "disable",
+                        "custom_url"
+                    ]
+                },
+                "refresh_interval": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string"
+                        },
+                        "watch": {
+                            "type": "boolean"
+                        },
+                        "search": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "boolean"
+                                },
+                                "case_insensitive": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "email",
+                                "case_insensitive"
+                            ]
+                        },
+                        "password": {
+                            "type": "object",
+                            "properties": {
+                                "algorithm": {
+                                    "type": "string"
+                                },
+                                "argon2": {
+                                    "type": "object",
+                                    "properties": {
+                                        "variant": {
+                                            "type": "string"
+                                        },
+                                        "iterations": {
+                                            "type": "number"
+                                        },
+                                        "memory": {
+                                            "type": "number"
+                                        },
+                                        "parallelism": {
+                                            "type": "number"
+                                        },
+                                        "key_length": {
+                                            "type": "number"
+                                        },
+                                        "salt_length": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "required": [
+                                        "variant",
+                                        "iterations",
+                                        "memory",
+                                        "parallelism",
+                                        "key_length",
+                                        "salt_length"
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "algorithm",
+                                "argon2"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "path"
+                    ]
+                }
+            },
+            "required": [
+                "file"
+            ]
+        },
+        "password_policy": {
+            "type": "object",
+            "properties": {
+                "standard": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "min_length": {
+                            "type": "number"
+                        },
+                        "max_length": {
+                            "type": "number"
+                        },
+                        "require_uppercase": {
+                            "type": "boolean"
+                        },
+                        "require_lowercase": {
+                            "type": "boolean"
+                        },
+                        "require_number": {
+                            "type": "boolean"
+                        },
+                        "require_special": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "min_length",
+                        "max_length",
+                        "require_uppercase",
+                        "require_lowercase",
+                        "require_number",
+                        "require_special"
+                    ]
+                },
+                "zxcvbn": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "min_score": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "enabled",
+                        "min_score"
+                    ]
+                }
+            },
+            "required": [
+                "standard",
+                "zxcvbn"
+            ]
+        },
+        "privacy_policy": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "require_user_acceptance": {
+                    "type": "boolean"
+                },
+                "policy_url": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "enabled",
+                "require_user_acceptance",
+                "policy_url"
+            ]
+        },
+        "access_control": {
+            "type": "object",
+            "properties": {
+                "default_policy": {
+                    "type": "string"
+                },
+                "rules": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "domain": {
+                                "type": "string"
+                            },
+                            "policy": {
+                                "type": "string"
+                            },
+                            "subject": {
+                                "type": "string"
+                            },
+                            "networks": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": [
+                            "domain",
+                            "policy"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "default_policy",
+                "rules"
+            ]
+        },
+        "session": {
+            "type": "object",
+            "properties": {
+                "secret": {
+                    "type": "string"
+                },
+                "cookies": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "domain": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "same_site": {
+                                "type": "string"
+                            },
+                            "inactivity": {
+                                "type": "string"
+                            },
+                            "expiration": {
+                                "type": "string"
+                            },
+                            "remember_me": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "domain",
+                            "name",
+                            "inactivity",
+                            "expiration"
+                        ]
+                    }
+                },
+                "redis": {
+                    "type": "object",
+                    "properties": {
+                        "host": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "number"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "database_index": {
+                            "type": "number"
+                        },
+                        "maximum_active_connections": {
+                            "type": "number"
+                        },
+                        "minimum_idle_connections": {
+                            "type": "number"
+                        },
+                        "tls": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "skip_verify": {
+                                    "type": "boolean"
+                                },
+                                "minimum_version": {
+                                    "type": "string"
+                                },
+                                "maximum_version": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "skip_verify",
+                                "minimum_version",
+                                "maximum_version"
+                            ]
+                        },
+                        "high_availability": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "sentinel_name": {
+                                    "type": "string"
+                                },
+                                "nodes": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "host": {
+                                                "type": "string"
+                                            },
+                                            "port": {
+                                                "type": "number"
+                                            }
+                                        },
+                                        "required": [
+                                            "host",
+                                            "port"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "sentinel_name",
+                                "nodes"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "host",
+                        "port",
+                        "username",
+                        "password",
+                        "database_index",
+                        "maximum_active_connections",
+                        "minimum_idle_connections",
+                        "tls",
+                        "high_availability"
+                    ]
+                }
+            },
+            "required": [
+                "secret",
+                "cookies"
+            ]
+        },
+        "regulation": {
+            "type": "object",
+            "properties": {
+                "modes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "max_retries": {
+                    "type": "number"
+                },
+                "find_time": {
+                    "type": "string"
+                },
+                "ban_time": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "max_retries",
+                "find_time",
+                "ban_time"
+            ]
+        },
+        "storage": {
+            "type": "object",
+            "properties": {
+                "encryption_key": {
+                    "type": "string"
+                },
+                "postgres": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "database": {
+                            "type": "string"
+                        },
+                        "schema": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "timeout": {
+                            "type": "string"
+                        },
+                        "tls": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "skip_verify": {
+                                    "type": "boolean"
+                                },
+                                "minimum_version": {
+                                    "type": "string"
+                                },
+                                "maximum_version": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "skip_verify",
+                                "minimum_version",
+                                "maximum_version"
+                            ]
+                        },
+                        "ssl": {
+                            "type": "object",
+                            "properties": {
+                                "mode": {
+                                    "type": "string"
+                                },
+                                "root_certificate": {
+                                    "type": "string"
+                                },
+                                "certificate": {
+                                    "type": "string"
+                                },
+                                "key": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "mode",
+                                "root_certificate",
+                                "certificate",
+                                "key"
+                            ]
+                        }
+                    },
+                    "required": [
+
+                    ]
+                }
+            },
+            "required": [
+                
+            ]
+        },
+        "notifier": {
+            "type": "object",
+            "properties": {
+                "filesystem": {
+                    "type": "object",
+                    "properties": {
+                        "filename": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "filename"
+                    ]
+                },
+                "disable_startup_check": {
+                    "type": "boolean"
+                },
+                "smtp": {
+                    "type": "object",
+                    "properties": {
+                        "address": {
+                            "type": "string"
+                        },
+                        "timeout": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "sender": {
+                            "type": "string"
+                        },
+                        "identifier": {
+                            "type": "string"
+                        },
+                        "subject": {
+                            "type": "string"
+                        },
+                        "startup_check_address": {
+                            "type": "string"
+                        },
+                        "disable_html_emails": {
+                            "type": "boolean"
+                        },
+                        "disable_require_tls": {
+                            "type": "boolean"
+                        },
+                        "disable_starttls": {
+                            "type": "boolean"
+                        },
+                        "tls": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "skip_verify": {
+                                    "type": "boolean"
+                                },
+                                "minimum_version": {
+                                    "type": "string"
+                                },
+                                "maximum_version": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "enabled",
+                                "skip_verify",
+                                "minimum_version",
+                                "maximum_version"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "address",
+                        "timeout",
+                        "username",
+                        "password",
+                        "sender",
+                        "identifier",
+                        "subject",
+                        "startup_check_address",
+                        "disable_html_emails",
+                        "disable_require_tls",
+                        "disable_starttls",
+                        "tls"
+                    ]
+                }
+            },
+            "required": []
+        },
+        "identity_providers": {
+            "type": "object",
+            "properties": {
+                "oidc": {
+                    "type": "object",
+                    "properties": {
+                        "hmac_secret": {
+                            "type": "string"
+                        },
+                        "jwks": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "key_id": {
+                                        "type": "string"
+                                    },
+                                    "key": {
+                                        "type": "string"
+                                    },
+                                    "algorithm": {
+                                        "type": "string"
+                                    },
+                                    "use": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "key_id",
+                                    "key",
+                                    "algorithm",
+                                    "use"
+                                ]
+                            }
+                        },
+                        "issuer_private_key": {
+                            "type": "string"
+                        },
+                        "issuer_certificate_chain": {
+                            "type": "string"
+                        },
+                        "access_token_lifespan": {
+                            "type": "string"
+                        },
+                        "authorize_code_lifespan": {
+                            "type": "string"
+                        },
+                        "id_token_lifespan": {
+                            "type": "string"
+                        },
+                        "refresh_token_lifespan": {
+                            "type": "string"
+                        },
+                        "enable_client_debug_messages": {
+                            "type": "boolean"
+                        },
+                        "enforce_pkce": {
+                            "type": "string"
+                        },
+                        "enable_pkce_plain_challenge": {
+                            "type": "boolean"
+                        },
+                        "pushed_authorizations": {
+                            "type": "object",
+                            "properties": {
+                                "enforce": {
+                                    "type": "boolean"
+                                },
+                                "context_lifespan": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "enforce",
+                                "context_lifespan"
+                            ]
+                        },
+                        "cors": {
+                            "type": "object",
+                            "properties": {
+                                "endpoints": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "allowed_origins": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "allowed_origins_from_client_redirect_uris": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "endpoints",
+                                "allowed_origins",
+                                "allowed_origins_from_client_redirect_uris"
+                            ]
+                        },
+                        "clients": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "client_id": {
+                                        "type": "string"
+                                    },
+                                    "client_name": {
+                                        "type": "string"
+                                    },
+                                    "client_secret": {
+                                        "type": "string"
+                                    },
+                                    "public": {
+                                        "type": "boolean"
+                                    },
+                                    "authorization_policy": {
+                                        "type": "string"
+                                    },
+                                    "require_pkce": {
+                                        "type": "boolean"
+                                    },
+                                    "pkce_challenge_method": {
+                                        "type": "string"
+                                    },
+                                    "redirect_uris": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "scopes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "response_types": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "response_modes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "grant_types": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "userinfo_signed_response_alg": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "client_id",
+                                    "client_name",
+                                    "client_secret",
+                                    "public",
+                                    "authorization_policy",
+                                    "redirect_uris",
+                                    "scopes",
+                                    "response_types",
+                                    "grant_types"
+                                ]
+                            }
+                        }
+                    },
+                    "required": [
+                        "hmac_secret",
+                        "jwks",
+                        "issuer_private_key",
+                        "issuer_certificate_chain",
+                        "access_token_lifespan",
+                        "authorize_code_lifespan",
+                        "id_token_lifespan",
+                        "refresh_token_lifespan",
+                        "enable_client_debug_messages",
+                        "enforce_pkce",
+                        "enable_pkce_plain_challenge",
+                        "pushed_authorizations",
+                        "cors",
+                        "clients"
+                    ]
+                }
+            },
+            "required": [
+                "oidc"
+            ]
+        }
+    }
+}
