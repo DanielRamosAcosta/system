@@ -13,45 +13,41 @@ local autheliaConfig = import './authelia.config.json';
   local configMap = k.core.v1.configMap,
 
   new(image='ghcr.io/authelia/authelia', version):: {
-    statefulSet: deployment.new('authelia', replicas=1, containers=[
-                   container.new('authelia', u.image(image, version)) +
-                   container.withPorts([containerPort.new('http', 9091)]) +
-                   container.withEnv(u.fromSecretEnv(self.secrets)) +
-                   container.withVolumeMounts([
-                     u.fromFile(self.configMap, "/config"),
-                     u.fromFile(self.usersSecret, "/config"),
-                   ]),
-                 ]) +
-                 u.injectFiles([self.configMap, self.usersSecret]) +
-                 deployment.spec.template.spec.withEnableServiceLinks(false),
+    deployment: deployment.new('authelia', replicas=1, containers=[
+                  container.new('authelia', u.image(image, version)) +
+                  container.withPorts([containerPort.new('http', 9091)]) +
+                  container.withEnv(u.fromSecretEnv(self.secrets)) +
+                  container.withVolumeMounts([
+                    u.fromFile(self.configuration, '/config'),
+                    u.fromFile(self.usersDatabase, '/config'),
+                  ]),
+                ]) +
+                u.injectFiles([self.configuration, self.usersDatabase]) +
+                deployment.spec.template.spec.withEnableServiceLinks(false),
 
-    service: k.util.serviceFor(self.statefulSet),
+    service: k.util.serviceFor(self.deployment),
 
-    configMap: configMap.new('authelia-config', {
-      'configuration.yml': std.manifestYamlDoc(u.withoutSchema(autheliaConfig)),
-    }),
+    configuration: u.createConfigMapFile('configuration.yml', std.manifestYamlDoc(u.withoutSchema(autheliaConfig))),
 
-    usersSecret: secret.new('users-secret', {
-      'users_database.yml': std.base64(std.manifestYamlDoc({
-        users: {
-          authelia: {
-            disabled: false,
-            displayname: 'Test User',
-            password: s.AUTHELIA_USER_AUTHELIA_HASHED_PASSWORD,
-            email: 'authelia@authelia.com',
-            groups: [
-              'admins',
-              'dev',
-            ],
-          },
+    usersDatabase: u.createSecretFile('users_database.yml', std.manifestYamlDoc({
+      users: {
+        authelia: {
+          disabled: false,
+          displayname: 'Test User',
+          password: s.AUTHELIA_USER_AUTHELIA_HASHED_PASSWORD,
+          email: 'authelia@authelia.com',
+          groups: [
+            'admins',
+            'dev',
+          ],
         },
-      })),
-    }),
+      },
+    })),
 
-    secrets: secret.new('authelia-secret', u.base64Keys({
+    secrets: u.secretEnvFor(self.deployment, {
       AUTHELIA_STORAGE_POSTGRES_PASSWORD: s.POSTGRES_PASSWORD_AUTHELIA,
       AUTHELIA_STORAGE_ENCRYPTION_KEY: s.AUTHELIA_STORAGE_ENCRYPTION_KEY,
-    })),
+    }),
 
     ingressRoute: u.ingressRoute(
       name='auth-ingressroute',

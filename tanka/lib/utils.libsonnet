@@ -99,4 +99,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       },
     },
   },
+  normalizeName(name):: std.strReplace(std.strReplace(name, '.yml', ''), '_', '-'),
+  createSecretFile(fileName, content):: k.core.v1.secret.new(self.normalizeName(fileName), {
+    [fileName]: std.base64(content),
+  }),
+  createConfigMapFile(fileName, content):: k.core.v1.configMap.new(self.normalizeName(fileName), {
+    [fileName]: content,
+  }),
+  secretEnvFor(component, content):: k.core.v1.secret.new(component.metadata.name + '-secret-env', self.base64Keys(content)),
 }
