@@ -78,11 +78,6 @@ local immichConfig = importstr './immich.config.json';
     pv: u.localPv(self.statefulSet.metadata.name + '-pv', '40Gi', '/mnt/data/services/immich/upload'),
     pvc: u.fromPv(self.pv),
 
-    ingressRoute: u.ingressRoute(
-      name='immich-ingressroute',
-      host='pphotos.danielramos.me',
-      serviceName='immich',
-      port=2283
-    ),
+    ingressRout: u.ingressRouteForService(self.service, 'pphotos.danielramos.me'),
   },
 }
