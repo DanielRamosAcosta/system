@@ -13,33 +13,18 @@ local immichConfig = importstr './immich.config.json';
   local volumeMount = k.core.v1.volumeMount,
   local configMap = k.core.v1.configMap,
 
-  local secretsName = 'immich-secret',
-  local configMapName = 'immich-config',
-  local dataVolumeName = 'upload',
-  local dataPv = 'immich-pv',
-  local dataPvc = 'immich-pvc',
-  local dataStorage = '40Gi',
-
   new(image='ghcr.io/immich-app/immich-server', version):: {
     statefulSet: statefulSet.new('immich', replicas=1, containers=[
-                   container.new('immich', u.image(image, version)) +
+                   container.new('immich', u.image(image, version)) + 
                    container.withPorts(
                      [containerPort.new('server', 2283)]
                    ) +
                    container.withEnv(
-                     u.extractConfig(configMapName, [
-                       'DB_HOSTNAME',
-                       'DB_USERNAME',
-                       'REDIS_HOSTNAME',
-                       'IMMICH_CONFIG_FILE',
-                       'IMMICH_PORT',
-                     ]) +
-                     u.extractSecrets(secretsName, [
-                       'DB_PASSWORD',
-                     ]),
+                     u.extractConfig(self.configMap.metadata.name, std.objectFieldsAll(self.configMap.data)) +
+                     u.extractSecrets(self.secrets.metadata.name, std.objectFieldsAll(self.secrets.data)),
                    ) +
                    container.withVolumeMounts([
-                     volumeMount.new(dataVolumeName, '/usr/src/app/upload'),
+                     volumeMount.new('upload', '/usr/src/app/upload'),
                      volumeMount.new('merged-config', '/app/config') + volumeMount.withReadOnly(true),
                    ]),
                  ]) +
@@ -57,7 +42,7 @@ local immichConfig = importstr './immich.config.json';
                    ])
                  ) +
                  statefulSet.spec.template.spec.withVolumes([
-                   volume.fromPersistentVolumeClaim(dataVolumeName, dataPvc),
+                   volume.fromPersistentVolumeClaim('upload', self.pvc.metadata.name),
                    volume.fromConfigMap('public-config', 'immich-config-public'),
                    volume.fromSecret('private-secret', 'immich-config-secret'),
                    volume.fromEmptyDir('merged-config'),
@@ -65,7 +50,7 @@ local immichConfig = importstr './immich.config.json';
 
     service: k.util.serviceFor(self.statefulSet),
 
-    configMap: configMap.new(configMapName, {
+    configMap: configMap.new("immich-config", {
       DB_HOSTNAME: 'postgres.databases.svc.cluster.local',
       DB_USERNAME: 'immich',
       REDIS_HOSTNAME: 'valkey.databases.svc.cluster.local',
@@ -73,7 +58,7 @@ local immichConfig = importstr './immich.config.json';
       IMMICH_PORT: '2283',
     }),
 
-    secrets: secret.new(secretsName, u.base64Keys({
+    secrets: secret.new("immich-secret", u.base64Keys({
       DB_PASSWORD: s.POSTGRES_PASSWORD_IMMICH,
     })),
 
@@ -90,8 +75,8 @@ local immichConfig = importstr './immich.config.json';
       })),
     }),
 
-    pv: u.localPv(dataPv, dataStorage, '/mnt/data/services/immich/upload'),
-    pvc: u.localPvc(dataPvc, dataPv, dataStorage),
+    pv: u.localPv(self.statefulSet.metadata.name + '-pv', '40Gi', '/mnt/data/services/immich/upload'),
+    pvc: u.fromPv(self.pv),
 
     ingressRoute: u.ingressRoute(
       name='immich-ingressroute',

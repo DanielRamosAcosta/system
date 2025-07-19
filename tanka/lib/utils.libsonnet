@@ -39,6 +39,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       },
     },
   },
+  fromPv(pv):: self.localPvc(pv.metadata.name + "c", pv.metadata.name, pv.spec.capacity.storage),
   localPvc(name, pv, storage):: {
     apiVersion: 'v1',
     kind: 'PersistentVolumeClaim',
