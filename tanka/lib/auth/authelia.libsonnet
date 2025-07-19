@@ -13,10 +13,10 @@ local autheliaConfig = import './authelia.config.json';
     deployment: deployment.new('authelia', replicas=1, containers=[
                   container.new('authelia', u.image(image, version)) +
                   container.withPorts([containerPort.new('http', 9091)]) +
-                  container.withEnv(u.fromSecretEnv(self.secrets)) +
+                  container.withEnv(u.envVars.fromSecret(self.secrets)) +
                   container.withVolumeMounts([
-                    u.fromFile(self.configuration, '/config'),
-                    u.fromFile(self.usersDatabase, '/config'),
+                    u.volumeMount.fromFile(self.configuration, '/config'),
+                    u.volumeMount.fromFile(self.usersDatabase, '/config'),
                   ]),
                 ]) +
                 u.injectFiles([self.configuration, self.usersDatabase]) +
@@ -24,9 +24,9 @@ local autheliaConfig = import './authelia.config.json';
 
     service: k.util.serviceFor(self.deployment),
 
-    configuration: u.createConfigMapFile('configuration.yml', std.manifestYamlDoc(u.withoutSchema(autheliaConfig))),
+    configuration: u.configMap.forFile('configuration.yml', std.manifestYamlDoc(u.withoutSchema(autheliaConfig))),
 
-    usersDatabase: u.createSecretFile('users_database.yml', std.manifestYamlDoc({
+    usersDatabase: u.secret.forFile('users_database.yml', std.manifestYamlDoc({
       users: {
         authelia: {
           disabled: false,
@@ -41,11 +41,11 @@ local autheliaConfig = import './authelia.config.json';
       },
     })),
 
-    secrets: u.secretEnvFor(self.deployment, {
+    secrets: u.secret.forEnv(self.deployment, {
       AUTHELIA_STORAGE_POSTGRES_PASSWORD: s.POSTGRES_PASSWORD_AUTHELIA,
       AUTHELIA_STORAGE_ENCRYPTION_KEY: s.AUTHELIA_STORAGE_ENCRYPTION_KEY,
     }),
 
-    ingressRoute: u.ingressRouteForService(self.service, 'pauth.danielramos.me'),
+    ingressRoute: u.ingressRoute.from(self.service, 'pauth.danielramos.me'),
   },
 }

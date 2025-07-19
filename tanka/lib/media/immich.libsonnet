@@ -15,13 +15,13 @@ local immichConfig = importstr './immich.config.json';
 
   new(image='ghcr.io/immich-app/immich-server', version):: {
     statefulSet: statefulSet.new('immich', replicas=1, containers=[
-                   container.new('immich', u.image(image, version)) + 
+                   container.new('immich', u.image(image, version)) +
                    container.withPorts(
                      [containerPort.new('server', 2283)]
                    ) +
                    container.withEnv(
-                     u.extractConfig(self.configMap.metadata.name, std.objectFieldsAll(self.configMap.data)) +
-                     u.extractSecrets(self.secrets.metadata.name, std.objectFieldsAll(self.secrets.data)),
+                     u.envVars.fromConfigMap(self.configEnv) +
+                     u.envVars.fromSecret(self.secretsEnv),
                    ) +
                    container.withVolumeMounts([
                      volumeMount.new('upload', '/usr/src/app/upload'),
@@ -33,24 +33,24 @@ local immichConfig = importstr './immich.config.json';
                    container.withCommand([
                      'sh',
                      '-c',
-                     "jq -s '.[0] * .[1]' /data/config.json /data/secret.json > /output/immich.json",
+                     "jq -s '.[0] * .[1]' /data/config.json /data/config-secret.json > /output/immich.json",
                    ]) +
                    container.withVolumeMounts([
-                     volumeMount.new('public-config', '/data/config.json') + volumeMount.withSubPath('config.json'),
-                     volumeMount.new('private-secret', '/data/secret.json') + volumeMount.withSubPath('secret.json'),
+                     u.volumeMount.fromFile(self.immichConfigPublic, '/data') +
+                     u.volumeMount.fromFile(self.immichConfigSecret, '/data') +
                      volumeMount.new('merged-config', '/output'),
                    ])
                  ) +
                  statefulSet.spec.template.spec.withVolumes([
                    volume.fromPersistentVolumeClaim('upload', self.pvc.metadata.name),
-                   volume.fromConfigMap('public-config', 'immich-config-public'),
-                   volume.fromSecret('private-secret', 'immich-config-secret'),
+                   u.volume.fromConfigMap(self.immichConfigPublic),
+                   u.volume.fromSecret(self.immichConfigSecret),
                    volume.fromEmptyDir('merged-config'),
                  ]),
 
     service: k.util.serviceFor(self.statefulSet),
 
-    configMap: configMap.new("immich-config", {
+    configEnv: u.configMap.forEnv(self.statefulSet, {
       DB_HOSTNAME: 'postgres.databases.svc.cluster.local',
       DB_USERNAME: 'immich',
       REDIS_HOSTNAME: 'valkey.databases.svc.cluster.local',
@@ -58,26 +58,22 @@ local immichConfig = importstr './immich.config.json';
       IMMICH_PORT: '2283',
     }),
 
-    secrets: secret.new("immich-secret", u.base64Keys({
+    secretsEnv: u.secret.forEnv(self.statefulSet, {
       DB_PASSWORD: s.POSTGRES_PASSWORD_IMMICH,
+    }),
+
+    immichConfigPublic: u.configMap.forFile('config.json', immichConfig),
+
+    immichConfigSecret: u.secret.forFile('config-secret.json', u.jsonStringify({
+      oauth: {
+        clientId: 'example',
+        clientSecret: 'something',
+      },
     })),
 
-    immichConfigPublic: configMap.new('immich-config-public', {
-      'config.json': immichConfig,
-    }),
+    pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/mnt/data/services/immich/upload'),
+    pvc: u.pvc.from(self.pv),
 
-    immichConfigSecret: secret.new('immich-config-secret', {
-      'secret.json': std.base64(u.jsonStringify({
-        oauth: {
-          clientId: 'example',
-          clientSecret: 'something',
-        },
-      })),
-    }),
-
-    pv: u.localPv(self.statefulSet.metadata.name + '-pv', '40Gi', '/mnt/data/services/immich/upload'),
-    pvc: u.fromPv(self.pv),
-
-    ingressRout: u.ingressRouteForService(self.service, 'pphotos.danielramos.me'),
+    ingressRout: u.ingressRoute.from(self.service, 'pphotos.danielramos.me'),
   },
 }
