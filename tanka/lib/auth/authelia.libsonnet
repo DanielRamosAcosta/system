@@ -10,37 +10,20 @@ local autheliaConfig = import './authelia.config.json';
   local containerPort = k.core.v1.containerPort,
   local secret = k.core.v1.secret,
   local volume = k.core.v1.volume,
-  local volumeMount = k.core.v1.volumeMount,
   local configMap = k.core.v1.configMap,
-
-  local secretsName = 'authelia-secret',
-  local configMapName = 'authelia-config',
-  local dataVolumeName = 'upload',
-  local dataPv = 'authelia-pv',
-  local dataPvc = 'authelia-pvc',
-  local dataStorage = '40Gi',
 
   new(image='ghcr.io/authelia/authelia', version):: {
     statefulSet: deployment.new('authelia', replicas=1, containers=[
                    container.new('authelia', u.image(image, version)) +
-                   container.withPorts(
-                     [containerPort.new('http', 9091)]
-                   ) +
-                   container.withEnv(
-                     u.extractSecrets(secretsName, [
-                       'AUTHELIA_STORAGE_POSTGRES_PASSWORD',
-                       'AUTHELIA_STORAGE_ENCRYPTION_KEY',
-                     ]),
-                   ) +
+                   container.withPorts([containerPort.new('http', 9091)]) +
+                   container.withEnv(u.fromSecretEnv(self.secrets)) +
                    container.withVolumeMounts([
-                     volumeMount.new('authelia-config', '/config/configuration.yml') + volumeMount.withSubPath('configuration.yml'),
-                     volumeMount.new('users-secret', '/config/users_database.yml') + volumeMount.withSubPath('users_database.yml'),
+                     u.fromFile(self.configMap, "/config"),
+                     u.fromFile(self.usersSecret, "/config"),
                    ]),
                  ]) +
-                 deployment.spec.template.spec.withVolumes([
-                   volume.fromConfigMap('authelia-config', 'authelia-config'),
-                   volume.fromSecret('users-secret', 'users-secret'),
-                 ]) + deployment.spec.template.spec.withEnableServiceLinks(false),
+                 u.injectFiles([self.configMap, self.usersSecret]) +
+                 deployment.spec.template.spec.withEnableServiceLinks(false),
 
     service: k.util.serviceFor(self.statefulSet),
 
@@ -65,7 +48,7 @@ local autheliaConfig = import './authelia.config.json';
       })),
     }),
 
-    secrets: secret.new(secretsName, u.base64Keys({
+    secrets: secret.new('authelia-secret', u.base64Keys({
       AUTHELIA_STORAGE_POSTGRES_PASSWORD: s.POSTGRES_PASSWORD_AUTHELIA,
       AUTHELIA_STORAGE_ENCRYPTION_KEY: s.AUTHELIA_STORAGE_ENCRYPTION_KEY,
     })),

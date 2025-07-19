@@ -61,6 +61,13 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   joinedEnv(name, elements):: [
     k.core.v1.envVar.new(name, std.join(',', elements)),
   ],
+  keysFromSecret(secret):: std.objectFieldsAll(secret.data),
+  fromSecretEnv(secret):: self.extractSecrets(secret.metadata.name, self.keysFromSecret(secret)),
+  fromFile(configMapOrSecret, path):: k.core.v1.volumeMount.new(configMapOrSecret.metadata.name, path + '/' + std.objectFieldsAll(configMapOrSecret.data)[0]) + k.core.v1.volumeMount.withSubPath(std.objectFieldsAll(configMapOrSecret.data)[0]),
+  injectFiles(configMapOrSecrets):: k.apps.v1.deployment.spec.template.spec.withVolumes([
+    k.core.v1.volume.fromConfigMap(configMapOrSecrets[0].metadata.name, configMapOrSecrets[0].metadata.name),
+    k.core.v1.volume.fromSecret(configMapOrSecrets[1].metadata.name, configMapOrSecrets[1].metadata.name),
+  ]),
   withoutSchema(object):: std.prune(std.mergePatch(object, { '$schema': null })),
   ingressRoute(name, host, serviceName, port):: {
     apiVersion: 'traefik.io/v1alpha1',
