@@ -1,5 +1,5 @@
 {
-    "$schema": "./authelia.config.schema.json",
+    "$schema": "https://www.authelia.com/schemas/v4.39/json-schema/configuration.json ",
     "authentication_backend": {
         "password_reset": {
             "disable": true

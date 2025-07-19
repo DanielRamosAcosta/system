@@ -7,5 +7,6 @@ temp.*
 *.priv.yaml
 tanka/vendor
 tanka/dist
+tanka/dist-reference
 tanka/charts
 tanka/lib/secrets.json
