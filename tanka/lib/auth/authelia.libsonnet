@@ -8,9 +8,6 @@ local autheliaConfig = import './authelia.config.json';
   local deployment = k.apps.v1.deployment,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
-  local secret = k.core.v1.secret,
-  local volume = k.core.v1.volume,
-  local configMap = k.core.v1.configMap,
 
   new(image='ghcr.io/authelia/authelia', version):: {
     deployment: deployment.new('authelia', replicas=1, containers=[
@@ -49,11 +46,6 @@ local autheliaConfig = import './authelia.config.json';
       AUTHELIA_STORAGE_ENCRYPTION_KEY: s.AUTHELIA_STORAGE_ENCRYPTION_KEY,
     }),
 
-    ingressRoute: u.ingressRoute(
-      name='auth-ingressroute',
-      host='pauth.danielramos.me',
-      serviceName='authelia',
-      port=9091
-    ),
+    ingressRoute: u.ingressRouteForService(self.service, 'pauth.danielramos.me'),
   },
 }

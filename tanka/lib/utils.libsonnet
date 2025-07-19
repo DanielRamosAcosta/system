@@ -99,6 +99,33 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       },
     },
   },
+  ingressRouteForService(service, host):: {
+    apiVersion: 'traefik.io/v1alpha1',
+    kind: 'IngressRoute',
+    metadata: {
+      name: service.metadata.name + '-ingressroute',
+    },
+    spec: {
+      entryPoints: [
+        'websecure',
+      ],
+      routes: [
+        {
+          match: 'Host(`' + host + '`)',
+          kind: 'Rule',
+          services: [
+            {
+              name: service.metadata.name,
+              port: service.spec.ports[0].port,
+            },
+          ],
+        },
+      ],
+      tls: {
+        certResolver: 'le',
+      },
+    },
+  },
   normalizeName(name):: std.strReplace(std.strReplace(name, '.yml', ''), '_', '-'),
   createSecretFile(fileName, content):: k.core.v1.secret.new(self.normalizeName(fileName), {
     [fileName]: std.base64(content),
