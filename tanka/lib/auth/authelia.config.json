@@ -1,5 +1,5 @@
 {
-    "$schema": "https://www.authelia.com/schemas/v4.39/json-schema/configuration.json ",
+    "$schema": "https://www.authelia.com/schemas/v4.39/json-schema/configuration.json",
     "authentication_backend": {
         "password_reset": {
             "disable": true
@@ -9,11 +9,11 @@
         }
     },
     "storage": {
-        "encryption_key": "{{AUTHELIA_STORAGE_ENCRYPTION_KEY}}",
+        "encryption_key": "{{ env `AUTHELIA_STORAGE_ENCRYPTION_KEY` }}",
         "postgres": {
             "address": "tcp://postgres.databases.svc.cluster.local:5432",
             "username": "authelia",
-            "password": "{{AUTHELIA_STORAGE_POSTGRES_PASSWORD}}",
+            "password": "{{ env `AUTHELIA_STORAGE_POSTGRES_PASSWORD` }}",
             "database": "authelia"
         }
     },
@@ -21,7 +21,7 @@
         "default_policy": "one_factor"
     },
     "session": {
-        "secret": "{{AUTHELIA_SESSION_SECRET}}",
+        "secret": "{{ env `AUTHELIA_SESSION_SECRET` }}",
         "cookies": [
             {
                 "domain": "danielramos.me",
@@ -33,6 +33,47 @@
     "notifier": {
         "filesystem": {
             "filename": "/config/notification.txt"
+        }
+    },
+    "identity_providers": {
+        "oidc": {
+            "jwks": [
+                {
+                    "key_id": "main",
+                    "algorithm": "RS256",
+                    "key": "{{ secret `/config/secrets/oidc/jwks/rsa.2048.key` }}"
+                }
+            ],
+            "clients": [
+                {
+                    "client_id": "{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID` }}",
+                    "client_name": "immich",
+                    "client_secret": "{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST` }}",
+                    "public": false,
+                    "authorization_policy": "one_factor",
+                    "require_pkce": false,
+                    "pkce_challenge_method": "",
+                    "redirect_uris": [
+                        "https://pphotos.danielramos.me/auth/login",
+                        "https://pphotos.danielramos.me/user-settings",
+                        "app.immich:///oauth-callback"
+                    ],
+                    "scopes": [
+                        "openid",
+                        "profile",
+                        "email"
+                    ],
+                    "response_types": [
+                        "code"
+                    ],
+                    "grant_types": [
+                        "authorization_code"
+                    ],
+                    "access_token_signed_response_alg": "none",
+                    "userinfo_signed_response_alg": "none",
+                    "token_endpoint_auth_method": "client_secret_post"
+                }
+            ]
         }
     }
 }

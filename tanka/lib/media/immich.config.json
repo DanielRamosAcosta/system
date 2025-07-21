@@ -8,6 +8,10 @@
     },
     "oauth": {
         "enabled": true,
-        "autoRegister": true
+        "autoRegister": true,
+        "buttonText": "Iniciar Sesión",
+        "issuerUrl": "https://pauth.danielramos.me/.well-known/openid-configuration",
+        "clientId": "{{AUTHELIA_OIDC_IMMICH_CLIENT_ID}}",
+        "clientSecret": "{{AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST}}"
     }
 }

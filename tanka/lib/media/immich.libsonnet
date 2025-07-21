@@ -30,14 +30,10 @@ local immichConfig = importstr './immich.config.json';
                  ]) +
                  statefulSet.spec.template.spec.withInitContainers(
                    container.new('merge-config', u.image('ghcr.io/danielramosacosta/jq', 'main-5231ab6')) +
-                   container.withCommand([
-                     'sh',
-                     '-c',
-                     "jq -s '.[0] * .[1]' /data/config.json /data/config-secret.json > /output/immich.json",
-                   ]) +
+                   u.command.jq.merge('/data/config.json', '/data/config-secret.json', '/output/immich.json') +
                    container.withVolumeMounts([
-                     u.volumeMount.fromFile(self.immichConfigPublic, '/data') +
-                     u.volumeMount.fromFile(self.immichConfigSecret, '/data') +
+                     u.volumeMount.fromFile(self.immichConfigPublic, '/data'),
+                     u.volumeMount.fromFile(self.immichConfigSecret, '/data'),
                      volumeMount.new('merged-config', '/output'),
                    ])
                  ) +
@@ -66,8 +62,8 @@ local immichConfig = importstr './immich.config.json';
 
     immichConfigSecret: u.secret.forFile('config-secret.json', u.jsonStringify({
       oauth: {
-        clientId: 'example',
-        clientSecret: 'something',
+        clientId: s.AUTHELIA_OIDC_IMMICH_CLIENT_ID,
+        clientSecret: s.AUTHELIA_OIDC_IMMICH_CLIENT_SECRET,
       },
     })),
 
