@@ -1,4 +1,5 @@
 local postgres = import 'databases/postgres.libsonnet';
+local mariadb = import 'databases/mariadb.libsonnet';
 local valkey = import 'databases/valkey.libsonnet';
 
 {
@@ -7,5 +8,8 @@ local valkey = import 'databases/valkey.libsonnet';
   ),
   valkey: valkey.new(
     version='7.2.10-alpine'
+  ),
+  mariadb: mariadb.new(
+    version='11.8.2'
   ),
 }

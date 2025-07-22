@@ -60,6 +60,9 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       volumeName: pv,
     },
   },
+  utils: {
+    join(elements, separator = ","):: std.join(separator, elements),
+  },
   joinedEnv(name, elements):: [
     k.core.v1.envVar.new(name, std.join(',', elements)),
   ],
