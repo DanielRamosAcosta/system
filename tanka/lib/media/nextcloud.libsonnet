@@ -44,6 +44,7 @@ local nginxConfig = importstr './nextcloud.nginx.conf';
       POSTGRES_USER: 'nextcloud',
       POSTGRES_HOST: 'postgres.databases.svc.cluster.local',
       REDIS_HOST: 'valkey.databases.svc.cluster.local',
+      NEXTCLOUD_TRUSTED_DOMAINS: "pnextcloud.danielramos.me",
     }),
 
     secretsEnv: u.secret.forEnv(self.deployment, {

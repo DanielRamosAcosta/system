@@ -2,7 +2,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
 local s = import 'secrets.json';
 local u = import 'utils.libsonnet';
 
-local autheliaConfig = import './authelia.config.json';
+local autheliaConfig = importstr './authelia.config.yml';
 
 {
   local deployment = k.apps.v1.deployment,
@@ -28,7 +28,7 @@ local autheliaConfig = import './authelia.config.json';
 
     service: k.util.serviceFor(self.deployment),
 
-    configuration: u.configMap.forFile('configuration.yml', std.manifestYamlDoc(u.withoutSchema(autheliaConfig))),
+    configuration: u.configMap.forFile('configuration.yml', autheliaConfig),
 
     usersDatabase: u.secret.forFile('users_database.yml', std.manifestYamlDoc({
       users: {
@@ -74,6 +74,8 @@ local autheliaConfig = import './authelia.config.json';
       AUTHELIA_SESSION_SECRET: s.AUTHELIA_SESSION_SECRET,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID: s.AUTHELIA_OIDC_IMMICH_CLIENT_ID,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST,
+      IDENTITY_PROVIDERS_OIDC_CLIENTS_NEXTCLOUD_CLIENT_ID: s.AUTHELIA_OIDC_NEXTCLOUD_CLIENT_ID,
+      IDENTITY_PROVIDERS_OIDC_CLIENTS_NEXTCLOUD_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_NEXTCLOUD_CLIENT_SECRET_DIGEST
     }),
 
     ingressRoute: u.ingressRoute.from(self.service, 'pauth.danielramos.me'),
