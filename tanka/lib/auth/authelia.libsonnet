@@ -47,6 +47,18 @@ local autheliaConfig = import './authelia.config.json';
             'dev',
           ],
         },
+        cris: {
+          disabled: false,
+          displayname: 'Cris',
+          given_name: 'Cristina',
+          family_name: 'Guardia Trujillo',
+          picture: 'https://2.gravatar.com/avatar/3780877d4745ddac6f733933240f62fddc3c4ded1a78571ac710b36d6dd96673?size=512&d=initials',
+          locale: 'es-ES',
+          zoneinfo: 'Europe/Madrid',
+          password: s.AUTHELIA_PASSWORD_CRIS,
+          email: 'ivhcristinaguardia@gmail.com',
+          groups: [],
+        },
       },
     })),
 
