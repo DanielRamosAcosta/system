@@ -1,0 +1,4 @@
+{
+    "jsonnet.debugger.pathToBinary": "/usr/local/bin/jsonnet-language-server",
+    "jsonnet.debugger.enableAutoUpdate": true
+}

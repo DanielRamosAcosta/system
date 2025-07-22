@@ -27,14 +27,6 @@
       devShells.${localSystem}.default = localPkgs.mkShell {
         packages = with localPkgs; [
           nixos-rebuild
-          kubeseal
-          tanka
-          jsonnet-bundler
-          just
-          watchexec
-          kubectl
-          age
-          kubernetes-helm
           agenix.packages.${localSystem}.default
         ];
 
