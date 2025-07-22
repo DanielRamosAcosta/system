@@ -7,5 +7,5 @@ local nextcloud = import 'media/nextcloud.libsonnet';
   ),
   nextcloud: nextcloud.new(
     version='31.0.7-fpm-alpine'
-  )
+  ),
 }

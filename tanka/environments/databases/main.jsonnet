@@ -7,5 +7,5 @@ local valkey = import 'databases/valkey.libsonnet';
   ),
   valkey: valkey.new(
     version='7.2.10-alpine'
-  )
+  ),
 }

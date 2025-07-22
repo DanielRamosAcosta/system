@@ -31,6 +31,7 @@ local u = import 'utils.libsonnet';
         u.joinedEnv('DATABASE_USERS', [
           'immich',
           'authelia',
+          'nextcloud',
         ]) +
         u.extractSecrets(secretsName, [
           'POSTGRES_PASSWORD',
@@ -53,6 +54,7 @@ local u = import 'utils.libsonnet';
       POSTGRES_PASSWORD: s.POSTGRES_PASSWORD,
       USER_PASSWORD_IMMICH: s.POSTGRES_PASSWORD_IMMICH,
       USER_PASSWORD_AUTHELIA: s.POSTGRES_PASSWORD_AUTHELIA,
+      USER_PASSWORD_NEXTCLOUD: s.POSTGRES_PASSWORD_NEXTCLOUD,
     })),
 
     configMap: configMap.new(initScriptConfigMapName, {
