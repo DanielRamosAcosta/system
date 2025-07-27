@@ -1,11 +1,11 @@
 local immich = import 'media/immich.libsonnet';
-local nextcloud = import 'media/nextcloud.libsonnet';
+local stratus = import 'media/stratus.libsonnet';
 
 {
   immich: immich.new(
     version='v1.135.3'
   ),
-  nextcloud: nextcloud.new(
-    version='31.0.7-fpm-alpine'
+  stratus: stratus.new(
+    version='main-b96b7bb'
   ),
 }

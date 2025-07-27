@@ -68,28 +68,27 @@ identity_providers:
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_post
-      - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_NEXTCLOUD_CLIENT_ID` }}'
-        client_name: NextCloud
-        client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_NEXTCLOUD_CLIENT_SECRET_DIGEST` }}'
+      - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_STRATUS_CLIENT_ID` }}'
+        client_name: stratus
+        client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_STRATUS_CLIENT_SECRET_DIGEST` }}'
         public: false
         authorization_policy: one_factor
         require_pkce: true
-        pkce_challenge_method: S256
-        claims_policy: nextcloud_userinfo
+        pkce_challenge_method: 'S256'
         redirect_uris:
-          - 'https://pnextcloud.danielramos.me/apps/oidc_login/oidc'
-          - 'https://pnextcloud.danielramos.me/index.php/apps/oidc_login/oidc'
-          - "http://pnextcloud.danielramos.me/index.php/apps/oidc_login/oidc"
+          - 'https://pcloud.danielramos.me/auth/callback'
+          - 'http://pcloud.danielramos.me/auth/callback'
         scopes:
           - openid
           - profile
           - email
           - groups
-          - nextcloud_userinfo
         response_types:
           - code
         grant_types:
           - authorization_code
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
-        token_endpoint_auth_method: client_secret_basic
+        token_endpoint_auth_method: client_secret_post
+        introspection_endpoint_auth_method: client_secret_post
+
