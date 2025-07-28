@@ -6,6 +6,6 @@ local stratus = import 'media/stratus.libsonnet';
     version='v1.135.3'
   ),
   stratus: stratus.new(
-    version='main-b96b7bb'
+    version='main-de53414'
   ),
 }
