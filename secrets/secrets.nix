@@ -1,8 +1,7 @@
 let
-  nas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPbY3wkjCRVMOYKWfe2mBw8IwSBF7OO/HiF8l+npQg/t";
-  playground = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDERMhNP8G9bE9Znd1omaMAGI54L6lil8v7mRaEgzD8G";
+  nas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB4Chuh+45HCl+jMi7xjDgquT8bqZ0S53av6uhgzPiZl";
   dani = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq21O6t1Q2QHfp9ypCIeDUqJ0PjauigrMXKKvvVL4I/";
 in
 {
-  "dani-hashed-password.age".publicKeys = [ nas playground dani ];
+  "dani-hashed-password.age".publicKeys = [ nas dani ];
 }
