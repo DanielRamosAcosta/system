@@ -78,6 +78,6 @@ local autheliaConfig = importstr './authelia.config.yml';
       IDENTITY_PROVIDERS_OIDC_CLIENTS_STRATUS_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_STRATUS_CLIENT_SECRET_DIGEST,
     }),
 
-    ingressRoute: u.ingressRoute.from(self.service, 'pauth.danielramos.me'),
+    ingressRoute: u.ingressRoute.from(self.service, 'auth.danielramos.me'),
   },
 }

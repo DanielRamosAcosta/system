@@ -27,7 +27,7 @@ local u = import 'utils.libsonnet';
 
     configEnv: u.configMap.forEnv(self.deployment, {
       OAUTH_BUTTON_TEXT: "Sign in",
-      OAUTH_ISSUER_URL: "https://pauth.danielramos.me/.well-known/openid-configuration",
+      OAUTH_ISSUER_URL: "https://auth.danielramos.me/.well-known/openid-configuration",
       DB_HOSTNAME: "postgres.databases.svc.cluster.local",
     }),
 
