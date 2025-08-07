@@ -67,7 +67,7 @@ local immichConfig = importstr './immich.config.json';
       },
     })),
 
-    pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/mnt/data/services/immich/upload'),
+    pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/cold-data/immich/upload'),
     pvc: u.pvc.from(self.pv),
 
     ingressRoute: u.ingressRoute.from(self.service, 'photos.danielramos.me'),
