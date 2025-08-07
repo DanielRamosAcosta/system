@@ -10,8 +10,8 @@ deploy-nas:
     --fast \
     --flake .#nas \
     --use-remote-sudo \
-    --build-host dani@192.168.1.68 \
-    --target-host dani@192.168.1.68
+    --build-host dani@192.168.1.200 \
+    --target-host dani@192.168.1.200
 
 # Deploy to playground host
 deploy-playground:

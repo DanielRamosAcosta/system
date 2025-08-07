@@ -11,15 +11,9 @@ local u = import 'utils.libsonnet';
   local volumeMount = k.core.v1.volumeMount,
   local configMap = k.core.v1.configMap,
 
-  local secretsName = 'postgres-secret',
   local dataVolumeName = 'data',
-  local dataPv = 'postgres-pv',
-  local dataPvc = 'postgres-pvc',
-  local dataStorage = '20Gi',
 
-  local initScriptVolumeName = 'init-script',
-  local initScriptConfigMapName = initScriptVolumeName,
-  local initScriptData = importstr './postgres.init.sh',
+  local createUserMigration = importstr './postgres.create-user.sh',
 
   new(image='ghcr.io/immich-app/postgres', version):: {
     statefulSet: statefulSet.new('postgres', replicas=1, containers=[
@@ -28,40 +22,50 @@ local u = import 'utils.libsonnet';
         [containerPort.new('postgres', 5432)]
       ) +
       container.withEnv(
-        u.joinedEnv('DATABASE_USERS', [
-          'immich',
-          'authelia',
-          'nextcloud',
-        ]) +
-        u.extractSecrets(secretsName, [
-          'POSTGRES_PASSWORD',
-          'USER_PASSWORD_IMMICH',
-          'USER_PASSWORD_AUTHELIA',
-        ]),
+        u.envVars.fromSecret(self.secretsEnv)
       ) +
       container.withVolumeMounts([
-        volumeMount.new(dataVolumeName, '/var/lib/postgresql/data'),
-        volumeMount.new(initScriptVolumeName, '/docker-entrypoint-initdb.d/postgres.init.sh') + volumeMount.withSubPath('postgres.init.sh'),
+        volumeMount.new(dataVolumeName, '/var/lib/postgresql/data')
       ]),
     ]) + statefulSet.spec.template.spec.withVolumes([
-      volume.fromPersistentVolumeClaim(dataVolumeName, dataPvc),
-      volume.fromConfigMap(initScriptVolumeName, initScriptConfigMapName) + volume.configMap.withDefaultMode(std.parseOctal('755')),
+      volume.fromPersistentVolumeClaim(dataVolumeName, self.pvc.metadata.name),
     ]),
 
     service: k.util.serviceFor(self.statefulSet),
 
-    secrets: secret.new(secretsName, u.base64Keys({
+    secretsEnv: u.secret.forEnv(self.statefulSet, {
       POSTGRES_PASSWORD: s.POSTGRES_PASSWORD,
-      USER_PASSWORD_IMMICH: s.POSTGRES_PASSWORD_IMMICH,
-      USER_PASSWORD_AUTHELIA: s.POSTGRES_PASSWORD_AUTHELIA,
-      USER_PASSWORD_NEXTCLOUD: s.POSTGRES_PASSWORD_NEXTCLOUD,
-    })),
-
-    configMap: configMap.new(initScriptConfigMapName, {
-      'postgres.init.sh': initScriptData,
     }),
 
-    pv: u.localPv(dataPv, dataStorage, '/mnt/data/services/postgres'),
-    pvc: u.localPvc(dataPvc, dataPv, dataStorage),
+    userImmich: self.createUser("immich", s.POSTGRES_PASSWORD_IMMICH, self.createUserMigration, self.secretsEnv),
+
+    createUserMigration: u.configMap.forFile('postgres.create-user.sh', createUserMigration),
+
+    pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/data/postgres/data'),
+    pvc: u.pvc.from(self.pv),
+
+    createUser(name, password, configMap, secret):: {
+      migrationJob: k.batch.v1.job.new('postgres-create-user-' + name) +
+      k.batch.v1.job.spec.template.spec.withRestartPolicy('OnFailure') +
+      k.batch.v1.job.spec.template.spec.withContainers([
+        container.new('create-user', u.image(image, version)) +
+        container.withCommand(['/bin/bash', '/mnt/scripts/postgres.create-user.sh']) +
+        container.withEnv(
+          [k.core.v1.envVar.new("USER_NAME", name)] + 
+          u.envVars.fromSecret(self.userSecret) + 
+          u.envVars.fromSecret(secret)
+        ) +
+        container.withVolumeMounts([
+          u.volumeMount.fromFile(configMap, '/mnt/scripts'),
+        ]),
+      ]) +
+      k.batch.v1.job.spec.template.spec.withVolumes([
+        u.volume.fromConfigMap(configMap),
+      ]),
+
+      userSecret: u.secret.forEnv(self.migrationJob, {
+        USER_PASSWORD: password,
+      })
+    }
   },
 }

@@ -7,6 +7,7 @@
     git
     cmatrix
     bottom
+    usbutils
   ];
 
   system.stateVersion = "25.05";

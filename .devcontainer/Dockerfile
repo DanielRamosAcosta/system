@@ -34,6 +34,11 @@ RUN curl -Lo jsonnet-language-server https://github.com/grafana/jsonnet-language
     && install -o root -g root -m 0755 jsonnet-language-server /usr/local/bin/jsonnet-language-server \
     && rm jsonnet-language-server
 
+# jsonnet-debugger
+RUN curl -Lo jsonnet-debugger https://github.com/grafana/jsonnet-debugger/releases/download/v0.1.0/jsonnet-debugger_0.1.0_linux_arm64 \
+    && install -o root -g root -m 0755 jsonnet-debugger /usr/local/bin/jsonnet-debugger \
+    && rm jsonnet-debugger
+
 # watchexec
 RUN curl -Lo watchexec.tar.xz https://github.com/watchexec/watchexec/releases/download/v2.3.2/watchexec-2.3.2-aarch64-unknown-linux-gnu.tar.xz \
     && tar -xJf watchexec.tar.xz \
