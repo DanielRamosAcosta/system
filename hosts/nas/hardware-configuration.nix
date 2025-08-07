@@ -36,6 +36,12 @@
       options = [ "fmask=0022" "dmask=0022" ];
     };
 
+  fileSystems."/cold-data/immich" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@immich" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
