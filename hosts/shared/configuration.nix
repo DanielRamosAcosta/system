@@ -8,6 +8,7 @@
     cmatrix
     bottom
     usbutils
+    tree
   ];
 
   system.stateVersion = "25.05";
