@@ -39,6 +39,7 @@ local u = import 'utils.libsonnet';
 
     userImmich: self.createUser("immich", s.POSTGRES_PASSWORD_IMMICH, self.createUserMigration, self.secretsEnv),
     userAuthelia: self.createUser("authelia", s.POSTGRES_PASSWORD_AUTHELIA, self.createUserMigration, self.secretsEnv),
+    userSftpgo: self.createUser("sftpgo", s.POSTGRES_PASSWORD_SFTPGO, self.createUserMigration, self.secretsEnv),
 
     createUserMigration: u.configMap.forFile('postgres.create-user.sh', createUserMigration),
 
