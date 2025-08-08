@@ -59,6 +59,18 @@ local autheliaConfig = importstr './authelia.config.yml';
           email: 'ivhcristinaguardia@gmail.com',
           groups: [],
         },
+        alex: {
+          disabled: false,
+          displayname: 'Alex',
+          given_name: 'Alexander',
+          family_name: 'Ramos García',
+          picture: 'https://2.gravatar.com/avatar/6bc544db0e0d3242bb0f72894672cfb24635d29f02a2c9164368a9612b923374?size=512&d=initials',
+          locale: 'es-ES',
+          zoneinfo: 'Atlantic/Canary',
+          password: s.AUTHELIA_PASSWORD_ALEX,
+          email: 'alexsaxramos@gmail.com',
+          groups: [],
+        },
       },
     })),
 
