@@ -42,6 +42,12 @@
     options = [ "degraded" "compress=zstd" "subvol=@immich" ];
   };
 
+  fileSystems."/cold-data/sftpgo" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "degraded" "compress=zstd" "subvol=@sftpgo" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
