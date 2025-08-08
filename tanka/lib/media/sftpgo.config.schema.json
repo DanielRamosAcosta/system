@@ -1,0 +1,1715 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "common": {
+      "type": "object",
+      "properties": {
+        "idle_timeout": {
+          "type": "number"
+        },
+        "upload_mode": {
+          "type": "number"
+        },
+        "actions": {
+          "type": "object",
+          "properties": {
+            "execute_on": {
+              "type": "array",
+              "items": {}
+            },
+            "execute_sync": {
+              "type": "array",
+              "items": {}
+            },
+            "hook": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "execute_on",
+            "execute_sync",
+            "hook"
+          ]
+        },
+        "setstat_mode": {
+          "type": "number"
+        },
+        "rename_mode": {
+          "type": "number"
+        },
+        "resume_max_size": {
+          "type": "number"
+        },
+        "temp_path": {
+          "type": "string"
+        },
+        "proxy_protocol": {
+          "type": "number"
+        },
+        "proxy_allowed": {
+          "type": "array",
+          "items": {}
+        },
+        "proxy_skipped": {
+          "type": "array",
+          "items": {}
+        },
+        "startup_hook": {
+          "type": "string"
+        },
+        "post_connect_hook": {
+          "type": "string"
+        },
+        "post_disconnect_hook": {
+          "type": "string"
+        },
+        "data_retention_hook": {
+          "type": "string"
+        },
+        "max_total_connections": {
+          "type": "number"
+        },
+        "max_per_host_connections": {
+          "type": "number"
+        },
+        "allowlist_status": {
+          "type": "number"
+        },
+        "allow_self_connections": {
+          "type": "number"
+        },
+        "umask": {
+          "type": "string"
+        },
+        "server_version": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "read": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "read"
+          ]
+        },
+        "defender": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "driver": {
+              "type": "string"
+            },
+            "ban_time": {
+              "type": "number"
+            },
+            "ban_time_increment": {
+              "type": "number"
+            },
+            "threshold": {
+              "type": "number"
+            },
+            "score_invalid": {
+              "type": "number"
+            },
+            "score_valid": {
+              "type": "number"
+            },
+            "score_limit_exceeded": {
+              "type": "number"
+            },
+            "score_no_auth": {
+              "type": "number"
+            },
+            "observation_time": {
+              "type": "number"
+            },
+            "entries_soft_limit": {
+              "type": "number"
+            },
+            "entries_hard_limit": {
+              "type": "number"
+            },
+            "login_delay": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "number"
+                },
+                "password_failed": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "success",
+                "password_failed"
+              ]
+            }
+          },
+          "required": [
+            "enabled",
+            "driver",
+            "ban_time",
+            "ban_time_increment",
+            "threshold",
+            "score_invalid",
+            "score_valid",
+            "score_limit_exceeded",
+            "score_no_auth",
+            "observation_time",
+            "entries_soft_limit",
+            "entries_hard_limit",
+            "login_delay"
+          ]
+        },
+        "rate_limiters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "average": {
+                "type": "number"
+              },
+              "period": {
+                "type": "number"
+              },
+              "burst": {
+                "type": "number"
+              },
+              "type": {
+                "type": "number"
+              },
+              "protocols": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "generate_defender_events": {
+                "type": "boolean"
+              },
+              "entries_soft_limit": {
+                "type": "number"
+              },
+              "entries_hard_limit": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "average",
+              "period",
+              "burst",
+              "type",
+              "protocols",
+              "generate_defender_events",
+              "entries_soft_limit",
+              "entries_hard_limit"
+            ]
+          }
+        },
+        "event_manager": {
+          "type": "object",
+          "properties": {
+            "enabled_commands": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "enabled_commands"
+          ]
+        }
+      },
+      "required": [
+        "idle_timeout",
+        "upload_mode",
+        "actions",
+        "setstat_mode",
+        "rename_mode",
+        "resume_max_size",
+        "temp_path",
+        "proxy_protocol",
+        "proxy_allowed",
+        "proxy_skipped",
+        "startup_hook",
+        "post_connect_hook",
+        "post_disconnect_hook",
+        "data_retention_hook",
+        "max_total_connections",
+        "max_per_host_connections",
+        "allowlist_status",
+        "allow_self_connections",
+        "umask",
+        "server_version",
+        "metadata",
+        "defender",
+        "rate_limiters",
+        "event_manager"
+      ]
+    },
+    "acme": {
+      "type": "object",
+      "properties": {
+        "domains": {
+          "type": "array",
+          "items": {}
+        },
+        "email": {
+          "type": "string"
+        },
+        "key_type": {
+          "type": "string"
+        },
+        "certs_path": {
+          "type": "string"
+        },
+        "ca_endpoint": {
+          "type": "string"
+        },
+        "renew_days": {
+          "type": "number"
+        },
+        "http01_challenge": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "number"
+            },
+            "proxy_header": {
+              "type": "string"
+            },
+            "webroot": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "port",
+            "proxy_header",
+            "webroot"
+          ]
+        },
+        "tls_alpn01_challenge": {
+          "type": "object",
+          "properties": {
+            "port": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "port"
+          ]
+        }
+      },
+      "required": [
+        "domains",
+        "email",
+        "key_type",
+        "certs_path",
+        "ca_endpoint",
+        "renew_days",
+        "http01_challenge",
+        "tls_alpn01_challenge"
+      ]
+    },
+    "sftpd": {
+      "type": "object",
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number"
+              },
+              "address": {
+                "type": "string"
+              },
+              "apply_proxy_config": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "port",
+              "address",
+              "apply_proxy_config"
+            ]
+          }
+        },
+        "max_auth_tries": {
+          "type": "number"
+        },
+        "host_keys": {
+          "type": "array",
+          "items": {}
+        },
+        "host_certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "host_key_algorithms": {
+          "type": "array",
+          "items": {}
+        },
+        "kex_algorithms": {
+          "type": "array",
+          "items": {}
+        },
+        "min_dh_group_exchange_key_size": {
+          "type": "number"
+        },
+        "ciphers": {
+          "type": "array",
+          "items": {}
+        },
+        "macs": {
+          "type": "array",
+          "items": {}
+        },
+        "public_key_algorithms": {
+          "type": "array",
+          "items": {}
+        },
+        "trusted_user_ca_keys": {
+          "type": "array",
+          "items": {}
+        },
+        "revoked_user_certs_file": {
+          "type": "string"
+        },
+        "login_banner_file": {
+          "type": "string"
+        },
+        "enabled_ssh_commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "keyboard_interactive_authentication": {
+          "type": "boolean"
+        },
+        "keyboard_interactive_auth_hook": {
+          "type": "string"
+        },
+        "password_authentication": {
+          "type": "boolean"
+        },
+        "folder_prefix": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bindings",
+        "max_auth_tries",
+        "host_keys",
+        "host_certificates",
+        "host_key_algorithms",
+        "kex_algorithms",
+        "min_dh_group_exchange_key_size",
+        "ciphers",
+        "macs",
+        "public_key_algorithms",
+        "trusted_user_ca_keys",
+        "revoked_user_certs_file",
+        "login_banner_file",
+        "enabled_ssh_commands",
+        "keyboard_interactive_authentication",
+        "keyboard_interactive_auth_hook",
+        "password_authentication",
+        "folder_prefix"
+      ]
+    },
+    "ftpd": {
+      "type": "object",
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number"
+              },
+              "address": {
+                "type": "string"
+              },
+              "apply_proxy_config": {
+                "type": "boolean"
+              },
+              "tls_mode": {
+                "type": "number"
+              },
+              "tls_session_reuse": {
+                "type": "number"
+              },
+              "certificate_file": {
+                "type": "string"
+              },
+              "certificate_key_file": {
+                "type": "string"
+              },
+              "min_tls_version": {
+                "type": "number"
+              },
+              "force_passive_ip": {
+                "type": "string"
+              },
+              "passive_ip_overrides": {
+                "type": "array",
+                "items": {}
+              },
+              "passive_host": {
+                "type": "string"
+              },
+              "client_auth_type": {
+                "type": "number"
+              },
+              "tls_cipher_suites": {
+                "type": "array",
+                "items": {}
+              },
+              "passive_connections_security": {
+                "type": "number"
+              },
+              "active_connections_security": {
+                "type": "number"
+              },
+              "ignore_ascii_transfer_type": {
+                "type": "number"
+              },
+              "debug": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "port",
+              "address",
+              "apply_proxy_config",
+              "tls_mode",
+              "tls_session_reuse",
+              "certificate_file",
+              "certificate_key_file",
+              "min_tls_version",
+              "force_passive_ip",
+              "passive_ip_overrides",
+              "passive_host",
+              "client_auth_type",
+              "tls_cipher_suites",
+              "passive_connections_security",
+              "active_connections_security",
+              "ignore_ascii_transfer_type",
+              "debug"
+            ]
+          }
+        },
+        "banner_file": {
+          "type": "string"
+        },
+        "active_transfers_port_non_20": {
+          "type": "boolean"
+        },
+        "passive_port_range": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "number"
+            },
+            "end": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ]
+        },
+        "disable_active_mode": {
+          "type": "boolean"
+        },
+        "enable_site": {
+          "type": "boolean"
+        },
+        "hash_support": {
+          "type": "number"
+        },
+        "combine_support": {
+          "type": "number"
+        },
+        "certificate_file": {
+          "type": "string"
+        },
+        "certificate_key_file": {
+          "type": "string"
+        },
+        "ca_certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "ca_revocation_lists": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "bindings",
+        "banner_file",
+        "active_transfers_port_non_20",
+        "passive_port_range",
+        "disable_active_mode",
+        "enable_site",
+        "hash_support",
+        "combine_support",
+        "certificate_file",
+        "certificate_key_file",
+        "ca_certificates",
+        "ca_revocation_lists"
+      ]
+    },
+    "webdavd": {
+      "type": "object",
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number"
+              },
+              "address": {
+                "type": "string"
+              },
+              "enable_https": {
+                "type": "boolean"
+              },
+              "certificate_file": {
+                "type": "string"
+              },
+              "certificate_key_file": {
+                "type": "string"
+              },
+              "min_tls_version": {
+                "type": "number"
+              },
+              "client_auth_type": {
+                "type": "number"
+              },
+              "tls_cipher_suites": {
+                "type": "array",
+                "items": {}
+              },
+              "tls_protocols": {
+                "type": "array",
+                "items": {}
+              },
+              "prefix": {
+                "type": "string"
+              },
+              "proxy_allowed": {
+                "type": "array",
+                "items": {}
+              },
+              "client_ip_proxy_header": {
+                "type": "string"
+              },
+              "client_ip_header_depth": {
+                "type": "number"
+              },
+              "disable_www_auth_header": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "port",
+              "address",
+              "enable_https",
+              "certificate_file",
+              "certificate_key_file",
+              "min_tls_version",
+              "client_auth_type",
+              "tls_cipher_suites",
+              "tls_protocols",
+              "prefix",
+              "proxy_allowed",
+              "client_ip_proxy_header",
+              "client_ip_header_depth",
+              "disable_www_auth_header"
+            ]
+          }
+        },
+        "certificate_file": {
+          "type": "string"
+        },
+        "certificate_key_file": {
+          "type": "string"
+        },
+        "ca_certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "ca_revocation_lists": {
+          "type": "array",
+          "items": {}
+        },
+        "cors": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "allowed_origins": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_methods": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_headers": {
+              "type": "array",
+              "items": {}
+            },
+            "exposed_headers": {
+              "type": "array",
+              "items": {}
+            },
+            "allow_credentials": {
+              "type": "boolean"
+            },
+            "max_age": {
+              "type": "number"
+            },
+            "options_passthrough": {
+              "type": "boolean"
+            },
+            "options_success_status": {
+              "type": "number"
+            },
+            "allow_private_network": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled",
+            "allowed_origins",
+            "allowed_methods",
+            "allowed_headers",
+            "exposed_headers",
+            "allow_credentials",
+            "max_age",
+            "options_passthrough",
+            "options_success_status",
+            "allow_private_network"
+          ]
+        },
+        "cache": {
+          "type": "object",
+          "properties": {
+            "users": {
+              "type": "object",
+              "properties": {
+                "expiration_time": {
+                  "type": "number"
+                },
+                "max_size": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "expiration_time",
+                "max_size"
+              ]
+            },
+            "mime_types": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "max_size": {
+                  "type": "number"
+                },
+                "custom_mappings": {
+                  "type": "array",
+                  "items": {}
+                }
+              },
+              "required": [
+                "enabled",
+                "max_size",
+                "custom_mappings"
+              ]
+            }
+          },
+          "required": [
+            "users",
+            "mime_types"
+          ]
+        }
+      },
+      "required": [
+        "bindings",
+        "certificate_file",
+        "certificate_key_file",
+        "ca_certificates",
+        "ca_revocation_lists",
+        "cors",
+        "cache"
+      ]
+    },
+    "data_provider": {
+      "type": "object",
+      "properties": {
+        "driver": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "sslmode": {
+          "type": "number"
+        },
+        "disable_sni": {
+          "type": "boolean"
+        },
+        "target_session_attrs": {
+          "type": "string"
+        },
+        "root_cert": {
+          "type": "string"
+        },
+        "client_cert": {
+          "type": "string"
+        },
+        "client_key": {
+          "type": "string"
+        },
+        "connection_string": {
+          "type": "string"
+        },
+        "sql_tables_prefix": {
+          "type": "string"
+        },
+        "track_quota": {
+          "type": "number"
+        },
+        "delayed_quota_update": {
+          "type": "number"
+        },
+        "pool_size": {
+          "type": "number"
+        },
+        "users_base_dir": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "object",
+          "properties": {
+            "execute_on": {
+              "type": "array",
+              "items": {}
+            },
+            "execute_for": {
+              "type": "array",
+              "items": {}
+            },
+            "hook": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "execute_on",
+            "execute_for",
+            "hook"
+          ]
+        },
+        "external_auth_hook": {
+          "type": "string"
+        },
+        "external_auth_scope": {
+          "type": "number"
+        },
+        "pre_login_hook": {
+          "type": "string"
+        },
+        "post_login_hook": {
+          "type": "string"
+        },
+        "post_login_scope": {
+          "type": "number"
+        },
+        "check_password_hook": {
+          "type": "string"
+        },
+        "check_password_scope": {
+          "type": "number"
+        },
+        "password_hashing": {
+          "type": "object",
+          "properties": {
+            "bcrypt_options": {
+              "type": "object",
+              "properties": {
+                "cost": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "cost"
+              ]
+            },
+            "argon2_options": {
+              "type": "object",
+              "properties": {
+                "memory": {
+                  "type": "number"
+                },
+                "iterations": {
+                  "type": "number"
+                },
+                "parallelism": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "memory",
+                "iterations",
+                "parallelism"
+              ]
+            },
+            "algo": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "bcrypt_options",
+            "argon2_options",
+            "algo"
+          ]
+        },
+        "password_validation": {
+          "type": "object",
+          "properties": {
+            "admins": {
+              "type": "object",
+              "properties": {
+                "min_entropy": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "min_entropy"
+              ]
+            },
+            "users": {
+              "type": "object",
+              "properties": {
+                "min_entropy": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "min_entropy"
+              ]
+            }
+          },
+          "required": [
+            "admins",
+            "users"
+          ]
+        },
+        "password_caching": {
+          "type": "boolean"
+        },
+        "update_mode": {
+          "type": "number"
+        },
+        "create_default_admin": {
+          "type": "boolean"
+        },
+        "naming_rules": {
+          "type": "number"
+        },
+        "is_shared": {
+          "type": "number"
+        },
+        "node": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "number"
+            },
+            "proto": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "host",
+            "port",
+            "proto"
+          ]
+        },
+        "backups_path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "driver",
+        "name",
+        "host",
+        "port",
+        "username",
+        "password",
+        "sslmode",
+        "disable_sni",
+        "target_session_attrs",
+        "root_cert",
+        "client_cert",
+        "client_key",
+        "connection_string",
+        "sql_tables_prefix",
+        "track_quota",
+        "delayed_quota_update",
+        "pool_size",
+        "users_base_dir",
+        "actions",
+        "external_auth_hook",
+        "external_auth_scope",
+        "pre_login_hook",
+        "post_login_hook",
+        "post_login_scope",
+        "check_password_hook",
+        "check_password_scope",
+        "password_hashing",
+        "password_validation",
+        "password_caching",
+        "update_mode",
+        "create_default_admin",
+        "naming_rules",
+        "is_shared",
+        "node",
+        "backups_path"
+      ]
+    },
+    "httpd": {
+      "type": "object",
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "number"
+              },
+              "address": {
+                "type": "string"
+              },
+              "enable_web_admin": {
+                "type": "boolean"
+              },
+              "enable_web_client": {
+                "type": "boolean"
+              },
+              "enable_rest_api": {
+                "type": "boolean"
+              },
+              "enabled_login_methods": {
+                "type": "number"
+              },
+              "enable_https": {
+                "type": "boolean"
+              },
+              "certificate_file": {
+                "type": "string"
+              },
+              "certificate_key_file": {
+                "type": "string"
+              },
+              "min_tls_version": {
+                "type": "number"
+              },
+              "client_auth_type": {
+                "type": "number"
+              },
+              "tls_cipher_suites": {
+                "type": "array",
+                "items": {}
+              },
+              "tls_protocols": {
+                "type": "array",
+                "items": {}
+              },
+              "proxy_allowed": {
+                "type": "array",
+                "items": {}
+              },
+              "client_ip_proxy_header": {
+                "type": "string"
+              },
+              "client_ip_header_depth": {
+                "type": "number"
+              },
+              "hide_login_url": {
+                "type": "number"
+              },
+              "render_openapi": {
+                "type": "boolean"
+              },
+              "oidc": {
+                "type": "object",
+                "properties": {
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  },
+                  "client_secret_file": {
+                    "type": "string"
+                  },
+                  "config_url": {
+                    "type": "string"
+                  },
+                  "redirect_base_url": {
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "username_field": {
+                    "type": "string"
+                  },
+                  "role_field": {
+                    "type": "string"
+                  },
+                  "implicit_roles": {
+                    "type": "boolean"
+                  },
+                  "custom_fields": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "insecure_skip_signature_check": {
+                    "type": "boolean"
+                  },
+                  "debug": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "client_id",
+                  "client_secret",
+                  "client_secret_file",
+                  "config_url",
+                  "redirect_base_url",
+                  "scopes",
+                  "username_field",
+                  "role_field",
+                  "implicit_roles",
+                  "custom_fields",
+                  "insecure_skip_signature_check",
+                  "debug"
+                ]
+              },
+              "security": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "allowed_hosts": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "allowed_hosts_are_regex": {
+                    "type": "boolean"
+                  },
+                  "hosts_proxy_headers": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "https_redirect": {
+                    "type": "boolean"
+                  },
+                  "https_host": {
+                    "type": "string"
+                  },
+                  "https_proxy_headers": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "sts_seconds": {
+                    "type": "number"
+                  },
+                  "sts_include_subdomains": {
+                    "type": "boolean"
+                  },
+                  "sts_preload": {
+                    "type": "boolean"
+                  },
+                  "content_type_nosniff": {
+                    "type": "boolean"
+                  },
+                  "content_security_policy": {
+                    "type": "string"
+                  },
+                  "permissions_policy": {
+                    "type": "string"
+                  },
+                  "cross_origin_opener_policy": {
+                    "type": "string"
+                  },
+                  "cache_control": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "allowed_hosts",
+                  "allowed_hosts_are_regex",
+                  "hosts_proxy_headers",
+                  "https_redirect",
+                  "https_host",
+                  "https_proxy_headers",
+                  "sts_seconds",
+                  "sts_include_subdomains",
+                  "sts_preload",
+                  "content_type_nosniff",
+                  "content_security_policy",
+                  "permissions_policy",
+                  "cross_origin_opener_policy",
+                  "cache_control"
+                ]
+              },
+              "branding": {
+                "type": "object",
+                "properties": {
+                  "web_admin": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "short_name": {
+                        "type": "string"
+                      },
+                      "favicon_path": {
+                        "type": "string"
+                      },
+                      "logo_path": {
+                        "type": "string"
+                      },
+                      "disclaimer_name": {
+                        "type": "string"
+                      },
+                      "disclaimer_path": {
+                        "type": "string"
+                      },
+                      "default_css": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "extra_css": {
+                        "type": "array",
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "short_name",
+                      "favicon_path",
+                      "logo_path",
+                      "disclaimer_name",
+                      "disclaimer_path",
+                      "default_css",
+                      "extra_css"
+                    ]
+                  },
+                  "web_client": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "short_name": {
+                        "type": "string"
+                      },
+                      "favicon_path": {
+                        "type": "string"
+                      },
+                      "logo_path": {
+                        "type": "string"
+                      },
+                      "disclaimer_name": {
+                        "type": "string"
+                      },
+                      "disclaimer_path": {
+                        "type": "string"
+                      },
+                      "default_css": {
+                        "type": "array",
+                        "items": {}
+                      },
+                      "extra_css": {
+                        "type": "array",
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "short_name",
+                      "favicon_path",
+                      "logo_path",
+                      "disclaimer_name",
+                      "disclaimer_path",
+                      "default_css",
+                      "extra_css"
+                    ]
+                  }
+                },
+                "required": [
+                  "web_admin",
+                  "web_client"
+                ]
+              }
+            },
+            "required": [
+              "port",
+              "address",
+              "enable_web_admin",
+              "enable_web_client",
+              "enable_rest_api",
+              "enabled_login_methods",
+              "enable_https",
+              "certificate_file",
+              "certificate_key_file",
+              "min_tls_version",
+              "client_auth_type",
+              "tls_cipher_suites",
+              "tls_protocols",
+              "proxy_allowed",
+              "client_ip_proxy_header",
+              "client_ip_header_depth",
+              "hide_login_url",
+              "render_openapi",
+              "oidc",
+              "security",
+              "branding"
+            ]
+          }
+        },
+        "templates_path": {
+          "type": "string"
+        },
+        "static_files_path": {
+          "type": "string"
+        },
+        "openapi_path": {
+          "type": "string"
+        },
+        "web_root": {
+          "type": "string"
+        },
+        "certificate_file": {
+          "type": "string"
+        },
+        "certificate_key_file": {
+          "type": "string"
+        },
+        "ca_certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "ca_revocation_lists": {
+          "type": "array",
+          "items": {}
+        },
+        "signing_passphrase": {
+          "type": "string"
+        },
+        "signing_passphrase_file": {
+          "type": "string"
+        },
+        "token_validation": {
+          "type": "number"
+        },
+        "max_upload_file_size": {
+          "type": "number"
+        },
+        "cors": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "allowed_origins": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_methods": {
+              "type": "array",
+              "items": {}
+            },
+            "allowed_headers": {
+              "type": "array",
+              "items": {}
+            },
+            "exposed_headers": {
+              "type": "array",
+              "items": {}
+            },
+            "allow_credentials": {
+              "type": "boolean"
+            },
+            "max_age": {
+              "type": "number"
+            },
+            "options_passthrough": {
+              "type": "boolean"
+            },
+            "options_success_status": {
+              "type": "number"
+            },
+            "allow_private_network": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled",
+            "allowed_origins",
+            "allowed_methods",
+            "allowed_headers",
+            "exposed_headers",
+            "allow_credentials",
+            "max_age",
+            "options_passthrough",
+            "options_success_status",
+            "allow_private_network"
+          ]
+        },
+        "setup": {
+          "type": "object",
+          "properties": {
+            "installation_code": {
+              "type": "string"
+            },
+            "installation_code_hint": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "installation_code",
+            "installation_code_hint"
+          ]
+        },
+        "hide_support_link": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "bindings",
+        "templates_path",
+        "static_files_path",
+        "openapi_path",
+        "web_root",
+        "certificate_file",
+        "certificate_key_file",
+        "ca_certificates",
+        "ca_revocation_lists",
+        "signing_passphrase",
+        "signing_passphrase_file",
+        "token_validation",
+        "max_upload_file_size",
+        "cors",
+        "setup",
+        "hide_support_link"
+      ]
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "bind_port": {
+          "type": "number"
+        },
+        "bind_address": {
+          "type": "string"
+        },
+        "enable_profiler": {
+          "type": "boolean"
+        },
+        "auth_user_file": {
+          "type": "string"
+        },
+        "certificate_file": {
+          "type": "string"
+        },
+        "certificate_key_file": {
+          "type": "string"
+        },
+        "min_tls_version": {
+          "type": "number"
+        },
+        "tls_cipher_suites": {
+          "type": "array",
+          "items": {}
+        },
+        "tls_protocols": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "bind_port",
+        "bind_address",
+        "enable_profiler",
+        "auth_user_file",
+        "certificate_file",
+        "certificate_key_file",
+        "min_tls_version",
+        "tls_cipher_suites",
+        "tls_protocols"
+      ]
+    },
+    "http": {
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "type": "number"
+        },
+        "retry_wait_min": {
+          "type": "number"
+        },
+        "retry_wait_max": {
+          "type": "number"
+        },
+        "retry_max": {
+          "type": "number"
+        },
+        "ca_certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "certificates": {
+          "type": "array",
+          "items": {}
+        },
+        "skip_tls_verify": {
+          "type": "boolean"
+        },
+        "headers": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "timeout",
+        "retry_wait_min",
+        "retry_wait_max",
+        "retry_max",
+        "ca_certificates",
+        "certificates",
+        "skip_tls_verify",
+        "headers"
+      ]
+    },
+    "command": {
+      "type": "object",
+      "properties": {
+        "timeout": {
+          "type": "number"
+        },
+        "env": {
+          "type": "array",
+          "items": {}
+        },
+        "commands": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "timeout",
+        "env",
+        "commands"
+      ]
+    },
+    "kms": {
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "master_key": {
+              "type": "string"
+            },
+            "master_key_path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url",
+            "master_key",
+            "master_key_path"
+          ]
+        }
+      },
+      "required": [
+        "secrets"
+      ]
+    },
+    "mfa": {
+      "type": "object",
+      "properties": {
+        "totp": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "algo": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "issuer",
+              "algo"
+            ]
+          }
+        }
+      },
+      "required": [
+        "totp"
+      ]
+    },
+    "smtp": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "number"
+        },
+        "from": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "auth_type": {
+          "type": "number"
+        },
+        "encryption": {
+          "type": "number"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "templates_path": {
+          "type": "string"
+        },
+        "debug": {
+          "type": "number"
+        },
+        "oauth2": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "number"
+            },
+            "tenant": {
+              "type": "string"
+            },
+            "client_id": {
+              "type": "string"
+            },
+            "client_secret": {
+              "type": "string"
+            },
+            "refresh_token": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "provider",
+            "tenant",
+            "client_id",
+            "client_secret",
+            "refresh_token"
+          ]
+        }
+      },
+      "required": [
+        "host",
+        "port",
+        "from",
+        "user",
+        "password",
+        "auth_type",
+        "encryption",
+        "domain",
+        "templates_path",
+        "debug",
+        "oauth2"
+      ]
+    },
+    "plugins": {
+      "type": "array",
+      "items": {}
+    }
+  },
+  "required": [
+    "common",
+    "acme",
+    "sftpd",
+    "ftpd",
+    "webdavd",
+    "data_provider",
+    "httpd",
+    "telemetry",
+    "http",
+    "command",
+    "kms",
+    "mfa",
+    "smtp",
+    "plugins"
+  ]
+}

@@ -9,6 +9,7 @@
     bottom
     usbutils
     tree
+    tmux
   ];
 
   system.stateVersion = "25.05";
