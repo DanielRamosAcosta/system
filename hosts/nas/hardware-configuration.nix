@@ -39,7 +39,7 @@
   fileSystems."/cold-data/immich" = {
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@immich" ];
+    options = [ "degraded" "compress=zstd" "subvol=@immich" ];
   };
 
   swapDevices = [ ];
