@@ -71,6 +71,18 @@ local autheliaConfig = importstr './authelia.config.yml';
           email: 'alexsaxramos@gmail.com',
           groups: [],
         },
+        ana: {
+          disabled: false,
+          displayname: 'Ana',
+          given_name: 'Ana',
+          family_name: 'Acosta García',
+          picture: 'https://1.gravatar.com/avatar/c1bb07abcadf81a38641e42d64a3181ca22c3807b49abc49798ce72e9cf45007?size=512&d=initials',
+          locale: 'es-ES',
+          zoneinfo: 'Atlantic/Canary',
+          password: s.AUTHELIA_PASSWORD_ANA,
+          email: 'ana_acosta@live.com',
+          groups: [],
+        },
       },
     })),
 
@@ -86,8 +98,7 @@ local autheliaConfig = importstr './authelia.config.yml';
       AUTHELIA_SESSION_SECRET: s.AUTHELIA_SESSION_SECRET,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID: s.AUTHELIA_OIDC_IMMICH_CLIENT_ID,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST,
-      IDENTITY_PROVIDERS_OIDC_CLIENTS_STRATUS_CLIENT_ID: s.AUTHELIA_OIDC_STRATUS_CLIENT_ID,
-      IDENTITY_PROVIDERS_OIDC_CLIENTS_STRATUS_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_STRATUS_CLIENT_SECRET_DIGEST,
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD: s.SMTP_PASSWORD
     }),
 
     ingressRoute: u.ingressRoute.from(self.service, 'auth.danielramos.me'),

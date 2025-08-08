@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://www.authelia.com/schemas/v4.39/json-schema/configuration.json
+
 authentication_backend:
   password_reset:
     disable: true
@@ -13,7 +15,7 @@ storage:
     database: authelia
 
 access_control:
-  default_policy: one_factor
+  default_policy: two_factor
 
 session:
   secret: '{{ env `AUTHELIA_SESSION_SECRET` }}'
@@ -23,8 +25,12 @@ session:
       default_redirection_url: 'https://photos.danielramos.me'
 
 notifier:
-  filesystem:
-    filename: /config/notification.txt
+  smtp:
+    address: 'smtp://smtp.eu.mailgun.org:587'
+    username: 'nas@mail.danielramos.me'
+    password: '{{ env `AUTHELIA_NOTIFIER_SMTP_PASSWORD` }}'
+    sender: "NAS <nas@mail.danielramos.me>"
+    subject: "[NAS] {title}"
 
 identity_providers:
   oidc:
@@ -37,7 +43,7 @@ identity_providers:
         client_name: immich
         client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST` }}'
         public: false
-        authorization_policy: one_factor
+        authorization_policy: two_factor
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
