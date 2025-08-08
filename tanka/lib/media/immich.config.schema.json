@@ -800,8 +800,7 @@
             },
             "from": {
               "type": "string",
-              "description": "From email address for notifications",
-              "format": "email"
+              "description": "From email address for notifications"
             },
             "replyTo": {
               "type": "string",

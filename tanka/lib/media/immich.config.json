@@ -13,5 +13,18 @@
         "issuerUrl": "https://auth.danielramos.me/.well-known/openid-configuration",
         "clientId": "{{AUTHELIA_OIDC_IMMICH_CLIENT_ID}}",
         "clientSecret": "{{AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST}}"
+    },
+    "notifications": {
+        "smtp": {
+            "enabled": true,
+            "from": "NAS <nas@mail.danielramos.me>",
+            "replyTo": "nas@mail.danielramos.me",
+            "transport": {
+                "host": "smtp.eu.mailgun.org",
+                "port": 587,
+                "username": "nas@mail.danielramos.me",
+                "password": "{{SMTP_PASSWORD}}"
+            }
+        }
     }
 }

@@ -65,6 +65,13 @@ local immichConfig = importstr './immich.config.json';
         clientId: s.AUTHELIA_OIDC_IMMICH_CLIENT_ID,
         clientSecret: s.AUTHELIA_OIDC_IMMICH_CLIENT_SECRET,
       },
+      notifications: {
+        smtp: {
+          transport: {
+            password: s.SMTP_PASSWORD,
+          }
+        }
+      }
     })),
 
     pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/cold-data/immich/upload'),
