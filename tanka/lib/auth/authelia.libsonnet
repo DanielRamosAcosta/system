@@ -82,7 +82,7 @@ local autheliaConfig = importstr './authelia.config.yml';
           password: s.AUTHELIA_PASSWORD_ANA,
           email: 'ana_acosta@live.com',
           groups: [],
-        },
+        }
       },
     })),
 
@@ -98,7 +98,9 @@ local autheliaConfig = importstr './authelia.config.yml';
       AUTHELIA_SESSION_SECRET: s.AUTHELIA_SESSION_SECRET,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID: s.AUTHELIA_OIDC_IMMICH_CLIENT_ID,
       IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST,
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD: s.SMTP_PASSWORD
+      IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_ID: s.AUTHELIA_OIDC_SFTPGO_CLIENT_ID,
+      IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_SECRET_DIGEST: s.AUTHELIA_OIDC_SFTPGO_CLIENT_SECRET_DIGEST,
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD: s.SMTP_PASSWORD,
     }),
 
     ingressRoute: u.ingressRoute.from(self.service, 'auth.danielramos.me'),

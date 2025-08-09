@@ -17,28 +17,29 @@ local sftpgoConfig = importstr './sftpgo.config.json';
     statefulSet: statefulSet.new('sftpgo', replicas=1, containers=[
                    container.new('sftpgo', u.image(image, version)) +
                    container.withPorts(
-                     [containerPort.new('server', 2022)]
+                     [containerPort.new('server', 8080)]
                    ) +
                    container.withEnv(
-                     u.envVars.fromConfigMap(self.configEnv) +
                      u.envVars.fromSecret(self.secretsEnv),
                    ) +
                    container.withVolumeMounts([
                      volumeMount.new('data', '/srv/sftpgo'),
-                     u.volumeMount.fromFile(self.configFile, '/etc/sftpgo'),
+                     u.volumeMount.fromFile(self.configuration, '/etc/sftpgo'),
                    ]),
                  ]) +
-                 u.injectFiles([self.configuration]) +
                  statefulSet.spec.template.spec.withVolumes([
+                   u.injectFile(self.configuration),
                    volume.fromPersistentVolumeClaim('data', self.pvc.metadata.name),
                  ]),
 
     service: k.util.serviceFor(self.statefulSet),
 
-    configuration: u.configMap.forFile("sftpgo.json", sftpgoConfig),
+    configuration: u.configMap.forFile('sftpgo.json', sftpgoConfig),
 
     secretsEnv: u.secret.forEnv(self.statefulSet, {
-      DB_PASSWORD: s.POSTGRES_PASSWORD_IMMICH,
+      SFTPGO_DATA_PROVIDER__PASSWORD: s.POSTGRES_PASSWORD_SFTPGO,
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_ID: s.AUTHELIA_OIDC_SFTPGO_CLIENT_ID,
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_SECRET: s.AUTHELIA_OIDC_SFTPGO_CLIENT_SECRET
     }),
 
     pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/cold-data/sftpgo/data'),

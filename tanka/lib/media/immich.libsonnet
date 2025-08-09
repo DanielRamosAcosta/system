@@ -69,9 +69,9 @@ local immichConfig = importstr './immich.config.json';
         smtp: {
           transport: {
             password: s.SMTP_PASSWORD,
-          }
-        }
-      }
+          },
+        },
+      },
     })),
 
     pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/cold-data/immich/upload'),

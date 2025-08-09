@@ -32,12 +32,33 @@ notifier:
     sender: "NAS <nas@mail.danielramos.me>"
     subject: "[NAS] {title}"
 
+definitions:
+  user_attributes:
+    sftpgo_role:
+      expression: '"admins" in groups ? "admin" : "user"'
+
 identity_providers:
   oidc:
     jwks:
       - key_id: main
         algorithm: RS256
         key: {{ secret "/config/secrets/oidc/jwks/rsa.2048.key" | mindent 10 "|" | msquote }}
+
+    claims_policies:
+      sftpgo_policy:
+        id_token: ['username', 'sftpgo_role']   # mete estas claims en el ID Token
+        custom_claims:
+          username:
+            attribute: username                 # atributo estándar: el login (dani)
+          sftpgo_role:
+            attribute: sftpgo_role              # atributo defini
+
+    scopes:
+      sftpgo:
+        claims:
+          - username
+          - sftpgo_role
+    
     clients:
       - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID` }}'
         client_name: immich
@@ -54,6 +75,29 @@ identity_providers:
           - openid
           - profile
           - email
+        response_types:
+          - code
+        grant_types:
+          - authorization_code
+        access_token_signed_response_alg: none
+        userinfo_signed_response_alg: none
+        token_endpoint_auth_method: client_secret_post
+      
+      - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_ID` }}'
+        client_name: sftpgo
+        client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_SECRET_DIGEST` }}'
+        public: false
+        authorization_policy: two_factor
+        claims_policy: sftpgo_policy
+        require_pkce: false
+        pkce_challenge_method: ''
+        redirect_uris:
+          - 'https://cloud.danielramos.me/web/oidc/redirect'
+        scopes:
+          - openid
+          - profile
+          - email
+          - sftpgo
         response_types:
           - code
         grant_types:

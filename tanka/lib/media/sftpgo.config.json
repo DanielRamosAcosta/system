@@ -1,3 +1,32 @@
 {
-    "$schema": "./sftpgo.config.schema.json"
+  "$schema": "./sftpgo.config.schema.json",
+  "data_provider": {
+    "driver": "postgresql",
+    "name": "sftpgo",
+    "host": "postgres.databases.svc.cluster.local",
+    "port": 5432,
+    "username": "sftpgo"
+  },
+  "httpd": {
+    "bindings": [
+      {
+        "port": 8080,
+        "disabled_login_methods": 252,
+        "render_openapi": false,
+        "oidc": {
+          "config_url": "https://auth.danielramos.me",
+          "redirect_base_url": "https://cloud.danielramos.me",
+          "username_field": "username",
+          "scopes": [
+            "openid",
+            "profile",
+            "email",
+            "sftpgo"
+          ],
+          "role_field": "sftpgo_role",
+          "debug": true
+        }
+      }
+    ]
+  }
 }

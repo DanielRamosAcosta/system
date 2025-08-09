@@ -25,7 +25,7 @@ local u = import 'utils.libsonnet';
         u.envVars.fromSecret(self.secretsEnv)
       ) +
       container.withVolumeMounts([
-        volumeMount.new(dataVolumeName, '/var/lib/postgresql/data')
+        volumeMount.new(dataVolumeName, '/var/lib/postgresql/data'),
       ]),
     ]) + statefulSet.spec.template.spec.withVolumes([
       volume.fromPersistentVolumeClaim(dataVolumeName, self.pvc.metadata.name),
@@ -37,9 +37,9 @@ local u = import 'utils.libsonnet';
       POSTGRES_PASSWORD: s.POSTGRES_PASSWORD,
     }),
 
-    userImmich: self.createUser("immich", s.POSTGRES_PASSWORD_IMMICH, self.createUserMigration, self.secretsEnv),
-    userAuthelia: self.createUser("authelia", s.POSTGRES_PASSWORD_AUTHELIA, self.createUserMigration, self.secretsEnv),
-    userSftpgo: self.createUser("sftpgo", s.POSTGRES_PASSWORD_SFTPGO, self.createUserMigration, self.secretsEnv),
+    userImmich: self.createUser('immich', s.POSTGRES_PASSWORD_IMMICH, self.createUserMigration, self.secretsEnv),
+    userAuthelia: self.createUser('authelia', s.POSTGRES_PASSWORD_AUTHELIA, self.createUserMigration, self.secretsEnv),
+    userSftpgo: self.createUser('sftpgo', s.POSTGRES_PASSWORD_SFTPGO, self.createUserMigration, self.secretsEnv),
 
     createUserMigration: u.configMap.forFile('postgres.create-user.sh', createUserMigration),
 
@@ -48,26 +48,26 @@ local u = import 'utils.libsonnet';
 
     createUser(name, password, configMap, secret):: {
       migrationJob: k.batch.v1.job.new('postgres-create-user-' + name) +
-      k.batch.v1.job.spec.template.spec.withRestartPolicy('OnFailure') +
-      k.batch.v1.job.spec.template.spec.withContainers([
-        container.new('create-user', u.image(image, version)) +
-        container.withCommand(['/bin/bash', '/mnt/scripts/postgres.create-user.sh']) +
-        container.withEnv(
-          [k.core.v1.envVar.new("USER_NAME", name)] + 
-          u.envVars.fromSecret(self.userSecret) + 
-          u.envVars.fromSecret(secret)
-        ) +
-        container.withVolumeMounts([
-          u.volumeMount.fromFile(configMap, '/mnt/scripts'),
-        ]),
-      ]) +
-      k.batch.v1.job.spec.template.spec.withVolumes([
-        u.volume.fromConfigMap(configMap),
-      ]),
+                    k.batch.v1.job.spec.template.spec.withRestartPolicy('OnFailure') +
+                    k.batch.v1.job.spec.template.spec.withContainers([
+                      container.new('create-user', u.image(image, version)) +
+                      container.withCommand(['/bin/bash', '/mnt/scripts/postgres.create-user.sh']) +
+                      container.withEnv(
+                        [k.core.v1.envVar.new('USER_NAME', name)] +
+                        u.envVars.fromSecret(self.userSecret) +
+                        u.envVars.fromSecret(secret)
+                      ) +
+                      container.withVolumeMounts([
+                        u.volumeMount.fromFile(configMap, '/mnt/scripts'),
+                      ]),
+                    ]) +
+                    k.batch.v1.job.spec.template.spec.withVolumes([
+                      u.volume.fromConfigMap(configMap),
+                    ]),
 
       userSecret: u.secret.forEnv(self.migrationJob, {
         USER_PASSWORD: password,
-      })
-    }
+      }),
+    },
   },
 }

@@ -1,30 +1,37 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Generated schema for Root",
+  "title": "SFTPGo Configuration Schema",
   "type": "object",
   "properties": {
     "common": {
       "type": "object",
+      "description": "Common configuration settings that apply globally to all SFTPGo services and protocols.",
       "properties": {
         "idle_timeout": {
-          "type": "number"
+          "type": "number",
+          "description": "Time in minutes after which idle connections will be closed. 0 means disabled."
         },
         "upload_mode": {
-          "type": "number"
+          "type": "number",
+          "description": "Upload mode: 0 = standard, 1 = atomic (upload to temp file then rename), 2 = atomic with resume support."
         },
         "actions": {
           "type": "object",
+          "description": "Configuration for actions that can be executed on various file system events.",
           "properties": {
             "execute_on": {
               "type": "array",
+              "description": "List of events that trigger the execution of actions (e.g., upload, download, delete).",
               "items": {}
             },
             "execute_sync": {
               "type": "array",
+              "description": "List of events for which actions should be executed synchronously.",
               "items": {}
             },
             "hook": {
-              "type": "string"
+              "type": "string",
+              "description": "Path to external program or HTTP URL to call for action execution."
             }
           },
           "required": [
@@ -34,63 +41,82 @@
           ]
         },
         "setstat_mode": {
-          "type": "number"
+          "type": "number",
+          "description": "Set stat mode: 0 = ignore setstat, 1 = enable setstat, 2 = enable setstat for owners only."
         },
         "rename_mode": {
-          "type": "number"
+          "type": "number",
+          "description": "Rename mode: 0 = standard, 1 = atomic rename with cross-filesystem support."
         },
         "resume_max_size": {
-          "type": "number"
+          "type": "number",
+          "description": "Maximum file size in bytes for resume support. 0 means no limit."
         },
         "temp_path": {
-          "type": "string"
+          "type": "string",
+          "description": "Path for temporary files during uploads. If empty, the user's home directory is used."
         },
         "proxy_protocol": {
-          "type": "number"
+          "type": "number",
+          "description": "Proxy protocol support: 0 = disabled, 1 = v1, 2 = v2, 3 = v1 and v2."
         },
         "proxy_allowed": {
           "type": "array",
+          "description": "List of IP addresses/networks allowed to send proxy headers.",
           "items": {}
         },
         "proxy_skipped": {
           "type": "array",
+          "description": "List of IP addresses/networks for which proxy headers should be ignored.",
           "items": {}
         },
         "startup_hook": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to external program or HTTP URL to call on SFTPGo startup."
         },
         "post_connect_hook": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to external program or HTTP URL to call after a client connects."
         },
         "post_disconnect_hook": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to external program or HTTP URL to call after a client disconnects."
         },
         "data_retention_hook": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to external program or HTTP URL to call for data retention policies."
         },
         "max_total_connections": {
-          "type": "number"
+          "type": "number",
+          "description": "Maximum number of concurrent connections. 0 means no limit."
         },
         "max_per_host_connections": {
-          "type": "number"
+          "type": "number",
+          "description": "Maximum number of concurrent connections per host. 0 means no limit."
         },
         "allowlist_status": {
-          "type": "number"
+          "type": "number",
+          "description": "IP allowlist status: 0 = disabled, 1 = enabled."
         },
         "allow_self_connections": {
-          "type": "number"
+          "type": "number",
+          "description": "Allow connections from the same IP as SFTPGo: 0 = disabled, 1 = enabled."
         },
         "umask": {
-          "type": "string"
+          "type": "string",
+          "description": "Default umask for new files and directories (octal format, e.g., '0022')."
         },
         "server_version": {
-          "type": "string"
+          "type": "string",
+          "description": "Custom server version string to report to clients."
         },
         "metadata": {
           "type": "object",
+          "description": "Configuration for file metadata handling.",
           "properties": {
             "read": {
-              "type": "number"
+              "type": "number",
+              "description": "Enable metadata reading: 0 = disabled, 1 = enabled."
             }
           },
           "required": [
@@ -99,51 +125,67 @@
         },
         "defender": {
           "type": "object",
+          "description": "Configuration for the built-in defender to protect against brute force attacks.",
           "properties": {
             "enabled": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enable or disable the defender."
             },
             "driver": {
-              "type": "string"
+              "type": "string",
+              "description": "Defender driver: 'memory' for in-memory storage or 'provider' to use the data provider."
             },
             "ban_time": {
-              "type": "number"
+              "type": "number",
+              "description": "Initial ban time in minutes."
             },
             "ban_time_increment": {
-              "type": "number"
+              "type": "number",
+              "description": "Ban time increment percentage for repeated violations."
             },
             "threshold": {
-              "type": "number"
+              "type": "number",
+              "description": "Score threshold above which an IP is banned."
             },
             "score_invalid": {
-              "type": "number"
+              "type": "number",
+              "description": "Score to assign for invalid login attempts."
             },
             "score_valid": {
-              "type": "number"
+              "type": "number",
+              "description": "Score to assign for valid login attempts (usually negative to reduce score)."
             },
             "score_limit_exceeded": {
-              "type": "number"
+              "type": "number",
+              "description": "Score to assign when connection limits are exceeded."
             },
             "score_no_auth": {
-              "type": "number"
+              "type": "number",
+              "description": "Score to assign when no authentication method is provided."
             },
             "observation_time": {
-              "type": "number"
+              "type": "number",
+              "description": "Time window in minutes for score observation."
             },
             "entries_soft_limit": {
-              "type": "number"
+              "type": "number",
+              "description": "Soft limit for defender entries, after which cleanup starts."
             },
             "entries_hard_limit": {
-              "type": "number"
+              "type": "number",
+              "description": "Hard limit for defender entries, no new entries accepted beyond this."
             },
             "login_delay": {
               "type": "object",
+              "description": "Configuration for login delays to slow down brute force attacks.",
               "properties": {
                 "success": {
-                  "type": "number"
+                  "type": "number",
+                  "description": "Delay in milliseconds after successful login."
                 },
                 "password_failed": {
-                  "type": "number"
+                  "type": "number",
+                  "description": "Delay in milliseconds after failed password authentication."
                 }
               },
               "required": [
@@ -170,35 +212,44 @@
         },
         "rate_limiters": {
           "type": "array",
+          "description": "Configuration for rate limiters to control connection and transfer rates.",
           "items": {
             "type": "object",
             "properties": {
               "average": {
-                "type": "number"
+                "type": "number",
+                "description": "Average rate limit (connections/transfers per period)."
               },
               "period": {
-                "type": "number"
+                "type": "number",
+                "description": "Time period in milliseconds for rate limiting calculations."
               },
               "burst": {
-                "type": "number"
+                "type": "number",
+                "description": "Maximum burst size allowed above the average rate."
               },
               "type": {
-                "type": "number"
+                "type": "number",
+                "description": "Rate limiter type: 1 = global, 2 = per-host."
               },
               "protocols": {
                 "type": "array",
+                "description": "List of protocols this rate limiter applies to (e.g., 'SSH', 'FTP', 'DAV', 'HTTP').",
                 "items": {
                   "type": "string"
                 }
               },
               "generate_defender_events": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Whether to generate defender events when rate limits are exceeded."
               },
               "entries_soft_limit": {
-                "type": "number"
+                "type": "number",
+                "description": "Soft limit for rate limiter entries."
               },
               "entries_hard_limit": {
-                "type": "number"
+                "type": "number",
+                "description": "Hard limit for rate limiter entries."
               }
             },
             "required": [
@@ -215,9 +266,11 @@
         },
         "event_manager": {
           "type": "object",
+          "description": "Configuration for the event manager that handles file system events.",
           "properties": {
             "enabled_commands": {
               "type": "array",
+              "description": "List of enabled event manager commands.",
               "items": {}
             }
           },
@@ -255,37 +308,48 @@
     },
     "acme": {
       "type": "object",
+      "description": "Configuration for automatic SSL certificate management using ACME protocol (Let's Encrypt).",
       "properties": {
         "domains": {
           "type": "array",
+          "description": "List of domain names for which to obtain SSL certificates.",
           "items": {}
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "description": "Email address for ACME account registration."
         },
         "key_type": {
-          "type": "string"
+          "type": "string",
+          "description": "Private key type for certificates (e.g., 'RSA2048', 'RSA4096', 'EC256', 'EC384')."
         },
         "certs_path": {
-          "type": "string"
+          "type": "string",
+          "description": "Directory path where ACME certificates will be stored."
         },
         "ca_endpoint": {
-          "type": "string"
+          "type": "string",
+          "description": "ACME Certificate Authority endpoint URL (e.g., Let's Encrypt production or staging)."
         },
         "renew_days": {
-          "type": "number"
+          "type": "number",
+          "description": "Number of days before expiration to renew certificates."
         },
         "http01_challenge": {
           "type": "object",
+          "description": "Configuration for HTTP-01 ACME challenge method.",
           "properties": {
             "port": {
-              "type": "number"
+              "type": "number",
+              "description": "Port to use for HTTP-01 challenge server."
             },
             "proxy_header": {
-              "type": "string"
+              "type": "string",
+              "description": "Proxy header to check for real client IP during HTTP-01 challenge."
             },
             "webroot": {
-              "type": "string"
+              "type": "string",
+              "description": "Webroot directory for HTTP-01 challenge files."
             }
           },
           "required": [
@@ -296,9 +360,11 @@
         },
         "tls_alpn01_challenge": {
           "type": "object",
+          "description": "Configuration for TLS-ALPN-01 ACME challenge method.",
           "properties": {
             "port": {
-              "type": "number"
+              "type": "number",
+              "description": "Port to use for TLS-ALPN-01 challenge server."
             }
           },
           "required": [
@@ -319,20 +385,25 @@
     },
     "sftpd": {
       "type": "object",
+      "description": "Configuration for the SFTP server daemon.",
       "properties": {
         "bindings": {
           "type": "array",
+          "description": "List of network bindings for the SFTP server.",
           "items": {
             "type": "object",
             "properties": {
               "port": {
-                "type": "number"
+                "type": "number",
+                "description": "Port number to bind the SFTP server to."
               },
               "address": {
-                "type": "string"
+                "type": "string",
+                "description": "IP address to bind the SFTP server to (empty for all interfaces)."
               },
               "apply_proxy_config": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Whether to apply proxy configuration to this binding."
               }
             },
             "required": [
@@ -343,66 +414,83 @@
           }
         },
         "max_auth_tries": {
-          "type": "number"
+          "type": "number",
+          "description": "Maximum number of authentication attempts per connection."
         },
         "host_keys": {
           "type": "array",
+          "description": "List of host key file paths for SSH server authentication.",
           "items": {}
         },
         "host_certificates": {
           "type": "array",
+          "description": "List of host certificate file paths for SSH server authentication.",
           "items": {}
         },
         "host_key_algorithms": {
           "type": "array",
+          "description": "List of enabled host key algorithms for SSH.",
           "items": {}
         },
         "kex_algorithms": {
           "type": "array",
+          "description": "List of enabled key exchange algorithms for SSH.",
           "items": {}
         },
         "min_dh_group_exchange_key_size": {
-          "type": "number"
+          "type": "number",
+          "description": "Minimum Diffie-Hellman group exchange key size in bits."
         },
         "ciphers": {
           "type": "array",
+          "description": "List of enabled cipher algorithms for SSH encryption.",
           "items": {}
         },
         "macs": {
           "type": "array",
+          "description": "List of enabled MAC (Message Authentication Code) algorithms for SSH.",
           "items": {}
         },
         "public_key_algorithms": {
           "type": "array",
+          "description": "List of enabled public key signature algorithms for SSH.",
           "items": {}
         },
         "trusted_user_ca_keys": {
           "type": "array",
+          "description": "List of trusted user Certificate Authority key file paths.",
           "items": {}
         },
         "revoked_user_certs_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to file containing revoked user certificates."
         },
         "login_banner_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to file containing login banner text to display to users."
         },
         "enabled_ssh_commands": {
           "type": "array",
+          "description": "List of SSH commands that are enabled (e.g., 'scp', 'rsync').",
           "items": {
             "type": "string"
           }
         },
         "keyboard_interactive_authentication": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to enable keyboard-interactive authentication method."
         },
         "keyboard_interactive_auth_hook": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to external program or HTTP URL for keyboard-interactive authentication."
         },
         "password_authentication": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Whether to enable password authentication method."
         },
         "folder_prefix": {
-          "type": "string"
+          "type": "string",
+          "description": "Virtual folder prefix to prepend to user home directories."
         }
       },
       "required": [
@@ -428,64 +516,83 @@
     },
     "ftpd": {
       "type": "object",
+      "description": "Configuration for the FTP server daemon.",
       "properties": {
         "bindings": {
           "type": "array",
+          "description": "List of network bindings for the FTP server.",
           "items": {
             "type": "object",
             "properties": {
               "port": {
-                "type": "number"
+                "type": "number",
+                "description": "Port number to bind the FTP server to."
               },
               "address": {
-                "type": "string"
+                "type": "string",
+                "description": "IP address to bind the FTP server to (empty for all interfaces)."
               },
               "apply_proxy_config": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Whether to apply proxy configuration to this binding."
               },
               "tls_mode": {
-                "type": "number"
+                "type": "number",
+                "description": "TLS mode: 0 = disabled, 1 = explicit, 2 = implicit."
               },
               "tls_session_reuse": {
-                "type": "number"
+                "type": "number",
+                "description": "TLS session reuse: 0 = disabled, 1 = enabled."
               },
               "certificate_file": {
-                "type": "string"
+                "type": "string",
+                "description": "Path to TLS certificate file for this binding."
               },
               "certificate_key_file": {
-                "type": "string"
+                "type": "string",
+                "description": "Path to TLS private key file for this binding."
               },
               "min_tls_version": {
-                "type": "number"
+                "type": "number",
+                "description": "Minimum TLS version: 12 = TLS 1.2, 13 = TLS 1.3."
               },
               "force_passive_ip": {
-                "type": "string"
+                "type": "string",
+                "description": "IP address to force for passive mode connections."
               },
               "passive_ip_overrides": {
                 "type": "array",
+                "description": "List of passive IP overrides for specific networks.",
                 "items": {}
               },
               "passive_host": {
-                "type": "string"
+                "type": "string",
+                "description": "Hostname to advertise for passive mode connections."
               },
               "client_auth_type": {
-                "type": "number"
+                "type": "number",
+                "description": "Client authentication type: 0 = disabled, 1 = request cert, 2 = require cert."
               },
               "tls_cipher_suites": {
                 "type": "array",
+                "description": "List of enabled TLS cipher suites.",
                 "items": {}
               },
               "passive_connections_security": {
-                "type": "number"
+                "type": "number",
+                "description": "Security mode for passive connections: 0 = inherit, 1 = plain, 2 = TLS."
               },
               "active_connections_security": {
-                "type": "number"
+                "type": "number",
+                "description": "Security mode for active connections: 0 = inherit, 1 = plain, 2 = TLS."
               },
               "ignore_ascii_transfer_type": {
-                "type": "number"
+                "type": "number",
+                "description": "Ignore ASCII transfer type and always use binary: 0 = disabled, 1 = enabled."
               },
               "debug": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Enable debug logging for this FTP binding."
               }
             },
             "required": [
@@ -510,19 +617,24 @@
           }
         },
         "banner_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to file containing FTP banner text to display to clients."
         },
         "active_transfers_port_non_20": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Allow active transfers on ports other than 20."
         },
         "passive_port_range": {
           "type": "object",
+          "description": "Port range for FTP passive mode connections.",
           "properties": {
             "start": {
-              "type": "number"
+              "type": "number",
+              "description": "Starting port for passive mode range."
             },
             "end": {
-              "type": "number"
+              "type": "number",
+              "description": "Ending port for passive mode range."
             }
           },
           "required": [
@@ -531,29 +643,37 @@
           ]
         },
         "disable_active_mode": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Disable FTP active mode transfers."
         },
         "enable_site": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Enable FTP SITE command."
         },
         "hash_support": {
-          "type": "number"
+          "type": "number",
+          "description": "Hash algorithm support: 0 = disabled, 1 = SHA1, 2 = SHA256, 3 = SHA1+SHA256."
         },
         "combine_support": {
-          "type": "number"
+          "type": "number",
+          "description": "Enable FTP COMB command support: 0 = disabled, 1 = enabled."
         },
         "certificate_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to global TLS certificate file for FTP server."
         },
         "certificate_key_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to global TLS private key file for FTP server."
         },
         "ca_certificates": {
           "type": "array",
+          "description": "List of CA certificate files for client authentication.",
           "items": {}
         },
         "ca_revocation_lists": {
           "type": "array",
+          "description": "List of certificate revocation lists.",
           "items": {}
         }
       },
@@ -574,56 +694,72 @@
     },
     "webdavd": {
       "type": "object",
+      "description": "Configuration for the WebDAV server daemon.",
       "properties": {
         "bindings": {
           "type": "array",
+          "description": "List of network bindings for the WebDAV server.",
           "items": {
             "type": "object",
             "properties": {
               "port": {
-                "type": "number"
+                "type": "number",
+                "description": "Port number to bind the WebDAV server to."
               },
               "address": {
-                "type": "string"
+                "type": "string",
+                "description": "IP address to bind the WebDAV server to (empty for all interfaces)."
               },
               "enable_https": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Enable HTTPS for this binding."
               },
               "certificate_file": {
-                "type": "string"
+                "type": "string",
+                "description": "Path to TLS certificate file for this binding."
               },
               "certificate_key_file": {
-                "type": "string"
+                "type": "string",
+                "description": "Path to TLS private key file for this binding."
               },
               "min_tls_version": {
-                "type": "number"
+                "type": "number",
+                "description": "Minimum TLS version: 12 = TLS 1.2, 13 = TLS 1.3."
               },
               "client_auth_type": {
-                "type": "number"
+                "type": "number",
+                "description": "Client authentication type: 0 = disabled, 1 = request cert, 2 = require cert."
               },
               "tls_cipher_suites": {
                 "type": "array",
+                "description": "List of enabled TLS cipher suites.",
                 "items": {}
               },
               "tls_protocols": {
                 "type": "array",
+                "description": "List of enabled TLS protocols.",
                 "items": {}
               },
               "prefix": {
-                "type": "string"
+                "type": "string",
+                "description": "URL prefix for WebDAV endpoints."
               },
               "proxy_allowed": {
                 "type": "array",
+                "description": "List of allowed proxy IP addresses.",
                 "items": {}
               },
               "client_ip_proxy_header": {
-                "type": "string"
+                "type": "string",
+                "description": "Header name for real client IP."
               },
               "client_ip_header_depth": {
-                "type": "number"
+                "type": "number",
+                "description": "Depth of proxy headers to check for client IP."
               },
               "disable_www_auth_header": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Disable WWW-Authenticate header."
               }
             },
             "required": [
@@ -645,55 +781,70 @@
           }
         },
         "certificate_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to global TLS certificate file for WebDAV server."
         },
         "certificate_key_file": {
-          "type": "string"
+          "type": "string",
+          "description": "Path to global TLS private key file for WebDAV server."
         },
         "ca_certificates": {
           "type": "array",
+          "description": "List of CA certificate files for client authentication.",
           "items": {}
         },
         "ca_revocation_lists": {
           "type": "array",
+          "description": "List of certificate revocation lists.",
           "items": {}
         },
         "cors": {
           "type": "object",
+          "description": "Cross-Origin Resource Sharing (CORS) configuration for WebDAV.",
           "properties": {
             "enabled": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enable CORS support."
             },
             "allowed_origins": {
               "type": "array",
+              "description": "List of allowed origin domains.",
               "items": {}
             },
             "allowed_methods": {
               "type": "array",
+              "description": "List of allowed HTTP methods.",
               "items": {}
             },
             "allowed_headers": {
               "type": "array",
+              "description": "List of allowed HTTP headers.",
               "items": {}
             },
             "exposed_headers": {
               "type": "array",
+              "description": "List of headers exposed to clients.",
               "items": {}
             },
             "allow_credentials": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow credentials in CORS requests."
             },
             "max_age": {
-              "type": "number"
+              "type": "number",
+              "description": "Maximum age for preflight request cache in seconds."
             },
             "options_passthrough": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Pass OPTIONS requests to handlers."
             },
             "options_success_status": {
-              "type": "number"
+              "type": "number",
+              "description": "Status code for successful OPTIONS requests."
             },
             "allow_private_network": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow private network requests."
             }
           },
           "required": [
@@ -711,15 +862,19 @@
         },
         "cache": {
           "type": "object",
+          "description": "Caching configuration for WebDAV performance optimization.",
           "properties": {
             "users": {
               "type": "object",
+              "description": "User cache configuration.",
               "properties": {
                 "expiration_time": {
-                  "type": "number"
+                  "type": "number",
+                  "description": "User cache expiration time in minutes."
                 },
                 "max_size": {
-                  "type": "number"
+                  "type": "number",
+                  "description": "Maximum number of users to cache."
                 }
               },
               "required": [
@@ -729,15 +884,19 @@
             },
             "mime_types": {
               "type": "object",
+              "description": "MIME type cache configuration for better WebDAV performance.",
               "properties": {
                 "enabled": {
-                  "type": "boolean"
+                  "type": "boolean",
+                  "description": "Enable MIME type caching."
                 },
                 "max_size": {
-                  "type": "number"
+                  "type": "number",
+                  "description": "Maximum number of MIME types to cache."
                 },
                 "custom_mappings": {
                   "type": "array",
+                  "description": "Custom file extension to MIME type mappings.",
                   "items": {}
                 }
               },
@@ -766,9 +925,11 @@
     },
     "data_provider": {
       "type": "object",
+      "description": "Configuration for the data provider (database) used to store users, folders, and other persistent data.",
       "properties": {
         "driver": {
-          "type": "string"
+          "type": "string",
+          "description": "Database driver: 'sqlite', 'mysql', 'postgresql', 'cockroachdb', 'bolt', 'memory'."
         },
         "name": {
           "type": "string"
@@ -975,46 +1136,11 @@
           "type": "string"
         }
       },
-      "required": [
-        "driver",
-        "name",
-        "host",
-        "port",
-        "username",
-        "password",
-        "sslmode",
-        "disable_sni",
-        "target_session_attrs",
-        "root_cert",
-        "client_cert",
-        "client_key",
-        "connection_string",
-        "sql_tables_prefix",
-        "track_quota",
-        "delayed_quota_update",
-        "pool_size",
-        "users_base_dir",
-        "actions",
-        "external_auth_hook",
-        "external_auth_scope",
-        "pre_login_hook",
-        "post_login_hook",
-        "post_login_scope",
-        "check_password_hook",
-        "check_password_scope",
-        "password_hashing",
-        "password_validation",
-        "password_caching",
-        "update_mode",
-        "create_default_admin",
-        "naming_rules",
-        "is_shared",
-        "node",
-        "backups_path"
-      ]
+      "required": []
     },
     "httpd": {
       "type": "object",
+      "description": "Configuration for the HTTP server that provides the web admin interface, REST API, and web client.",
       "properties": {
         "bindings": {
           "type": "array",
@@ -1453,6 +1579,7 @@
     },
     "telemetry": {
       "type": "object",
+      "description": "Configuration for telemetry, metrics, and profiling endpoints.",
       "properties": {
         "bind_port": {
           "type": "number"
@@ -1498,6 +1625,7 @@
     },
     "http": {
       "type": "object",
+      "description": "Global HTTP client configuration for external requests and webhooks.",
       "properties": {
         "timeout": {
           "type": "number"
@@ -1540,6 +1668,7 @@
     },
     "command": {
       "type": "object",
+      "description": "Configuration for external command execution and timeouts.",
       "properties": {
         "timeout": {
           "type": "number"
@@ -1561,6 +1690,7 @@
     },
     "kms": {
       "type": "object",
+      "description": "Key Management Service configuration for encryption keys.",
       "properties": {
         "secrets": {
           "type": "object",
@@ -1588,6 +1718,7 @@
     },
     "mfa": {
       "type": "object",
+      "description": "Multi-Factor Authentication configuration.",
       "properties": {
         "totp": {
           "type": "array",
@@ -1618,6 +1749,7 @@
     },
     "smtp": {
       "type": "object",
+      "description": "SMTP configuration for sending emails and notifications.",
       "properties": {
         "host": {
           "type": "string"
@@ -1693,23 +1825,8 @@
     },
     "plugins": {
       "type": "array",
+      "description": "List of enabled plugins and their configurations.",
       "items": {}
     }
-  },
-  "required": [
-    "common",
-    "acme",
-    "sftpd",
-    "ftpd",
-    "webdavd",
-    "data_provider",
-    "httpd",
-    "telemetry",
-    "http",
-    "command",
-    "kms",
-    "mfa",
-    "smtp",
-    "plugins"
-  ]
+  }
 }

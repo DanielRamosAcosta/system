@@ -7,5 +7,5 @@ local sftpgo = import 'media/sftpgo.libsonnet';
   ),
   sftpgo: sftpgo.new(
     version='v2.6.6-alpine'
-  )
+  ),
 }

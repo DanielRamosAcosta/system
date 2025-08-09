@@ -75,6 +75,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       k.core.v1.volume.fromConfigMap(resource.metadata.name, resource.metadata.name)
     for resource in configMapOrSecrets
   ]),
+  injectFile(resource)::
+    if resource.kind == 'Secret' then
+      k.core.v1.volume.fromSecret(resource.metadata.name, resource.metadata.name)
+    else
+      k.core.v1.volume.fromConfigMap(resource.metadata.name, resource.metadata.name)
+  ,
   withoutSchema(object):: std.prune(std.mergePatch(object, { '$schema': null })),
   normalizeName(name):: std.strReplace(std.strReplace(name, '.', '-'), '_', '-'),
   pv: {
