@@ -43,8 +43,21 @@ local autheliaConfig = importstr './authelia.config.yml';
           password: s.AUTHELIA_PASSWORD_DANI,
           email: 'danielramosacosta1@gmail.com',
           groups: [
-            'admins',
-            'dev',
+            "admins"
+          ],
+        },
+        admin: {
+          disabled: false,
+          displayname: 'Dani',
+          given_name: 'Daniel',
+          family_name: 'Ramos Acosta',
+          picture: 'https://2.gravatar.com/avatar/bd9cf3cfa5c4875128bdd435d7f304403c6c883442670a1cd201abf85d3858d1?size=512&d=initials',
+          locale: 'es-ES',
+          zoneinfo: 'Europe/Madrid',
+          password: s.AUTHELIA_PASSWORD_DANI,
+          email: 'danielramosacosta1+admin@gmail.com',
+          groups: [
+            "admins"
           ],
         },
         cris: {
@@ -81,6 +94,18 @@ local autheliaConfig = importstr './authelia.config.yml';
           zoneinfo: 'Atlantic/Canary',
           password: s.AUTHELIA_PASSWORD_ANA,
           email: 'ana_acosta@live.com',
+          groups: [],
+        },
+        gabriel: {
+          disabled: false,
+          displayname: 'Gabriel',
+          given_name: 'Gabriel',
+          family_name: 'Ramos Acosta',
+          picture: 'https://2.gravatar.com/avatar/f7454bbabbe58703669567dfe8bdeb80cfc79ffef303ca8f8ba12fc6238521c7?size=512&d=initials',
+          locale: 'es-ES',
+          zoneinfo: 'Atlantic/Canary',
+          password: s.AUTHELIA_PASSWORD_GABRIEL,
+          email: 'gabrielramosacosta1@gmail.com',
           groups: [],
         }
       },

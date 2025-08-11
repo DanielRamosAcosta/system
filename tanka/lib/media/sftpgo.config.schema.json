@@ -1248,20 +1248,7 @@
                     "type": "boolean"
                   }
                 },
-                "required": [
-                  "client_id",
-                  "client_secret",
-                  "client_secret_file",
-                  "config_url",
-                  "redirect_base_url",
-                  "scopes",
-                  "username_field",
-                  "role_field",
-                  "implicit_roles",
-                  "custom_fields",
-                  "insecure_skip_signature_check",
-                  "debug"
-                ]
+                "required": []
               },
               "security": {
                 "type": "object",
@@ -1426,27 +1413,7 @@
               }
             },
             "required": [
-              "port",
-              "address",
-              "enable_web_admin",
-              "enable_web_client",
-              "enable_rest_api",
-              "enabled_login_methods",
-              "enable_https",
-              "certificate_file",
-              "certificate_key_file",
-              "min_tls_version",
-              "client_auth_type",
-              "tls_cipher_suites",
-              "tls_protocols",
-              "proxy_allowed",
-              "client_ip_proxy_header",
-              "client_ip_header_depth",
-              "hide_login_url",
-              "render_openapi",
-              "oidc",
-              "security",
-              "branding"
+
             ]
           }
         },
@@ -1559,22 +1526,7 @@
         }
       },
       "required": [
-        "bindings",
-        "templates_path",
-        "static_files_path",
-        "openapi_path",
-        "web_root",
-        "certificate_file",
-        "certificate_key_file",
-        "ca_certificates",
-        "ca_revocation_lists",
-        "signing_passphrase",
-        "signing_passphrase_file",
-        "token_validation",
-        "max_upload_file_size",
-        "cors",
-        "setup",
-        "hide_support_link"
+
       ]
     },
     "telemetry": {

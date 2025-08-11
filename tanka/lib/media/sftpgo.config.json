@@ -11,7 +11,7 @@
     "bindings": [
       {
         "port": 8080,
-        "disabled_login_methods": 252,
+        "enabled_login_methods": 3,
         "render_openapi": false,
         "oidc": {
           "config_url": "https://auth.danielramos.me",
