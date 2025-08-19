@@ -42,9 +42,7 @@ local autheliaConfig = importstr './authelia.config.yml';
           zoneinfo: 'Europe/Madrid',
           password: s.AUTHELIA_PASSWORD_DANI,
           email: 'danielramosacosta1@gmail.com',
-          groups: [
-            "admins"
-          ],
+          groups: [],
         },
         admin: {
           disabled: false,

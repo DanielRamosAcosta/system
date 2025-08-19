@@ -763,20 +763,7 @@
               }
             },
             "required": [
-              "port",
-              "address",
-              "enable_https",
-              "certificate_file",
-              "certificate_key_file",
-              "min_tls_version",
-              "client_auth_type",
-              "tls_cipher_suites",
-              "tls_protocols",
-              "prefix",
-              "proxy_allowed",
-              "client_ip_proxy_header",
-              "client_ip_header_depth",
-              "disable_www_auth_header"
+
             ]
           }
         },
@@ -914,13 +901,7 @@
         }
       },
       "required": [
-        "bindings",
-        "certificate_file",
-        "certificate_key_file",
-        "ca_certificates",
-        "ca_revocation_lists",
-        "cors",
-        "cache"
+
       ]
     },
     "data_provider": {

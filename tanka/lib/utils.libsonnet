@@ -113,7 +113,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     fromSecret(secret):: u.extractSecrets(secret.metadata.name, u.keysFromSecret(secret)),
   },
   ingressRoute: {
-    from(service, host):: {
+    from(service, hostOrMap):: 
+      if std.type(hostOrMap) == 'string' then
+        self.fromDefaultPort(service, hostOrMap)
+      else
+        self.fromPortToHostMap(service, hostOrMap),
+    fromDefaultPort(service, host):: {
       apiVersion: 'traefik.io/v1alpha1',
       kind: 'IngressRoute',
       metadata: {
@@ -134,6 +139,34 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
               },
             ],
           },
+        ],
+        tls: {
+          certResolver: 'le',
+        },
+      },
+    },
+    fromPortToHostMap(service, portToHostMap):: {
+      apiVersion: 'traefik.io/v1alpha1',
+      kind: 'IngressRoute',
+      metadata: {
+        name: service.metadata.name + '-ingressroute',
+      },
+      spec: {
+        entryPoints: [
+          'websecure',
+        ],
+        routes: [
+          {
+            match: 'Host(`' + portToHostMap[port] + '`)',
+            kind: 'Rule',
+            services: [
+              {
+                name: service.metadata.name,
+                port: std.parseInt(port),
+              },
+            ],
+          }
+          for port in std.objectFields(portToHostMap)
         ],
         tls: {
           certResolver: 'le',

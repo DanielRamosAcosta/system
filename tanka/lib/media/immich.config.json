@@ -26,5 +26,8 @@
                 "password": "{{SMTP_PASSWORD}}"
             }
         }
+    },
+    "server": {
+        "externalDomain": "photos.danielramos.me"
     }
 }

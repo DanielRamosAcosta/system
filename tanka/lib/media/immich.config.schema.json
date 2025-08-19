@@ -773,7 +773,6 @@
         "externalDomain": {
           "type": "string",
           "description": "External domain where Immich is accessible (e.g., https://photos.example.com)",
-          "format": "uri",
           "default": ""
         },
         "loginPageMessage": {

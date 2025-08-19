@@ -5,7 +5,8 @@
     "name": "sftpgo",
     "host": "postgres.databases.svc.cluster.local",
     "port": 5432,
-    "username": "sftpgo"
+    "username": "sftpgo",
+    "check_password_hook": "http://satph.auth.svc.cluster.local:3000/auth"
   },
   "httpd": {
     "bindings": [
@@ -26,6 +27,14 @@
           "role_field": "sftpgo_role",
           "debug": true
         }
+      }
+    ]
+  },
+  "webdavd": {
+    "bindings": [
+      {
+        "port": 8081,
+        "prefix": "/webdav"
       }
     ]
   }
