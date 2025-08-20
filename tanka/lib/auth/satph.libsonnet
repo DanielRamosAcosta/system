@@ -11,12 +11,12 @@ local autheliaConfig = importstr './authelia.config.yml';
 
   new(image='ghcr.io/danielramosacosta/satph', version):: {
     deployment: deployment.new('satph', replicas=1, containers=[
-                  container.new('satph', u.image(image, version)) +
-                  container.withPorts([containerPort.new('http', 3000)]) +
-                  container.withEnv(
-                    u.envVars.fromConfigMap(self.configEnv)
-                  )
-                ]),
+      container.new('satph', u.image(image, version)) +
+      container.withPorts([containerPort.new('http', 3000)]) +
+      container.withEnv(
+        u.envVars.fromConfigMap(self.configEnv)
+      ),
+    ]),
 
     service: k.util.serviceFor(self.deployment),
 

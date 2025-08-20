@@ -17,9 +17,9 @@ local sftpgoConfig = importstr './sftpgo.config.json';
     statefulSet: statefulSet.new('sftpgo', replicas=1, containers=[
                    container.new('sftpgo', u.image(image, version)) +
                    container.withPorts([
-                    containerPort.new('server', 8080),
-                    containerPort.new('webdav', 8081),
-                  ]) +
+                     containerPort.new('server', 8080),
+                     containerPort.new('webdav', 8081),
+                   ]) +
                    container.withEnv(
                      u.envVars.fromSecret(self.secretsEnv),
                    ) +
@@ -36,17 +36,17 @@ local sftpgoConfig = importstr './sftpgo.config.json';
     service: k.util.serviceFor(self.statefulSet),
 
     serviceLocal: k.core.v1.service.new('sftpgo-local', self.statefulSet.spec.selector.matchLabels, [
-      k.core.v1.servicePort.new(8081, 8081) +
-      k.core.v1.servicePort.withNodePort(30081)
-    ]) +
-    k.core.v1.service.spec.withType('NodePort'),
+                    k.core.v1.servicePort.new(8081, 8081) +
+                    k.core.v1.servicePort.withNodePort(30081),
+                  ]) +
+                  k.core.v1.service.spec.withType('NodePort'),
 
     configuration: u.configMap.forFile('sftpgo.json', sftpgoConfig),
 
     secretsEnv: u.secret.forEnv(self.statefulSet, {
       SFTPGO_DATA_PROVIDER__PASSWORD: s.POSTGRES_PASSWORD_SFTPGO,
       SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_ID: s.AUTHELIA_OIDC_SFTPGO_CLIENT_ID,
-      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_SECRET: s.AUTHELIA_OIDC_SFTPGO_CLIENT_SECRET
+      SFTPGO_HTTPD__BINDINGS__0__OIDC__CLIENT_SECRET: s.AUTHELIA_OIDC_SFTPGO_CLIENT_SECRET,
     }),
 
     pv: u.pv.localPathFor(self.statefulSet, '40Gi', '/cold-data/sftpgo/data'),

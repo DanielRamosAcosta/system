@@ -28,6 +28,6 @@
         }
     },
     "server": {
-        "externalDomain": "photos.danielramos.me"
+        "externalDomain": "https://photos.danielramos.me"
     }
 }

@@ -7,5 +7,5 @@ local satph = import 'auth/satph.libsonnet';
   ),
   satph: satph.new(
     version='main-d35382b'
-  )
+  ),
 }

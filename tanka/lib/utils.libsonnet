@@ -113,7 +113,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     fromSecret(secret):: u.extractSecrets(secret.metadata.name, u.keysFromSecret(secret)),
   },
   ingressRoute: {
-    from(service, hostOrMap):: 
+    from(service, hostOrMap)::
       if std.type(hostOrMap) == 'string' then
         self.fromDefaultPort(service, hostOrMap)
       else

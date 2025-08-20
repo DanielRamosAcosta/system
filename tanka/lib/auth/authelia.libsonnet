@@ -55,7 +55,7 @@ local autheliaConfig = importstr './authelia.config.yml';
           password: s.AUTHELIA_PASSWORD_DANI,
           email: 'danielramosacosta1+admin@gmail.com',
           groups: [
-            "admins"
+            'admins',
           ],
         },
         cris: {
@@ -105,7 +105,7 @@ local autheliaConfig = importstr './authelia.config.yml';
           password: s.AUTHELIA_PASSWORD_GABRIEL,
           email: 'gabrielramosacosta1@gmail.com',
           groups: [],
-        }
+        },
       },
     })),
 

@@ -2,11 +2,11 @@
   "apiVersion": "tanka.dev/v1alpha1",
   "kind": "Environment",
   "metadata": {
-    "name": "environments/proxy"
+    "name": "environments/system"
   },
   "spec": {
     "apiServer": "https://localhost:6443",
-    "namespace": "proxy",
+    "namespace": "system",
     "resourceDefaults": {},
     "expectVersions": {}
   }
