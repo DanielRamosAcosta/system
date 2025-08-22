@@ -865,8 +865,7 @@
                 }
               },
               "required": [
-                "expiration_time",
-                "max_size"
+                
               ]
             },
             "mime_types": {
@@ -895,8 +894,7 @@
             }
           },
           "required": [
-            "users",
-            "mime_types"
+            
           ]
         }
       },

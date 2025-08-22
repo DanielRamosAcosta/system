@@ -31,6 +31,11 @@
     ]
   },
   "webdavd": {
+    "cache": {
+      "users": {
+        "expiration_time": 1440
+      }
+    },
     "bindings": [
       {
         "port": 8081,
