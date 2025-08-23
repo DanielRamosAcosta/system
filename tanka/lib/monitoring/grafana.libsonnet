@@ -35,8 +35,6 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
 
       GF_AUTH_DISABLE_LOGIN_FORM: 'true',
 
-      GF_USERS_DEFAULT_LANGUAGE: 'es-ES',
-
       GF_EXPLORE_ENABLED: 'true',
 
       GF_AUTH_GENERIC_OAUTH_ENABLED: 'true',

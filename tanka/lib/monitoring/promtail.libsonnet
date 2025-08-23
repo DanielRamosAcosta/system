@@ -1,8 +1,4 @@
-local k = (import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet') + {
-  _config+:: {
-    namespace: "default",
-  },
-};
+local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 local s = import 'secrets.json';
 local u = import 'utils.libsonnet';
 
@@ -19,13 +15,19 @@ local configuration = importstr './promtail.config.yml';
   new(image='docker.io/grafana/promtail', version):: {
     daemonSet: daemonSet.new('promtail', containers=[
                  container.new('promtail', u.image(image, version)) +
-                 container.withArgs('-config.file=/etc/promtail/promtail.yaml') +
+                 container.withEnv([
+                   k.core.v1.envVar.fromFieldPath('HOSTNAME', 'spec.nodeName'),
+                 ]) +
+                 container.withArgs([
+                   '-config.file=/etc/promtail/promtail.yaml',
+                   '-log.level=debug',
+                 ]) +
                  container.withVolumeMounts([
                    u.volumeMount.fromFile(self.configuration, '/etc/promtail'),
                    k.core.v1.volumeMount.new('logs', '/var/log'),
                  ]),
                ]) +
-               daemonSet.spec.template.spec.withServiceAccount("promtail") +
+               daemonSet.spec.template.spec.withServiceAccount('promtail') +
                daemonSet.spec.template.spec.withVolumes([
                  u.volume.fromConfigMap(self.configuration),
                  volume.fromHostPath('logs', '/var/log'),
@@ -33,7 +35,7 @@ local configuration = importstr './promtail.config.yml';
 
     configuration: u.configMap.forFile('promtail.yaml', configuration),
 
-    rbac: k.util.rbac('promtail', rules = [
+    rbac: u.rbac('promtail', 'monitoring', rules=[
       policyRule.withApiGroups(['']) +
       policyRule.withResources(['nodes', 'services', 'pods']) +
       policyRule.withVerbs(['get', 'watch', 'list']),

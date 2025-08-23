@@ -27,10 +27,11 @@ query_range:
 
 limits_config:
   metric_aggregation_enabled: true
+  retention_period: 168h
 
 schema_config:
   configs:
-    - from: 2025-08-22
+    - from: 2020-08-22
       store: tsdb
       object_store: filesystem
       schema: v13
