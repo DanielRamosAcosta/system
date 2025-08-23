@@ -20,7 +20,6 @@ local configuration = importstr './promtail.config.yml';
                  ]) +
                  container.withArgs([
                    '-config.file=/etc/promtail/promtail.yaml',
-                   '-log.level=debug',
                  ]) +
                  container.withVolumeMounts([
                    u.volumeMount.fromFile(self.configuration, '/etc/promtail'),

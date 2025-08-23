@@ -35,7 +35,7 @@ notifier:
 definitions:
   user_attributes:
     sftpgo_role:
-      expression: '"admins" in groups ? "admin" : "user"'
+      expression: 'username == "admin" ? "admin" : "user"'
 
 identity_providers:
   oidc:

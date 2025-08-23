@@ -139,10 +139,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
               },
             ],
           },
-        ],
-        tls: {
-          certResolver: 'le',
-        },
+        ]
       },
     },
     fromPortToHostMap(service, portToHostMap):: {
