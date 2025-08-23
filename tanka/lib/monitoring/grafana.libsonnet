@@ -53,6 +53,8 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
       GF_AUTH_GENERIC_OAUTH_USE_PKCE: 'true',
       GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'editors') && 'Editor' || 'Viewer'",
       GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT: 'true',
+
+      GF_PATHS_PROVISIONING: '/usr/share/grafana/conf/provisioning',
     }),
 
     secretEnv: u.secret.forEnv(self.deployment, {
