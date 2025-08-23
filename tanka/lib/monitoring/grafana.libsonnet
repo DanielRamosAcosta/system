@@ -11,17 +11,17 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
 
   new(image='docker.io/grafana/grafana-oss', version):: {
     deployment: deployment.new('grafana', replicas=1, containers=[
-      container.new('grafana', u.image(image, version)) +
-      container.withPorts([containerPort.new('http', 3000)]) +
-      container.withEnv(
-        u.envVars.fromConfigMap(self.configEnv) +
-        u.envVars.fromSecret(self.secretEnv)
-      ) +
-      container.withVolumeMounts([
-        u.volumeMount.fromFile(self.lokiDatasource, '/usr/share/grafana/conf/provisioning/datasources'),
-      ])
-    ]) + 
-    u.injectFiles([self.lokiDatasource]),
+                  container.new('grafana', u.image(image, version)) +
+                  container.withPorts([containerPort.new('http', 3000)]) +
+                  container.withEnv(
+                    u.envVars.fromConfigMap(self.configEnv) +
+                    u.envVars.fromSecret(self.secretEnv)
+                  ) +
+                  container.withVolumeMounts([
+                    u.volumeMount.fromFile(self.lokiDatasource, '/usr/share/grafana/conf/provisioning/datasources'),
+                  ]),
+                ]) +
+                u.injectFiles([self.lokiDatasource]),
 
     service: k.util.serviceFor(self.deployment),
 
@@ -51,8 +51,8 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
       GF_AUTH_GENERIC_OAUTH_GROUPS_ATTRIBUTE_PATH: 'groups',
       GF_AUTH_GENERIC_OAUTH_NAME_ATTRIBUTE_PATH: 'name',
       GF_AUTH_GENERIC_OAUTH_USE_PKCE: 'true',
-      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: '\'Admin\'',
-      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT: "true",
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_PATH: "contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'editors') && 'Editor' || 'Viewer'",
+      GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT: 'true',
     }),
 
     secretEnv: u.secret.forEnv(self.deployment, {

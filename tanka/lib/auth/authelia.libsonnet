@@ -43,7 +43,7 @@ local autheliaConfig = importstr './authelia.config.yml';
           password: s.AUTHELIA_PASSWORD_DANI,
           email: 'danielramosacosta1@gmail.com',
           groups: [
-            'admins'
+            'admins',
           ],
         },
         admin: {
