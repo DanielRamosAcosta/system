@@ -7,6 +7,9 @@ build-media:
 build-auth:
   tk export dist/auth environments/auth --merge-strategy replace-envs
 
+build-monitoring:
+  tk export dist/monitoring environments/monitoring --merge-strategy replace-envs
+
 encrypt-secrets:
   age --encrypt --recipients-file ../id_dani.pub --output ./lib/secrets.json.age ./lib/secrets.json
 

@@ -45,13 +45,16 @@ identity_providers:
         key: {{ secret "/config/secrets/oidc/jwks/rsa.2048.key" | mindent 10 "|" | msquote }}
 
     claims_policies:
-      sftpgo_policy:
-        id_token: ['username', 'sftpgo_role']   # mete estas claims en el ID Token
+      grafana:
+        id_token: ['email', 'name', 'groups', 'preferred_username']
+
+      sftpgo:
+        id_token: ['username', 'sftpgo_role']
         custom_claims:
           username:
-            attribute: username                 # atributo estándar: el login (dani)
+            attribute: username
           sftpgo_role:
-            attribute: sftpgo_role              # atributo defini
+            attribute: sftpgo_role
 
     scopes:
       sftpgo:
@@ -61,7 +64,7 @@ identity_providers:
     
     clients:
       - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_ID` }}'
-        client_name: immich
+        client_name: Immich
         client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST` }}'
         public: false
         authorization_policy: two_factor
@@ -84,11 +87,11 @@ identity_providers:
         token_endpoint_auth_method: client_secret_post
       
       - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_ID` }}'
-        client_name: sftpgo
+        client_name: SFTPGo
         client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_SFTPGO_CLIENT_SECRET_DIGEST` }}'
         public: false
         authorization_policy: two_factor
-        claims_policy: sftpgo_policy
+        claims_policy: sftpgo
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
@@ -105,3 +108,26 @@ identity_providers:
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_post
+
+      - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_GRAFANA_CLIENT_ID` }}'
+        client_name: Grafana
+        client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_GRAFANA_CLIENT_SECRET_DIGEST` }}'
+        public: false
+        authorization_policy: two_factor
+        claims_policy: grafana
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://grafana.danielramos.me/login/generic_oauth'
+        scopes:
+          - openid
+          - profile
+          - email
+          - groups
+        response_types:
+          - code
+        grant_types:
+          - authorization_code
+        access_token_signed_response_alg: none
+        userinfo_signed_response_alg: none
+        token_endpoint_auth_method: client_secret_basic
