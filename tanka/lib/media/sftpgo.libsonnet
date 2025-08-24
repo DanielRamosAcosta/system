@@ -28,6 +28,9 @@ local sftpgoConfig = importstr './sftpgo.config.json';
                      u.volumeMount.fromFile(self.configuration, '/etc/sftpgo'),
                    ]),
                  ]) +
+                 statefulSet.spec.template.spec.securityContext.withRunAsUser(0) +
+                 statefulSet.spec.template.spec.securityContext.withRunAsGroup(0) +
+                 statefulSet.spec.template.spec.securityContext.withFsGroup(0) +
                  statefulSet.spec.template.spec.withVolumes([
                    u.injectFile(self.configuration),
                    volume.fromPersistentVolumeClaim('data', self.pvc.metadata.name),

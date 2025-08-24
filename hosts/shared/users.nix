@@ -21,6 +21,10 @@
           (builtins.readFile ../../id_alex.pub)
         ];
       };
+
+      ana.isNormalUser = true;
+      gabriel.isNormalUser = true;
+      cris.isNormalUser = true;
     };
   };
 
