@@ -1,8 +1,31 @@
 { config, lib, pkgs, ... }:
+let
+  sambaShare = user: path: {
+    "path" = path;
+    "browseable" = "yes";
+    "read only" = "no";
+    "guest ok" = "no";
+    "create mask" = "0644";
+    "directory mask" = "0755";
+    "force user" = user;
+    "force group" = "users";
+    "valid users" = user;
+    "vfs objects" = "recycle";
+    "recycle:repository" = ".recycle";
+    "recycle:keeptree" = "yes";
+    "recycle:versions" = "yes";
+    "recycle:touch" = "yes";
+    "recycle:touch_mtime" = "yes"; 
+    "recycle:maxsize" = "0";
+    "recycle:exclude" = "*.tmp, *.temp, ~$*, *.bak, .DS_Store, desktop.ini, Thumbs.db";
+    "recycle:exclude_dir" = "tmp, cache, .cache, .recycle";
+    "recycle:directory_mode" = "0755";
+    "recycle:subdir_mode" = "0755";
+  };
+in
 {
   services.samba = {
     enable = true;
-    securityType = "user";
     openFirewall = true;
     settings = {
       global = {
@@ -15,49 +38,10 @@
         "guest account" = "nobody";
         "map to guest" = "bad user";
       };
-      "alex" = {
-        "path" = "/cold-data/sftpgo/data/alex";
-        "browseable" = "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "create mask" = "0644";
-        "directory mask" = "0755";
-        "force user" = "alex";
-        "force group" = "users";
-        "valid users" = "alex";
-      };
-      "alex_tm" = {
-        "path" = "/cold-data/time-machine/alex";
-        "valid users" = "alex";
-        "public" = "no";
-        "writeable" = "yes";
-        "force user" = "alex";
-        "fruit:aapl" = "yes";
-        "fruit:time machine" = "yes";
-        "vfs objects" = "catia fruit streams_xattr";
-      };
-      "ana" = {
-        "path" = "/cold-data/sftpgo/data/ana";
-        "browseable" = "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "create mask" = "0644";
-        "directory mask" = "0755";
-        "force user" = "ana";
-        "force group" = "users";
-        "valid users" = "ana";
-      };
-      "gabriel" = {
-        "path" = "/cold-data/sftpgo/data/gabriel";
-        "browseable" = "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "create mask" = "0644";
-        "directory mask" = "0755";
-        "force user" = "gabriel";
-        "force group" = "users";
-        "valid users" = "gabriel";
-      };
+      
+      alex = sambaShare "alex" "/cold-data/sftpgo/data/alex";
+      ana = sambaShare "ana" "/cold-data/sftpgo/data/ana";
+      gabriel = sambaShare "gabriel" "/cold-data/sftpgo/data/gabriel";
     };
   };
 

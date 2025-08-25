@@ -10,6 +10,8 @@
     usbutils
     tree
     tmux
+    zip
+    unzip
   ];
 
   system.stateVersion = "25.05";
