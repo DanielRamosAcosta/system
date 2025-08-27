@@ -3,7 +3,7 @@ local sftpgo = import 'media/sftpgo.libsonnet';
 
 {
   immich: immich.new(
-    version='v1.139.2'
+    version='v1.139.3'
   ),
   sftpgo: sftpgo.new(
     version='v2.6.6-alpine'

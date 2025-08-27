@@ -18,7 +18,8 @@ local sftpgoConfig = importstr './sftpgo.config.json';
                    container.new('sftpgo', u.image(image, version)) +
                    container.withPorts([
                      containerPort.new('server', 8080),
-                     containerPort.new('webdav', 8081),
+                     // containerPort.new('webdav', 8081),
+                     containerPort.new('metrics', 9219),
                    ]) +
                    container.withEnv(
                      u.envVars.fromSecret(self.secretsEnv),
@@ -36,13 +37,7 @@ local sftpgoConfig = importstr './sftpgo.config.json';
                    volume.fromPersistentVolumeClaim('data', self.pvc.metadata.name),
                  ]),
 
-    service: k.util.serviceFor(self.statefulSet),
-
-    serviceLocal: k.core.v1.service.new('sftpgo-local', self.statefulSet.spec.selector.matchLabels, [
-                    k.core.v1.servicePort.new(8081, 8081) +
-                    k.core.v1.servicePort.withNodePort(30081),
-                  ]) +
-                  k.core.v1.service.spec.withType('NodePort'),
+    service: k.util.serviceFor(self.statefulSet) + u.prometheus(port='9219', path='/metrics'),
 
     configuration: u.configMap.forFile('sftpgo.json', sftpgoConfig),
 
@@ -57,7 +52,7 @@ local sftpgoConfig = importstr './sftpgo.config.json';
 
     ingressRoute: u.ingressRoute.from(self.service, {
       '8080': 'cloud.danielramos.me',
-      '8081': 'webdav.danielramos.me',
+      // '8081': 'webdav.danielramos.me',
     }),
   },
 }

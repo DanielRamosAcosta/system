@@ -139,7 +139,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
               },
             ],
           },
-        ]
+        ],
       },
     },
     fromPortToHostMap(service, portToHostMap):: {
@@ -207,4 +207,10 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
         subject.withNamespace(namespace),
       ]),
   },
+  prometheus(port, path='/metrics')::
+    k.core.v1.service.metadata.withAnnotations({
+      'prometheus.io/path': path,
+      'prometheus.io/scrape': 'true',
+      'prometheus.io/port': port,
+    }),
 }

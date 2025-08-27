@@ -42,5 +42,9 @@
         "prefix": "/webdav"
       }
     ]
+  },
+  "telemetry": {
+    "bind_port": 9219,
+    "bind_address": "0.0.0.0"
   }
 }

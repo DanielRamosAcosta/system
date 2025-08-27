@@ -6,6 +6,7 @@ local immichConfig = importstr './immich.config.json';
 
 {
   local statefulSet = k.apps.v1.statefulSet,
+  local service = k.core.v1.service,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
   local secret = k.core.v1.secret,
@@ -44,13 +45,14 @@ local immichConfig = importstr './immich.config.json';
                    volume.fromEmptyDir('merged-config'),
                  ]),
 
-    service: k.util.serviceFor(self.statefulSet),
+    service: k.util.serviceFor(self.statefulSet) + u.prometheus(port='8081'),
 
     configEnv: u.configMap.forEnv(self.statefulSet, {
       DB_HOSTNAME: 'postgres.databases.svc.cluster.local',
       DB_USERNAME: 'immich',
       REDIS_HOSTNAME: 'valkey.databases.svc.cluster.local',
       IMMICH_CONFIG_FILE: '/app/config/immich.json',
+      IMMICH_TELEMETRY_INCLUDE: 'all',
       IMMICH_PORT: '2283',
     }),
 

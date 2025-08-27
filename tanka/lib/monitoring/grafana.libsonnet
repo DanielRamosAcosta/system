@@ -3,6 +3,7 @@ local s = import 'secrets.json';
 local u = import 'utils.libsonnet';
 
 local lokiDatasource = importstr './grafana.datasource.loki.yml';
+local prometheusDatasource = importstr './grafana.datasource.prometheus.yml';
 
 {
   local deployment = k.apps.v1.deployment,
@@ -19,9 +20,10 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
                   ) +
                   container.withVolumeMounts([
                     u.volumeMount.fromFile(self.lokiDatasource, '/usr/share/grafana/conf/provisioning/datasources'),
+                    u.volumeMount.fromFile(self.prometheusDatasource, '/usr/share/grafana/conf/provisioning/datasources'),
                   ]),
                 ]) +
-                u.injectFiles([self.lokiDatasource]),
+                u.injectFiles([self.lokiDatasource, self.prometheusDatasource]),
 
     service: k.util.serviceFor(self.deployment),
 
@@ -62,6 +64,7 @@ local lokiDatasource = importstr './grafana.datasource.loki.yml';
     }),
 
     lokiDatasource: u.configMap.forFile('loki.yaml', lokiDatasource),
+    prometheusDatasource: u.configMap.forFile('prometheus.yaml', prometheusDatasource),
 
     ingressRoute: u.ingressRoute.from(self.service, 'grafana.danielramos.me'),
   },

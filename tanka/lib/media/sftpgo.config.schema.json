@@ -1543,15 +1543,7 @@
         }
       },
       "required": [
-        "bind_port",
-        "bind_address",
-        "enable_profiler",
-        "auth_user_file",
-        "certificate_file",
-        "certificate_key_file",
-        "min_tls_version",
-        "tls_cipher_suites",
-        "tls_protocols"
+
       ]
     },
     "http": {

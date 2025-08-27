@@ -1,5 +1,10 @@
 {
     "$schema": "./immich.config.schema.json",
+    "backup": {
+        "database": {
+            "enabled": false
+        }
+    },
     "storageTemplate": {
         "enabled": true
     },
