@@ -12,6 +12,8 @@
     tmux
     zip
     unzip
+    lm_sensors
+    smartmontools
   ];
 
   system.stateVersion = "25.05";
