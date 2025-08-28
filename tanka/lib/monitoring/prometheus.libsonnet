@@ -31,8 +31,8 @@ local u = import 'utils.libsonnet';
                    u.injectFile(self.configuration),
                    volume.fromPersistentVolumeClaim(dataVolumeName, self.pvc.metadata.name),
                  ]) +
-                 statefulSet.spec.template.spec.securityContext.withFsGroup(65534) + 
-                 statefulSet.spec.template.spec.securityContext.withFsGroupChangePolicy("OnRootMismatch"),
+                 statefulSet.spec.template.spec.securityContext.withFsGroup(65534) +
+                 statefulSet.spec.template.spec.securityContext.withFsGroupChangePolicy('OnRootMismatch'),
 
     service: k.util.serviceFor(self.statefulSet),
 

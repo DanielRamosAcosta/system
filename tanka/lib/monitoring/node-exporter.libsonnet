@@ -17,7 +17,7 @@ local u = import 'utils.libsonnet';
                    '--path.sysfs=/host/sys',
                    '--collector.netdev',
                    '--collector.netstat',
-                   '--collector.netclass'
+                   '--collector.netclass',
                  ]) +
                  container.withPorts(
                    [containerPort.new('node-exporter', 9100)]
