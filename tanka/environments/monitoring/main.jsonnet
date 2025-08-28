@@ -3,6 +3,7 @@ local loki = import 'monitoring/loki.libsonnet';
 local nodeExporter = import 'monitoring/node-exporter.libsonnet';
 local prometheus = import 'monitoring/prometheus.libsonnet';
 local promtail = import 'monitoring/promtail.libsonnet';
+local smartctlExporter = import 'monitoring/smartctl-exporter.libsonnet';
 
 {
   grafana: grafana.new(
@@ -19,5 +20,8 @@ local promtail = import 'monitoring/promtail.libsonnet';
   ),
   nodeExporter: nodeExporter.new(
     version='v1.9.1'
+  ),
+  smartctlExporter: smartctlExporter.new(
+    version='v0.14.0'
   ),
 }
