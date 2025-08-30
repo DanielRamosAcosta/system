@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
 
   makeFlags = [
     "KERNELRELEASE=${kernel.modDirVersion}"                                 # 3
-    "KERNEL_DIR=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"    # 4
+    "KERNEL_BUILD=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"  # 4
     "INSTALL_MOD_PATH=$(out)"                                               # 5
   ];
 
