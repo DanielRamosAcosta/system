@@ -115,3 +115,11 @@ scrape_configs:
     - source_labels: [__meta_kubernetes_service_name]
       action: replace
       target_label: kubernetes_name
+  - job_name: nut-salicru
+    metrics_path: /ups_metrics
+    static_configs:
+      - targets: ['nut-exporter.monitoring.svc.cluster.local:9199']
+        labels:
+          ups:  "salicru"
+    params:
+      ups: [ "salicru" ]

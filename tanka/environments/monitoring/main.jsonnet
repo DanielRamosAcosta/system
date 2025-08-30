@@ -1,6 +1,7 @@
 local grafana = import 'monitoring/grafana.libsonnet';
 local loki = import 'monitoring/loki.libsonnet';
 local nodeExporter = import 'monitoring/node-exporter.libsonnet';
+local nutExporter = import 'monitoring/nut-exporter.libsonnet';
 local prometheus = import 'monitoring/prometheus.libsonnet';
 local promtail = import 'monitoring/promtail.libsonnet';
 local smartctlExporter = import 'monitoring/smartctl-exporter.libsonnet';
@@ -23,5 +24,8 @@ local smartctlExporter = import 'monitoring/smartctl-exporter.libsonnet';
   ),
   smartctlExporter: smartctlExporter.new(
     version='v0.14.0'
+  ),
+  nutExporter: nutExporter.new(
+    version='3.2.1'
   ),
 }
