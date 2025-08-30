@@ -15,7 +15,7 @@
     };
 
     kernelModules = [ "kvm-intel" ];
-    extraModulePackages = [ ];
+    extraModulePackages = [ (pkgs.callPackage ./it87.nix { kernel = config.boot.kernelPackages.kernel; }) ];
   };
 
   fileSystems."/" =
