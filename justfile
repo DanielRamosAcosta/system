@@ -13,16 +13,6 @@ deploy-nas:
     --build-host nas \
     --target-host nas
 
-
-# Deploy to playground host
-deploy-playground:
-  nixos-rebuild switch \
-    --fast \
-    --flake .#playground \
-    --use-remote-sudo \
-    --build-host dani@192.168.1.41 \
-    --target-host dani@192.168.1.41
-
 # Port-forward to Kubernetes dashboard
 dashboard:
   kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
