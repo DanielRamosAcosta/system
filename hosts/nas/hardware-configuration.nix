@@ -14,7 +14,7 @@
       kernelModules = [ ];
     };
 
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [ "kvm-intel" "it87-custom" ];
     extraModulePackages = [ (pkgs.callPackage ./it87.nix { kernel = config.boot.kernelPackages.kernel; }) ];
   };
 
