@@ -55,6 +55,9 @@ local prometheusDatasource = importstr './grafana.datasource.prometheus.yml';
       GF_AUTH_GENERIC_OAUTH_ROLE_ATTRIBUTE_STRICT: 'true',
 
       GF_PATHS_PROVISIONING: '/usr/share/grafana/conf/provisioning',
+
+      GF_LOG_MODE: 'console',
+      GF_LOG_CONSOLE_FORMAT: 'json',
     }),
 
     secretEnv: u.secret.forEnv(self.deployment, {
