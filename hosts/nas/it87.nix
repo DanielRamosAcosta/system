@@ -11,12 +11,12 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-hjNph67pUaeL4kw3cacSz/sAvWMcoN2R7puiHWmRObM=";
   };
 
-  hardeningDisable = [ "pic" "format" ];                                             # 1
-  nativeBuildInputs = kernel.moduleBuildDependencies;                       # 2
+  hardeningDisable = [ "pic" "format" ];
+  nativeBuildInputs = kernel.moduleBuildDependencies;
 
   makeFlags = [
-    "KERNELRELEASE=${kernel.modDirVersion}"                                 # 3
-    "KERNEL_BUILD=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build"  # 4
+    "KERNELRELEASE=${kernel.modDirVersion}"
+    "KERNEL_BUILD=${kernel.dev}/lib/modules/${kernel.modDirVersion}/build" 
   ];
 
   buildPhase = ''
