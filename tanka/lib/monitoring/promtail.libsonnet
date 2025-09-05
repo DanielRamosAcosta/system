@@ -21,15 +21,21 @@ local configuration = importstr './promtail.config.yml';
                  container.withArgs([
                    '-config.file=/etc/promtail/promtail.yaml',
                  ]) +
+                 container.securityContext.withPrivileged(true) +
+                 container.securityContext.withRunAsUser(0) +
+                 container.securityContext.withRunAsGroup(0) +
+                 container.securityContext.withReadOnlyRootFilesystem(true) +
                  container.withVolumeMounts([
                    u.volumeMount.fromFile(self.configuration, '/etc/promtail'),
-                   k.core.v1.volumeMount.new('logs', '/var/log'),
+                   k.core.v1.volumeMount.new('logs', '/host/var/log'),
+                    k.core.v1.volumeMount.new('machineid', '/etc/machine-id', true),
                  ]),
                ]) +
                daemonSet.spec.template.spec.withServiceAccount('promtail') +
                daemonSet.spec.template.spec.withVolumes([
                  u.volume.fromConfigMap(self.configuration),
                  volume.fromHostPath('logs', '/var/log'),
+                 volume.fromHostPath('machineid', '/etc/machine-id') + volume.hostPath.withType('File'),
                ]),
 
     configuration: u.configMap.forFile('promtail.yaml', configuration),

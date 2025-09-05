@@ -1,6 +1,6 @@
 local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
-local u = import 'utils.libsonnet';
 local s = import 'secrets.json';
+local u = import 'utils.libsonnet';
 
 {
   local daemonSet = k.apps.v1.daemonSet,
@@ -13,7 +13,7 @@ local s = import 'secrets.json';
     daemonSet: daemonSet.new('nut-exporter', containers=[
                  container.new('nut-exporter', u.image(image, version)) +
                  container.withArgs([
-                  "--nut.username=monuser"
+                   '--nut.username=monuser',
                  ]) +
                  container.withPorts(containerPort.new('nut', 9199)) +
                  container.withEnv(

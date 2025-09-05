@@ -13,7 +13,7 @@ clients:
     max_retries: 20
 
 positions:
-  filename: /var/log/positions.yaml
+  filename: /host/var/log/positions.yaml
 target_config:
   sync_period: 10s
 scrape_configs:
@@ -39,3 +39,19 @@ scrape_configs:
       source_labels: [__meta_kubernetes_pod_uid]
       target_label: __path__
       replacement: /var/log/pods/*$1/*/*.log
+- job_name: journal-samba
+  journal:
+    path: /host/var/log/journal
+    max_age: 24h
+    labels:
+      job: samba
+  relabel_configs:
+    - source_labels: ['__journal__hostname']
+      target_label: host
+    - source_labels: ['__journal__systemd_unit']
+      regex: '(samba-.*\.service)'
+      action: keep
+    - source_labels: ['__journal_priority']
+      target_label: level
+    - source_labels: ['__journal__systemd_unit']
+      target_label: systemd_unit

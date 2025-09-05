@@ -20,46 +20,6 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     for key in std.objectFields(object)
   },
   jsonStringify(object):: std.manifestJsonEx(object, '  '),
-  localPv(name, storage, path):: {
-    apiVersion: 'v1',
-    kind: 'PersistentVolume',
-    metadata: {
-      name: name,
-    },
-    spec: {
-      capacity: {
-        storage: storage,
-      },
-      accessModes: [
-        'ReadWriteOnce',
-      ],
-      storageClassName: 'local-path',
-      persistentVolumeReclaimPolicy: 'Retain',
-      hostPath: {
-        path: path,
-        type: 'DirectoryOrCreate',
-      },
-    },
-  },
-  localPvc(name, pv, storage):: {
-    apiVersion: 'v1',
-    kind: 'PersistentVolumeClaim',
-    metadata: {
-      name: name,
-    },
-    spec: {
-      accessModes: [
-        'ReadWriteOnce',
-      ],
-      storageClassName: 'local-path',
-      resources: {
-        requests: {
-          storage: storage,
-        },
-      },
-      volumeName: pv,
-    },
-  },
   utils: {
     join(elements, separator=','):: std.join(separator, elements),
   },
@@ -84,10 +44,50 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   withoutSchema(object):: std.prune(std.mergePatch(object, { '$schema': null })),
   normalizeName(name):: std.strReplace(std.strReplace(name, '.', '-'), '_', '-'),
   pv: {
-    localPathFor(component, storage, path):: u.localPv(component.metadata.name + '-pv', storage, path),
+    localPathFor(component, storage, path):: u.pv.atLocal(component.metadata.name + '-pv', storage, path),
+    atLocal(name, storage, path):: {
+      apiVersion: 'v1',
+      kind: 'PersistentVolume',
+      metadata: {
+        name: name,
+      },
+      spec: {
+        capacity: {
+          storage: storage,
+        },
+        accessModes: [
+          'ReadWriteOnce',
+        ],
+        storageClassName: 'local-path',
+        persistentVolumeReclaimPolicy: 'Retain',
+        hostPath: {
+          path: path,
+          type: 'DirectoryOrCreate',
+        },
+      },
+    },
   },
   pvc: {
-    from(pv):: u.localPvc(pv.metadata.name + 'c', pv.metadata.name, pv.spec.capacity.storage),
+    from(pv):: u.pvc.atLocal(pv.metadata.name + 'c', pv.metadata.name, pv.spec.capacity.storage),
+    atLocal(name, pv, storage):: {
+      apiVersion: 'v1',
+      kind: 'PersistentVolumeClaim',
+      metadata: {
+        name: name,
+      },
+      spec: {
+        accessModes: [
+          'ReadWriteOnce',
+        ],
+        storageClassName: 'local-path',
+        resources: {
+          requests: {
+            storage: storage,
+          },
+        },
+        volumeName: pv,
+      },
+    },
   },
   volumeMount: {
     fromFile(configMapOrSecret, path):: k.core.v1.volumeMount.new(configMapOrSecret.metadata.name, path + '/' + std.objectFieldsAll(configMapOrSecret.data)[0]) + k.core.v1.volumeMount.withSubPath(std.objectFieldsAll(configMapOrSecret.data)[0]),
