@@ -49,6 +49,7 @@ in
   services.samba-wsdd = {
     enable = true;
     openFirewall = true;
+    interface = "enp4s0";
   };
 
   networking.firewall.enable = true;
