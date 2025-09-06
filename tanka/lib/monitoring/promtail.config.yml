@@ -39,19 +39,32 @@ scrape_configs:
       source_labels: [__meta_kubernetes_pod_uid]
       target_label: __path__
       replacement: /var/log/pods/*$1/*/*.log
-- job_name: journal-samba
+- job_name: systemd-journal
   journal:
     path: /host/var/log/journal
     max_age: 24h
     labels:
-      job: samba
+      job: systemd-journal
   relabel_configs:
     - source_labels: ['__journal__hostname']
       target_label: host
     - source_labels: ['__journal__systemd_unit']
-      regex: '(samba-.*\.service)'
       action: keep
     - source_labels: ['__journal_priority']
       target_label: level
     - source_labels: ['__journal__systemd_unit']
       target_label: systemd_unit
+- job_name: samba
+  static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: samba
+        __path__: /host/var/log/samba/log.*
+  relabel_configs:
+    - source_labels: [__path__]
+      regex: '/host/var/log/samba/log\.(.+?)(?:\.old)?$'
+      target_label: samba_log_type
+      replacement: '${1}'
+    - target_label: host
+      replacement: 'nas'
