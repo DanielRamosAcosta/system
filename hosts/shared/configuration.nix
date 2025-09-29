@@ -15,6 +15,7 @@
     lm_sensors
     smartmontools
     exiftool
+    liquidctl
   ];
 
   system.stateVersion = "25.05";
