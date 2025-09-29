@@ -1,5 +1,6 @@
 {
   imports = [
+    ../../utilities/liquidctl.nix
     ../shared/configuration.nix
     ../shared/secrets.nix
     ../shared/users.nix
