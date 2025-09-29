@@ -113,12 +113,12 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
     fromSecret(secret):: u.extractSecrets(secret.metadata.name, u.keysFromSecret(secret)),
   },
   ingressRoute: {
-    from(service, hostOrMap)::
+    from(service, hostOrMap, middlewares=[])::
       if std.type(hostOrMap) == 'string' then
-        self.fromDefaultPort(service, hostOrMap)
+        self.fromDefaultPort(service, hostOrMap, middlewares)
       else
         self.fromPortToHostMap(service, hostOrMap),
-    fromDefaultPort(service, host):: {
+    fromDefaultPort(service, host, middlewares):: {
       apiVersion: 'traefik.io/v1alpha1',
       kind: 'IngressRoute',
       metadata: {
@@ -138,6 +138,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
                 port: service.spec.ports[0].port,
               },
             ],
+            middlewares: if std.length(middlewares) > 0 then middlewares else null,
           },
         ],
       },
@@ -213,4 +214,26 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       'prometheus.io/scrape': 'true',
       'prometheus.io/port': port,
     }),
+  traefik: {
+    middleware: {
+      new(name, namespace):: {
+        apiVersion: 'traefik.io/v1alpha1',
+        kind: 'Middleware',
+        metadata: {
+          name: name,
+          namespace: namespace,
+        },
+      },
+      spec: {
+        withforwardAuth(address, authResponseHeaders):: {
+          spec+: {
+            forwardAuth: {
+              address: address,
+              authResponseHeaders: authResponseHeaders,
+            },
+          },
+        },
+      },
+    },
+  },
 }

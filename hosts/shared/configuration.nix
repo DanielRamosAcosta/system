@@ -14,6 +14,7 @@
     unzip
     lm_sensors
     smartmontools
+    exiftool
   ];
 
   system.stateVersion = "25.05";
