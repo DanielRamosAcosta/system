@@ -8,19 +8,19 @@
     fans = [
       {
         name = "fan1";
-        percentage = 10;
+        percentage = 30;
       }
       {
         name = "fan2";
-        percentage = 10;
+        percentage = 30;
       }
       {
         name = "fan3";
-        percentage = 10;
+        percentage = 30;
       }
       {
         name = "fan4";
-        percentage = 10;
+        percentage = 30;
       }
     ];
   };
