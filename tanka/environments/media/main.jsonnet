@@ -1,11 +1,12 @@
 local immich = import 'media/immich.libsonnet';
 local sftpgo = import 'media/sftpgo.libsonnet';
+local versions = import '../versions.jsonnet';
 
 {
   immich: immich.new(
-    version='v2.0.1'
+    version=versions.immich.version,
   ),
   sftpgo: sftpgo.new(
-    version='v2.6.6-alpine'
+    version=versions.sftpgo.version + '-alpine',
   ),
 }

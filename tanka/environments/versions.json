@@ -1,0 +1,14 @@
+{
+  "immich": {
+    "repo": "immich-app/immich",
+    "version": "v2.0.1"
+  },
+  "sftpgo": {
+    "repo": "drakkan/sftpgo",
+    "version": "v2.6.6"
+  },
+  "authelia": {
+    "repo": "authelia/authelia",
+    "version": "4.39.11"
+  }
+}
