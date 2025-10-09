@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+# Set USER variable (required for Nix profile script)
+export USER=vscode
+
+# Source Nix profile
+. /home/vscode/.nix-profile/etc/profile.d/nix.sh
+
 # Run nix develop command
 nix develop --impure --accept-flake-config --command true
 

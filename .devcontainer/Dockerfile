@@ -52,3 +52,8 @@ RUN curl --proto '=https' --tlsv1.2 -sSfL https://nixos.org/nix/install | sh -s 
     && mkdir -p /home/vscode/.config/nix \
     && echo 'experimental-features = nix-command flakes' >> /home/vscode/.config/nix/nix.conf \
     && echo '. /home/vscode/.nix-profile/etc/profile.d/nix.sh' >> /home/vscode/.bashrc
+
+# Install nixos-rebuild globally via Nix
+RUN export USER=vscode \
+    && . /home/vscode/.nix-profile/etc/profile.d/nix.sh \
+    && nix profile install nixpkgs#nixos-rebuild
