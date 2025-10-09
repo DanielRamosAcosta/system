@@ -135,7 +135,7 @@ The `versions.json` file in `tanka/environments/` centralizes version management
 
 Example from `media/main.jsonnet`:
 ```jsonnet
-local versions = import '../versions.jsonnet';
+local versions = import '../versions.json';
 immich.new(version=versions.immich.version)
 ```
 

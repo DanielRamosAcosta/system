@@ -9,6 +9,42 @@
   },
   "authelia": {
     "repo": "authelia/authelia",
-    "version": "4.39.11"
+    "version": "4.39.12"
+  },
+  "valkey": {
+    "repo": "valkey-io/valkey",
+    "version": "7.2.10"
+  },
+  "grafana": {
+    "repo": "grafana/grafana",
+    "version": "12.1.1"
+  },
+  "loki": {
+    "repo": "grafana/loki",
+    "version": "3.5.5"
+  },
+  "promtail": {
+    "repo": "grafana/loki",
+    "version": "3.5.5"
+  },
+  "prometheus": {
+    "repo": "prometheus/prometheus",
+    "version": "v3.6.0"
+  },
+  "nodeExporter": {
+    "repo": "prometheus/node_exporter",
+    "version": "v1.9.1"
+  },
+  "smartctlExporter": {
+    "repo": "prometheus-community/smartctl_exporter",
+    "version": "v0.14.0"
+  },
+  "nutExporter": {
+    "repo": "DRuggeri/nut_exporter",
+    "version": "3.2.1"
+  },
+  "cloudflare": {
+    "repo": "favonia/cloudflare-ddns",
+    "version": "1.15.1"
   }
 }

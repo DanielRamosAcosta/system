@@ -1,6 +1,6 @@
 local immich = import 'media/immich.libsonnet';
 local sftpgo = import 'media/sftpgo.libsonnet';
-local versions = import '../versions.jsonnet';
+local versions = import '../versions.json';
 
 {
   immich: immich.new(

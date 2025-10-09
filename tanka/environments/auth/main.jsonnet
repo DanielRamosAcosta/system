@@ -1,6 +1,6 @@
 local authelia = import 'auth/authelia.libsonnet';
 local satph = import 'auth/satph.libsonnet';
-local versions = import '../versions.jsonnet';
+local versions = import '../versions.json';
 
 {
   authelia: authelia.new(

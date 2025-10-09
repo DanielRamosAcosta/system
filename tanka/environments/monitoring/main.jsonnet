@@ -5,27 +5,28 @@ local nutExporter = import 'monitoring/nut-exporter.libsonnet';
 local prometheus = import 'monitoring/prometheus.libsonnet';
 local promtail = import 'monitoring/promtail.libsonnet';
 local smartctlExporter = import 'monitoring/smartctl-exporter.libsonnet';
+local versions = import '../versions.json';
 
 {
   grafana: grafana.new(
-    version='12.1.1'
+    version=versions.grafana.version
   ),
   loki: loki.new(
-    version='3.5.3'
+    version=versions.loki.version
   ),
   promtail: promtail.new(
-    version='3.5.3'
+    version=versions.promtail.version
   ),
   prometheus: prometheus.new(
-    version='v3.6.0-rc.0'
+    version=versions.prometheus.version
   ),
   nodeExporter: nodeExporter.new(
-    version='v1.9.1'
+    version=versions.nodeExporter.version
   ),
   smartctlExporter: smartctlExporter.new(
-    version='v0.14.0'
+    version=versions.smartctlExporter.version
   ),
   nutExporter: nutExporter.new(
-    version='3.2.1'
+    version=versions.nutExporter.version
   ),
 }

@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(cat:*)",
-      "Bash(docker run:*)"
+      "Bash(docker run:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
