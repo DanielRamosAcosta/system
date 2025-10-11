@@ -1,6 +1,6 @@
+local versions = import '../versions.json';
 local postgres = import 'databases/postgres.libsonnet';
 local valkey = import 'databases/valkey.libsonnet';
-local versions = import '../versions.json';
 
 {
   postgres: postgres.new(
