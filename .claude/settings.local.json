@@ -3,7 +3,18 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(docker run:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_tabs",
+      "WebSearch",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__select_page",
+      "mcp__chrome-devtools__take_snapshot"
     ],
     "deny": [],
     "ask": []

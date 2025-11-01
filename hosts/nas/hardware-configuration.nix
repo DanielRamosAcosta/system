@@ -48,6 +48,12 @@
     options = [ "degraded" "compress=zstd" "subvol=@sftpgo" ];
   };
 
+  fileSystems."/cold-data/gitea" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "degraded" "compress=zstd" "subvol=@gitea" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
