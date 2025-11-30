@@ -24,6 +24,9 @@ just install
 # Build ISO image
 just iso
 
+# Build documentation PDF from Typst source
+just docs
+
 # Run Nix utility tests
 just test
 # Or directly: nix eval --impure --expr 'import ./utilities/utilities.test.nix {}'
@@ -39,9 +42,11 @@ just tanka::build-databases
 just tanka::build-media
 just tanka::build-auth
 just tanka::build-monitoring
+# Available environments: databases, media, auth, monitoring, dashboard, system
 
 # Deploy to cluster
 just tanka::deploy
+# Note: Currently configured to deploy databases environment
 
 # Manage secrets
 just tanka::encrypt-secrets  # Encrypts lib/secrets.json -> lib/secrets.json.age
@@ -128,7 +133,20 @@ Each environment has:
 
 ### Version Management
 
-The `versions.json` file in `tanka/environments/` centralizes version management for all Kubernetes applications. When updating application versions:
+The `versions.json` file in `tanka/environments/` centralizes version management for all Kubernetes applications.
+
+**Structure:**
+Each application has a `repo` (GitHub org/name) and `version` (tag or version string):
+```jsonnet
+{
+  "immich": {
+    "repo": "immich-app/immich",
+    "version": "v2.2.1"
+  }
+}
+```
+
+**Usage Pattern:**
 1. Update the version in `versions.json`
 2. Import it in the environment's `main.jsonnet`
 3. Pass the version to the application constructor
@@ -138,6 +156,8 @@ Example from `media/main.jsonnet`:
 local versions = import '../versions.json';
 immich.new(version=versions.immich.version)
 ```
+
+Applications currently tracked: immich, sftpgo, gitea, authelia, valkey, grafana, loki, promtail, prometheus, nodeExporter, smartctlExporter, nutExporter, cloudflare.
 
 ### System Services
 

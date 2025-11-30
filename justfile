@@ -30,4 +30,4 @@ iso:
 
 # Run tests
 test:
-  nix eval --impure --expr 'import ./utils/utils.test.nix {}'
+  nix eval --impure --expr 'import ./utilities/utilities.test.nix {}'

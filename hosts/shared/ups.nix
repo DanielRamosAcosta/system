@@ -1,5 +1,9 @@
 { config, ... }:
 {
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0665", ATTRS{idProduct}=="5161", ATTR{power/control}="on", ATTR{power/autosuspend_delay_ms}="0"
+  '';
+
   power.ups = {
     enable = true;
 
