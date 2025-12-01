@@ -6,4 +6,5 @@ in
   "dani-hashed-password.age".publicKeys = [ nas dani ];
   "alex-hashed-password.age".publicKeys = [ nas dani ];
   "monuser-password.age".publicKeys = [ nas dani ];
+  "nas-tunnel-credentials.json.age".publicKeys = [ nas dani ];
 }

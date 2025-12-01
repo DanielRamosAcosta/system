@@ -5,5 +5,6 @@
     ./samba.nix
     ./smart.nix
     ./fans.nix
+    ./cloudflared.nix
   ];
 }
