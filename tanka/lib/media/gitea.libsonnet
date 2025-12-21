@@ -10,13 +10,18 @@ local u = import 'utils.libsonnet';
   local volume = k.core.v1.volume,
   local volumeMount = k.core.v1.volumeMount,
   local configMap = k.core.v1.configMap,
+  local role = k.rbac.v1.role,
+  local roleBinding = k.rbac.v1.roleBinding,
+  local subject = k.rbac.v1.subject,
+  local serviceAccount = k.core.v1.serviceAccount,
+  local policyRule = k.rbac.v1.policyRule,
 
   new(image='docker.gitea.com/gitea', version):: {
     statefulSet: statefulSet.new('gitea', replicas=1, containers=[
                    container.new('gitea', u.image(image, version)) +
                    container.withPorts([
                      containerPort.new('server', 3000),
-                     // containerPort.new('ssh', 22),
+                     containerPort.new('ssh', 2222),
                    ]) +
                    container.withEnv(
                      u.envVars.fromConfigMap(self.configEnv) +
@@ -28,7 +33,8 @@ local u = import 'utils.libsonnet';
                  ]) +
                  statefulSet.spec.template.spec.withVolumes([
                    volume.fromHostPath('data', '/cold-data/gitea/data') + volume.hostPath.withType('DirectoryOrCreate'),
-                 ]),
+                 ]) +
+                 statefulSet.spec.template.spec.withServiceAccount('git-ssh'),
 
     service: k.util.serviceFor(self.statefulSet) + u.prometheus(port='3000', path='/metrics'),
 
@@ -60,6 +66,13 @@ local u = import 'utils.libsonnet';
       GITEA__service__ALLOW_ONLY_EXTERNAL_REGISTRATION: 'true',
       GITEA__service__SHOW_REGISTRATION_BUTTON: 'false',
       GITEA__service__ENABLE_PASSWORD_SIGNIN_FORM: 'false',
+
+      // server
+      GITEA__server__DOMAIN: 'git.danielramos.me',
+      GITEA__server__SSH_DOMAIN: 'ssh.danielramos.me',
+      GITEA__server__SSH_PORT: '22',
+      GITEA__server__SSH_LISTEN_PORT: '2222',
+      GITEA__server__START_SSH_SERVER: 'true',
     }),
 
     secretsEnv: u.secret.forEnv(self.statefulSet, {
@@ -74,5 +87,36 @@ local u = import 'utils.libsonnet';
       '3000': 'git.danielramos.me',
       // '8081': 'webdav.danielramos.me',
     }),
+
+    // RBAC para permitir kubectl exec desde el host
+    rbac: {
+      service_account:
+        serviceAccount.new('git-ssh'),
+
+      role:
+        role.new() +
+        role.mixin.metadata.withName('git-ssh-exec') +
+        role.withRules([
+          policyRule.withApiGroups(['']) +
+          policyRule.withResources(['pods']) +
+          policyRule.withVerbs(['get', 'list']),
+          policyRule.withApiGroups(['']) +
+          policyRule.withResources(['pods/exec']) +
+          policyRule.withVerbs(['create']),
+        ]),
+
+      role_binding:
+        roleBinding.new() +
+        roleBinding.mixin.metadata.withName('git-ssh-exec-binding') +
+        roleBinding.mixin.roleRef.withApiGroup('rbac.authorization.k8s.io') +
+        roleBinding.mixin.roleRef.withKind('Role') +
+        roleBinding.mixin.roleRef.withName('git-ssh-exec') +
+        roleBinding.withSubjects([
+          subject.new() +
+          subject.withKind('ServiceAccount') +
+          subject.withName('git-ssh') +
+          subject.withNamespace('media'),
+        ]),
+    },
   },
 }

@@ -14,7 +14,16 @@
       "mcp__chrome-devtools__navigate_page",
       "mcp__chrome-devtools__new_page",
       "mcp__chrome-devtools__select_page",
-      "mcp__chrome-devtools__take_snapshot"
+      "mcp__chrome-devtools__take_snapshot",
+      "Bash(kubectl get pods -n media)",
+      "Bash(tk apply environments/media --auto-approve)",
+      "Bash(tk apply environments/media --auto-approve=always)",
+      "Bash(kubectl logs -n media gitea-0 --tail=30)",
+      "Bash(kubectl logs -n media gitea-0 --tail=10)",
+      "Bash(kubectl logs -n media gitea-0)",
+      "Bash(kubectl get pod -n media gitea-0 -o jsonpath='{.spec.serviceAccountName}')",
+      "Bash(ssh nas:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

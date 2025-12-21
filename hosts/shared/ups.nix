@@ -9,7 +9,7 @@
 
     ups.salicru = {
       description = "Salicru UPS";
-      driver = "nutdrv_qx";
+      driver = "blazer_usb";
       port = "auto";
       directives = [ "pollinterval = 15" ];
     };
