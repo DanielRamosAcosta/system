@@ -38,7 +38,7 @@ scrape_configs:
     - action: replace
       source_labels: [__meta_kubernetes_pod_uid]
       target_label: __path__
-      replacement: /var/log/pods/*$1/*/*.log
+      replacement: /host/var/log/pods/*$1/*/*.log
 - job_name: systemd-journal
   journal:
     path: /host/var/log/journal

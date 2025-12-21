@@ -19,6 +19,10 @@
         "clientId": "{{AUTHELIA_OIDC_IMMICH_CLIENT_ID}}",
         "clientSecret": "{{AUTHELIA_OIDC_IMMICH_CLIENT_SECRET_DIGEST}}"
     },
+    "machineLearning": {
+        "enabled": true,
+        "urls": ["http://192.168.1.22:3003"]
+    },
     "notifications": {
         "smtp": {
             "enabled": true,

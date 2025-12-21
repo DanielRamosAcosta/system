@@ -6,6 +6,7 @@ local immichConfig = importstr './immich.config.json';
 
 {
   local statefulSet = k.apps.v1.statefulSet,
+  local deployment = k.apps.v1.deployment,
   local service = k.core.v1.service,
   local container = k.core.v1.container,
   local containerPort = k.core.v1.containerPort,
@@ -14,7 +15,7 @@ local immichConfig = importstr './immich.config.json';
   local volumeMount = k.core.v1.volumeMount,
   local configMap = k.core.v1.configMap,
 
-  new(image='ghcr.io/immich-app/immich-server', version):: {
+  new(image='ghcr.io/immich-app/immich-server', version, mlImage='ghcr.io/immich-app/immich-machine-learning'):: {
     statefulSet: statefulSet.new('immich', replicas=1, containers=[
                    container.new('immich', u.image(image, version)) +
                    container.withPorts(
@@ -80,5 +81,41 @@ local immichConfig = importstr './immich.config.json';
     pvc: u.pvc.from(self.pv),
 
     ingressRoute: u.ingressRoute.from(self.service, 'photos.danielramos.me'),
+
+    // Machine Learning Service
+    mlDeployment: deployment.new('immich-machine-learning', replicas=1, containers=[
+                    container.new('immich-machine-learning', u.image(mlImage, version)) +
+                    container.withPorts([
+                      containerPort.new('http', 3003),
+                    ]) +
+                    container.withEnv([
+                      k.core.v1.envVar.new('TRANSFORMERS_CACHE', '/cache'),
+                      k.core.v1.envVar.new('PYTHONUNBUFFERED', '1'),
+                    ]) +
+                    container.withVolumeMounts([
+                      volumeMount.new('model-cache', '/cache'),
+                    ]) +
+                    {
+                      resources: {
+                        requests: {
+                          memory: '2Gi',
+                          cpu: '1000m',
+                        },
+                        limits: {
+                          memory: '6Gi',
+                          cpu: '4000m',
+                        },
+                      },
+                    },
+                  ]) +
+                  deployment.spec.template.spec.withVolumes([
+                    volume.fromPersistentVolumeClaim('model-cache', self.mlPvc.metadata.name),
+                  ]) +
+                  deployment.spec.strategy.withType('Recreate'),
+
+    mlService: k.util.serviceFor(self.mlDeployment),
+
+    mlPv: u.pv.localPathFor(self.mlDeployment, '15Gi', '/data/immich/ml-cache'),
+    mlPvc: u.pvc.from(self.mlPv),
   },
 }
