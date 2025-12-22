@@ -1,7 +1,7 @@
 {
   "immich": {
     "repo": "immich-app/immich",
-    "version": "v2.3.1"
+    "version": "v2.4.1"
   },
   "sftpgo": {
     "repo": "drakkan/sftpgo",
