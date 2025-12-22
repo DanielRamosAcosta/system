@@ -23,7 +23,20 @@
       "Bash(kubectl logs -n media gitea-0)",
       "Bash(kubectl get pod -n media gitea-0 -o jsonpath='{.spec.serviceAccountName}')",
       "Bash(ssh nas:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(kubectl get:*)",
+      "Bash(grep:*)",
+      "Bash(kubectl rollout:*)",
+      "Bash(kubectl logs:*)",
+      "Bash(kubectl describe:*)",
+      "Bash(docker pull:*)",
+      "Bash(just tanka::build-monitoring:*)",
+      "Bash(just tanka::deploy:*)",
+      "Bash(tk apply:*)",
+      "WebFetch(domain:photos.danielramos.me)",
+      "Bash(top:*)",
+      "Bash(curl:*)",
+      "Bash(docker logs:*)"
     ],
     "deny": [],
     "ask": []

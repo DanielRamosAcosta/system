@@ -111,6 +111,7 @@ local immichConfig = importstr './immich.config.json';
                   deployment.spec.template.spec.withVolumes([
                     volume.fromPersistentVolumeClaim('model-cache', self.mlPvc.metadata.name),
                   ]) +
+                  deployment.spec.template.spec.withEnableServiceLinks(false) +
                   deployment.spec.strategy.withType('Recreate'),
 
     mlService: k.util.serviceFor(self.mlDeployment),
