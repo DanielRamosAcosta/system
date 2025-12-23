@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Strict schema for UserLangResponse - tuple of 10 single-property objects
 export const UserLangResponseSchema = z.tuple([
   z.object({ encryption_key: z.string() }).strict(),
   z.object({ salt: z.string() }).strict(),
@@ -16,7 +15,6 @@ export const UserLangResponseSchema = z.tuple([
 
 export type UserLangResponse = z.infer<typeof UserLangResponseSchema>;
 
-// LAN Settings Response Schema - tuple of 25 single-property objects
 export const LanSettingsResponseSchema = z.tuple([
   z.object({ LanIP: z.string() }).strict(),
   z.object({ LanSubnetMask: z.string() }).strict(),
