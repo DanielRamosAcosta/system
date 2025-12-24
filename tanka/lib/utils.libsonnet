@@ -141,6 +141,9 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
             middlewares: if std.length(middlewares) > 0 then middlewares else null,
           },
         ],
+        tls: {
+          certResolver: 'le',
+        },
       },
     },
     fromPortToHostMap(service, portToHostMap):: {

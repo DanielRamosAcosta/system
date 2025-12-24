@@ -16,6 +16,7 @@
     smartmontools
     exiftool
     liquidctl
+    openssl
   ];
 
   system.stateVersion = "25.05";

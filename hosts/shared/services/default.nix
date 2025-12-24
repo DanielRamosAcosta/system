@@ -6,5 +6,6 @@
     ./smart.nix
     ./fans.nix
     ./cloudflared.nix
+    ./dnsmasq.nix
   ];
 }
