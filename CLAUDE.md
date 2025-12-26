@@ -60,6 +60,36 @@ just tanka::decrypt-secrets  # Requires private key at ~/.ssh/id_ed25519
 nix develop
 ```
 
+### Deploying NixOS Configuration
+
+#### Quick Deploy (from outside dev container)
+
+```bash
+# THIS IS THE FASTEST WAY - Automatically finds and uses the dev container
+./deploy.sh
+```
+
+This script:
+- Automatically finds the VSCode dev container
+- Sources the nix environment
+- Executes the deployment with all required setup
+- Works with or without VPN
+
+#### Deploy from Inside Dev Container
+
+When working inside the VSCode dev container, SSH keys are automatically mounted from `.hostssh/` to `.ssh/`.
+
+**Deploy Command (from inside dev container):**
+```bash
+# Quick method using justfile
+just --unstable deploy-nas
+```
+
+Or directly:
+```bash
+/home/vscode/.nix-profile/bin/nixos-rebuild switch --no-reexec --flake '.#nas' --sudo --build-host nas --target-host nas
+```
+
 ### Kubernetes Access
 
 ```bash

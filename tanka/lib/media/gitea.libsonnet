@@ -99,9 +99,11 @@ local u = import 'utils.libsonnet';
         role.withRules([
           policyRule.withApiGroups(['']) +
           policyRule.withResources(['pods']) +
+          policyRule.withResourceNames(['gitea-0']) +
           policyRule.withVerbs(['get', 'list']),
           policyRule.withApiGroups(['']) +
           policyRule.withResources(['pods/exec']) +
+          policyRule.withResourceNames(['gitea-0']) +
           policyRule.withVerbs(['create']),
         ]),
 
