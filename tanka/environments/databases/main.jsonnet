@@ -1,6 +1,7 @@
 local versions = import '../versions.json';
 local postgres = import 'databases/postgres.libsonnet';
 local valkey = import 'databases/valkey.libsonnet';
+local mariadb = import 'databases/mariadb.libsonnet';
 
 {
   postgres: postgres.new(
@@ -8,5 +9,8 @@ local valkey = import 'databases/valkey.libsonnet';
   ),
   valkey: valkey.new(
     version=versions.valkey.version + '-alpine'
+  ),
+  mariadb: mariadb.new(
+    version='11.4.8-r0-ls201'
   ),
 }
