@@ -50,5 +50,9 @@
   "cloudflare": {
     "repo": "favonia/cloudflare-ddns",
     "version": "1.15.1"
+  },
+  "booklore": {
+    "repo": "booklore-app/booklore",
+    "version": "v1.16.0"
   }
 }
