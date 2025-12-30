@@ -47,6 +47,16 @@ definitions:
 
 identity_providers:
   oidc:
+    cors:
+      endpoints:
+        - authorization
+        - pushed-authorization-request
+        - token
+        - revocation
+        - introspection
+        - userinfo
+      allowed_origins_from_client_redirect_uris: true
+
     jwks:
       - key_id: main
         algorithm: RS256
@@ -63,6 +73,9 @@ identity_providers:
             attribute: username
           sftpgo_role:
             attribute: sftpgo_role
+
+      booklore:
+        id_token: ['email', 'email_verified', 'preferred_username', 'name']
 
     scopes:
       sftpgo:
@@ -148,7 +161,7 @@ identity_providers:
         # See:
         # * https://github.com/go-gitea/gitea/issues/34747
         # * https://github.com/go-gitea/gitea/issues/16983
-        # * https://github.com/go-gitea/gitea/issues/21376        
+        # * https://github.com/go-gitea/gitea/issues/21376
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
@@ -165,3 +178,27 @@ identity_providers:
         access_token_signed_response_alg: none
         userinfo_signed_response_alg: none
         token_endpoint_auth_method: client_secret_basic
+
+      - client_id: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_BOOKLORE_CLIENT_ID` }}'
+        client_name: Booklore
+        public: true
+        authorization_policy: two_factor
+        claims_policy: booklore
+        consent_mode: implicit
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://books.danielramos.me/oauth2-callback'
+        scopes:
+          - openid
+          - offline_access
+          - profile
+          - email
+        response_types:
+          - code
+        grant_types:
+          - authorization_code
+          - refresh_token
+        access_token_signed_response_alg: none
+        userinfo_signed_response_alg: none
+        token_endpoint_auth_method: none
