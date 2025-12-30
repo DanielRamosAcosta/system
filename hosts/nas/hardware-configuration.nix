@@ -39,19 +39,19 @@
   fileSystems."/cold-data/immich" = {
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
-    options = [ "degraded" "compress=zstd" "subvol=@immich" ];
+    options = [ "compress=zstd" "subvol=@immich" ];
   };
 
   fileSystems."/cold-data/sftpgo" = {
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
-    options = [ "degraded" "compress=zstd" "subvol=@sftpgo" ];
+    options = [ "compress=zstd" "subvol=@sftpgo" ];
   };
 
   fileSystems."/cold-data/gitea" = {
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
-    options = [ "degraded" "compress=zstd" "subvol=@gitea" ];
+    options = [ "compress=zstd" "subvol=@gitea" ];
   };
 
   swapDevices = [ ];
