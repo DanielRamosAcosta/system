@@ -1,6 +1,7 @@
 local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 local s = import 'secrets.json';
 local u = import 'utils.libsonnet';
+local logbackConfig = importstr './booklore.logback-spring.xml';
 
 {
   local statefulSet = k.apps.v1.statefulSet,
@@ -21,11 +22,13 @@ local u = import 'utils.libsonnet';
         volumeMount.new('data', '/app/data'),
         volumeMount.new('books', '/books'),
         volumeMount.new('bookdrop', '/bookdrop'),
+        u.volumeMount.fromFile(self.logbackConfiguration, '/config'),
       ]),
     ]) + statefulSet.spec.template.spec.withVolumes([
       volume.fromPersistentVolumeClaim('data', self.dataPvc.metadata.name),
       volume.fromPersistentVolumeClaim('books', self.booksPvc.metadata.name),
       volume.fromPersistentVolumeClaim('bookdrop', self.bookdropPvc.metadata.name),
+      u.injectFile(self.logbackConfiguration),
     ]),
 
     service: k.util.serviceFor(self.statefulSet),
@@ -37,11 +40,14 @@ local u = import 'utils.libsonnet';
       BOOKLORE_PORT: '6060',
       DATABASE_URL: 'jdbc:mariadb://mariadb.databases.svc.cluster.local:3306/booklore',
       DATABASE_USERNAME: 'booklore',
+      LOGGING_CONFIG: '/config/logback-spring.xml',
     }),
 
     secretsEnv: u.secret.forEnv(self.statefulSet, {
       DATABASE_PASSWORD: s.MARIADB_PASSWORD_BOOKLORE,
     }),
+
+    logbackConfiguration: u.configMap.forFile('logback-spring.xml', logbackConfig),
 
     dataPv: u.pv.atLocal('booklore-data-pv', '5Gi', '/cold-data/booklore/data'),
     dataPvc: u.pvc.from(self.dataPv),
