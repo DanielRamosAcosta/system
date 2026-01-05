@@ -18,6 +18,19 @@ chmod 700 ~/.ssh
 cp ~/.hostssh/config ~/.ssh/config
 chmod 600 ~/.ssh/config
 
+# Copy SSH keys from host mount and set permissions
+for key in id_rsa id_rsa.pub id_ed25519 id_ed25519.pub id_mac id_mac.pub; do
+  if [ -f ~/.hostssh/$key ]; then
+    cp ~/.hostssh/$key ~/.ssh/$key
+    # Set 600 permissions for private keys, 644 for public keys
+    if [[ $key == *.pub ]]; then
+      chmod 644 ~/.ssh/$key
+    else
+      chmod 600 ~/.ssh/$key
+    fi
+  fi
+done
+
 # Comment out line 8 of the SSH config
 sed -i '8s/^/# /' ~/.ssh/config
 
