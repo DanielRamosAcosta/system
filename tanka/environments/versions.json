@@ -54,5 +54,9 @@
   "booklore": {
     "repo": "booklore-app/booklore",
     "version": "v1.16.0"
+  },
+  "jellyfin": {
+    "repo": "jellyfin/jellyfin",
+    "version": "10.11.5"
   }
 }
