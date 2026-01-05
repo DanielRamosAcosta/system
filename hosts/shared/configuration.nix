@@ -3,20 +3,21 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [
-    btrfs-progs
-    git
-    cmatrix
     bottom
-    usbutils
-    tree
-    tmux
-    zip
-    unzip
-    lm_sensors
-    smartmontools
+    btrfs-progs
+    cmatrix
+    dua
     exiftool
+    git
     liquidctl
+    lm_sensors
     openssl
+    smartmontools
+    tmux
+    tree
+    unzip
+    usbutils
+    zip
   ];
 
   system.stateVersion = "25.05";
