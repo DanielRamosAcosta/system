@@ -89,6 +89,7 @@ identity_providers:
         client_secret: '{{ env `IDENTITY_PROVIDERS_OIDC_CLIENTS_IMMICH_CLIENT_SECRET_DIGEST` }}'
         public: false
         authorization_policy: two_factor
+        consent_mode: 'auto'
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
@@ -113,6 +114,7 @@ identity_providers:
         public: false
         authorization_policy: two_factor
         claims_policy: sftpgo
+        consent_mode: 'auto'
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
@@ -136,6 +138,7 @@ identity_providers:
         public: false
         authorization_policy: two_factor
         claims_policy: grafana
+        consent_mode: 'auto'
         require_pkce: true
         pkce_challenge_method: 'S256'
         redirect_uris:
@@ -162,6 +165,7 @@ identity_providers:
         # * https://github.com/go-gitea/gitea/issues/34747
         # * https://github.com/go-gitea/gitea/issues/16983
         # * https://github.com/go-gitea/gitea/issues/21376
+        consent_mode: 'auto'
         require_pkce: false
         pkce_challenge_method: ''
         redirect_uris:
@@ -184,7 +188,7 @@ identity_providers:
         public: true
         authorization_policy: two_factor
         claims_policy: booklore
-        consent_mode: implicit
+        consent_mode: 'auto'
         require_pkce: true
         pkce_challenge_method: 'S256'
         redirect_uris:
