@@ -7,4 +7,8 @@ in
   "alex-hashed-password.age".publicKeys = [ nas dani ];
   "monuser-password.age".publicKeys = [ nas dani ];
   "nas-tunnel-credentials.json.age".publicKeys = [ nas dani ];
+  "strongswan-ca-cert.pem.age".publicKeys = [ nas dani ];
+  "strongswan-ca-key.pem.age".publicKeys = [ nas dani ];
+  "strongswan-server-key.pem.age".publicKeys = [ nas dani ];
+  "strongswan-server-cert.pem.age".publicKeys = [ nas dani ];
 }
