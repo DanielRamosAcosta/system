@@ -55,7 +55,11 @@
       "Bash(git add:*)",
       "Bash(git rm:*)",
       "Bash(git reset:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(ls:*)",
+      "mcp__context7__query-docs",
+      "mcp__context7__resolve-library-id",
+      "Bash(kubectl cp:*)"
     ],
     "deny": [],
     "ask": []

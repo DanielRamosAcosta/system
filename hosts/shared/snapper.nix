@@ -24,6 +24,7 @@ in
       sftpgo = snapshotConfig "/cold-data/sftpgo";
       gitea = snapshotConfig "/cold-data/gitea";
       booklore = snapshotConfig "/cold-data/booklore";
+      media = snapshotConfig "/cold-data/media";
     };
   };
 }

@@ -60,6 +60,12 @@
     options = [ "compress=zstd" "subvol=@booklore" ];
   };
 
+  fileSystems."/cold-data/media" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@media" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
