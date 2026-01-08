@@ -33,7 +33,7 @@ in
         "server string" = "nas";
         "netbios name" = "nas";
         "security" = "user";
-        "hosts allow" = "192.168.1. 127.0.0.1 localhost";
+        "hosts allow" = "192.168.1. 10.10.10. 127.0.0.1 localhost";
         "hosts deny" = "0.0.0.0/0";
         "guest account" = "nobody";
         "map to guest" = "bad user";

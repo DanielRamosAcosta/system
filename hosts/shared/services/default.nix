@@ -7,5 +7,6 @@
     ./fans.nix
     ./cloudflared.nix
     ./dnsmasq.nix
+    ./strongswan.nix
   ];
 }

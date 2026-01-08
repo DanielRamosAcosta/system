@@ -59,7 +59,12 @@
       "Bash(ls:*)",
       "mcp__context7__query-docs",
       "mcp__context7__resolve-library-id",
-      "Bash(kubectl cp:*)"
+      "Bash(kubectl cp:*)",
+      "Bash(bash:*)",
+      "mcp__playwright__browser_type",
+      "Bash(openssl pkcs12:*)",
+      "Bash(tcpdump:*)",
+      "mcp__nixos-search__search_nixos_options"
     ],
     "deny": [],
     "ask": []
