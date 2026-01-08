@@ -75,14 +75,16 @@
 
   networking.nftables.enable = true;
 
-  networking.nftables.ruleset = ''
-    table inet nat {
+  networking.nftables.tables.vpn_nat = {
+    name = "vpn_nat";
+    family = "inet";
+    content = ''
       chain prerouting {
         type nat hook prerouting priority -100; policy accept;
         ip saddr 10.10.10.0/24 ip daddr 10.10.20.200 tcp dport { 445, 139 } dnat to 192.168.1.200
       }
-    }
-  '';
+    '';
+  };
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
