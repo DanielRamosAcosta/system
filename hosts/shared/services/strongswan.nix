@@ -12,7 +12,7 @@
 
           local.vpn-server = {
             auth = "eap";
-            certs = [ "vpn.danielramos.me.pem" ];
+            certs = [ "${config.age.secrets.strongswan-server-cert-pem.path}" ];
             id = "vpn.danielramos.me";
             aaa_id = "vpn.danielramos.me";
           };
@@ -21,7 +21,7 @@
             id = "%any";
             auth = "eap-tls";
             eap_id = "%any";
-            cacerts = [ "ca.pem" ];
+            cacerts = [ "${config.age.secrets.strongswan-ca-cert-pem.path}" ];
           };
 
           children.nas-vpn = {
@@ -55,6 +55,11 @@
         };
       };
     };
+  };
+
+  environment.etc."swanctl/private/server.pem" = {
+    source = config.age.secrets.strongswan-server-key-pem.path;
+    mode = "0600";
   };
 
   networking.firewall = {
@@ -97,21 +102,6 @@
     externalInterface = "enp4s0";
     internalInterfaces = [ "ipsec0" ];
     internalIPs = [ "10.10.10.0/24" ];
-  };
-
-  environment.etc = {
-    "swanctl/private/vpn.danielramos.me.pem" = {
-      source = config.age.secrets.strongswan-server-key-pem.path;
-      mode = "0600";
-    };
-    "swanctl/x509/vpn.danielramos.me.pem" = {
-      source = config.age.secrets.strongswan-server-cert-pem.path;
-      mode = "0644";
-    };
-    "swanctl/x509ca/ca.pem" = {
-      source = config.age.secrets.strongswan-ca-cert-pem.path;
-      mode = "0644";
-    };
   };
 
   environment.etc."scripts/generate-strongswan-client.sh" = {
