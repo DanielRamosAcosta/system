@@ -62,46 +62,50 @@
     mode = "0600";
   };
 
-  networking.firewall = {
-    allowedUDPPorts = [
-      500
-      4500
-    ];
-
-    extraInputRules = ''
-      ip protocol esp accept
-    '';
-
-    extraForwardRules = ''
-      ip saddr 10.10.10.0/24 ip daddr 10.10.20.0/24 accept
-      ip saddr 10.10.20.0/24 ip daddr 10.10.10.0/24 accept
-    '';
-  };
-
-  networking.nftables.enable = true;
-
-  networking.nftables.tables.vpn_nat = {
-    name = "vpn_nat";
-    family = "inet";
-    content = ''
-      chain prerouting {
-        type nat hook prerouting priority -100; policy accept;
-        ip saddr 10.10.10.0/24 ip daddr 10.10.20.200 tcp dport { 445, 139 } dnat to 192.168.1.200
-      }
-    '';
-  };
-
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
     "net.ipv4.conf.all.accept_redirects" = 0;
     "net.ipv4.conf.all.send_redirects" = 0;
   };
 
-  networking.nat = {
-    enable = true;
-    externalInterface = "enp4s0";
-    internalInterfaces = [ "ipsec0" ];
-    internalIPs = [ "10.10.10.0/24" ];
+  networking = {
+    firewall = {
+      allowedUDPPorts = [
+        500
+        4500
+      ];
+
+      extraInputRules = ''
+        ip protocol esp accept
+      '';
+
+      extraForwardRules = ''
+        ip saddr 10.10.10.0/24 ip daddr 10.10.20.0/24 accept
+        ip saddr 10.10.20.0/24 ip daddr 10.10.10.0/24 accept
+      '';
+    };
+
+    nftables = {
+      enable = true;
+
+      tables.vpn_nat = {
+        name = "vpn_nat";
+        family = "inet";
+        content = ''
+          chain prerouting {
+            type nat hook prerouting priority -100; policy accept;
+            ip saddr 10.10.10.0/24 ip daddr 10.10.20.200 tcp dport { 445, 139 } dnat to 192.168.1.200
+          }
+        '';
+      };
+    };
+
+    nat = {
+      enable = true;
+      externalInterface = "enp4s0";
+      internalInterfaces = [ "ipsec0" ];
+      internalIPs = [ "10.10.10.0/24" ];
+    };
   };
 
   environment.etc."scripts/generate-strongswan-client.sh" = {
