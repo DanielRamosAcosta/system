@@ -63,28 +63,26 @@
       4500
     ];
 
-    extraCommands = ''
-      iptables -A INPUT -p esp -j ACCEPT
-      iptables -A OUTPUT -p esp -j ACCEPT
-
-      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 445 -j DNAT --to-destination 192.168.1.200:445
-      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 139 -j DNAT --to-destination 192.168.1.200:139
-
-      iptables -A FORWARD -s 10.10.10.0/24 -d 10.10.20.0/24 -j ACCEPT
-      iptables -A FORWARD -s 10.10.20.0/24 -d 10.10.10.0/24 -j ACCEPT
+    extraInputRules = ''
+      ip protocol esp accept
     '';
 
-    extraStopCommands = ''
-      iptables -D INPUT -p esp -j ACCEPT 2>/dev/null || true
-      iptables -D OUTPUT -p esp -j ACCEPT 2>/dev/null || true
-
-      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 445 -j DNAT --to-destination 192.168.1.200:445 2>/dev/null || true
-      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 139 -j DNAT --to-destination 192.168.1.200:139 2>/dev/null || true
-
-      iptables -D FORWARD -s 10.10.10.0/24 -d 10.10.20.0/24 -j ACCEPT 2>/dev/null || true
-      iptables -D FORWARD -s 10.10.20.0/24 -d 10.10.10.0/24 -j ACCEPT 2>/dev/null || true
+    extraForwardRules = ''
+      ip saddr 10.10.10.0/24 ip daddr 10.10.20.0/24 accept
+      ip saddr 10.10.20.0/24 ip daddr 10.10.10.0/24 accept
     '';
   };
+
+  networking.nftables.enable = true;
+
+  networking.nftables.ruleset = ''
+    table inet nat {
+      chain prerouting {
+        type nat hook prerouting priority -100; policy accept;
+        ip saddr 10.10.10.0/24 ip daddr 10.10.20.200 tcp dport { 445, 139 } dnat to 192.168.1.200
+      }
+    }
+  '';
 
   boot.kernel.sysctl = {
     "net.ipv4.ip_forward" = 1;
