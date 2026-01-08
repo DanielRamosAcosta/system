@@ -13,6 +13,7 @@
     lm_sensors
     openssl
     smartmontools
+    tcpdump
     tmux
     tree
     unzip

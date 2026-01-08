@@ -30,7 +30,7 @@
           };
 
           children.nas-vpn = {
-            local_ts = [ "192.168.1.0/24" ];
+            local_ts = [ "10.10.20.0/24" ];
             remote_ts = [ "10.10.10.0/24" ];
             esp_proposals = [
               "aes256gcm16-ecp384"
@@ -76,15 +76,34 @@
     extraCommands = ''
       iptables -A INPUT -p esp -j ACCEPT
       iptables -A OUTPUT -p esp -j ACCEPT
-      iptables -A FORWARD -s 10.10.10.0/24 -d 192.168.1.0/24 -j ACCEPT
-      iptables -A FORWARD -s 192.168.1.0/24 -d 10.10.10.0/24 -j ACCEPT
+
+      # DNAT rules to expose NAS Samba on virtual subnet 10.10.20.0/24
+      # Matching by source (VPN clients) instead of interface for better compatibility with XFRM
+      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 445 -j DNAT --to-destination 192.168.1.200:445
+      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 139 -j DNAT --to-destination 192.168.1.200:139
+
+      # Optional: NetBIOS for network discovery (improves user experience)
+      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p udp --dport 137 -j DNAT --to-destination 192.168.1.200:137
+      iptables -t nat -A PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p udp --dport 138 -j DNAT --to-destination 192.168.1.200:138
+
+      # Updated FORWARD rules for new virtual subnet
+      iptables -A FORWARD -s 10.10.10.0/24 -d 10.10.20.0/24 -j ACCEPT
+      iptables -A FORWARD -s 10.10.20.0/24 -d 10.10.10.0/24 -j ACCEPT
     '';
 
     extraStopCommands = ''
       iptables -D INPUT -p esp -j ACCEPT 2>/dev/null || true
       iptables -D OUTPUT -p esp -j ACCEPT 2>/dev/null || true
-      iptables -D FORWARD -s 10.10.10.0/24 -d 192.168.1.0/24 -j ACCEPT 2>/dev/null || true
-      iptables -D FORWARD -s 192.168.1.0/24 -d 10.10.10.0/24 -j ACCEPT 2>/dev/null || true
+
+      # Remove DNAT rules for Samba
+      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 445 -j DNAT --to-destination 192.168.1.200:445 2>/dev/null || true
+      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p tcp --dport 139 -j DNAT --to-destination 192.168.1.200:139 2>/dev/null || true
+      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p udp --dport 137 -j DNAT --to-destination 192.168.1.200:137 2>/dev/null || true
+      iptables -t nat -D PREROUTING -s 10.10.10.0/24 -d 10.10.20.200 -p udp --dport 138 -j DNAT --to-destination 192.168.1.200:138 2>/dev/null || true
+
+      # Remove updated FORWARD rules for virtual subnet
+      iptables -D FORWARD -s 10.10.10.0/24 -d 10.10.20.0/24 -j ACCEPT 2>/dev/null || true
+      iptables -D FORWARD -s 10.10.20.0/24 -d 10.10.10.0/24 -j ACCEPT 2>/dev/null || true
     '';
   };
 
