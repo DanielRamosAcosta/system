@@ -114,12 +114,6 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    strongswan
-    openssl
-    util-linux
-  ];
-
   environment.etc."scripts/generate-strongswan-client.sh" = {
     source = pkgs.substitute {
       src = ./scripts/generate-strongswan-client.sh;

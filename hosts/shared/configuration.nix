@@ -13,11 +13,13 @@
     lm_sensors
     openssl
     smartmontools
+    strongswan
     tcpdump
     tmux
     tree
     unzip
     usbutils
+    util-linux
     zip
   ];
 
