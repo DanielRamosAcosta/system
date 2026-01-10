@@ -44,6 +44,27 @@ in
       ana = sambaShare "ana" "/cold-data/sftpgo/data/ana";
       gabriel = sambaShare "gabriel" "/cold-data/sftpgo/data/gabriel";
       dani = sambaShare "dani" "/cold-data/sftpgo/data/dani";
+      downloads = {
+        path = "/cold-data/downloads";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0664";
+        "directory mask" = "0775";
+        "force group" = "users";
+        "valid users" = "@users";
+        "vfs objects" = "recycle";
+        "recycle:repository" = ".recycle";
+        "recycle:keeptree" = "yes";
+        "recycle:versions" = "yes";
+        "recycle:touch" = "yes";
+        "recycle:touch_mtime" = "yes";
+        "recycle:maxsize" = "0";
+        "recycle:exclude" = "*.tmp, *.temp, ~$*, *.bak, .DS_Store, desktop.ini, Thumbs.db";
+        "recycle:exclude_dir" = "tmp, cache, .cache, .recycle";
+        "recycle:directory_mode" = "0755";
+        "recycle:subdir_mode" = "0755";
+      };
     };
   };
 

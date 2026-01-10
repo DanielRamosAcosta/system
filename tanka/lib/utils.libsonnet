@@ -95,6 +95,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
   volume: {
     fromConfigMap(configMap):: k.core.v1.volume.fromConfigMap(configMap.metadata.name, configMap.metadata.name),
     fromSecret(secret):: k.core.v1.volume.fromSecret(secret.metadata.name, secret.metadata.name),
+    fromHostPath(name, path):: k.core.v1.volume.fromHostPath(name, path),
   },
   secret: {
     forFile(fileName, content):: k.core.v1.secret.new(u.normalizeName(fileName), {

@@ -18,13 +18,9 @@ local u = import 'utils.libsonnet';
       container.withVolumeMounts([
         volumeMount.new('config', '/config'),
         volumeMount.new('cache', '/cache'),
-        volumeMount.new('media', '/media', true),  // read-only
+        volumeMount.new('media', '/media', true),
         volumeMount.new('dri', '/dev/dri/renderD128') + volumeMount.withSubPath('renderD128'),
-      ]) +
-      container.securityContext.withRunAsUser(0) +
-      container.securityContext.withRunAsGroup(0),
-      // No resource limits - allow full access to CPU/RAM for transcoding
-      // Running as root due to NixOS filesystem restrictions on /data mount
+      ])
     ]) +
     statefulSet.spec.template.spec.withVolumes([
       volume.fromPersistentVolumeClaim('config', self.configPvc.metadata.name),
@@ -32,8 +28,6 @@ local u = import 'utils.libsonnet';
       volume.fromHostPath('media', '/cold-data/media') + volume.hostPath.withType('DirectoryOrCreate'),
       volume.fromHostPath('dri', '/dev/dri') + volume.hostPath.withType('Directory'),
     ]) +
-    // CRITICAL: supplementalGroups for GPU access
-    // render GID: 303, video GID: 26 (verified on this host)
     statefulSet.spec.template.spec.securityContext.withSupplementalGroups([303, 26]) +
     statefulSet.spec.template.spec.securityContext.withFsGroup(1000),
 

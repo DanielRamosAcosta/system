@@ -12,3 +12,4 @@ tanka/dist-reference
 tanka/charts
 tanka/lib/secrets.json
 tanka/dist-*
+.playwright-mcp

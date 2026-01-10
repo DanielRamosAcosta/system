@@ -4,6 +4,8 @@ local sftpgo = import 'media/sftpgo.libsonnet';
 local gitea = import 'media/gitea.libsonnet';
 local booklore = import 'media/booklore.libsonnet';
 local jellyfin = import 'media/jellyfin.libsonnet';
+local jdownloader = import 'media/jdownloader.libsonnet';
+local transmission = import 'media/transmission.libsonnet';
 
 {
   immich: immich.new(
@@ -20,5 +22,11 @@ local jellyfin = import 'media/jellyfin.libsonnet';
   ),
   jellyfin: jellyfin.new(
     version=versions.jellyfin.version,
+  ),
+  jdownloader: jdownloader.new(
+    version=versions.jdownloader.version,
+  ),
+  transmission: transmission.new(
+    version=versions.transmission.version,
   ),
 }
