@@ -66,5 +66,13 @@
   "transmission": {
     "repo": "linuxserver/docker-transmission",
     "version": "4.0.6"
+  },
+  "sonarr": {
+    "repo": "hotio/sonarr",
+    "version": "release-4.0.16.2944"
+  },
+  "deluge": {
+    "repo": "linuxserver/deluge",
+    "version": "2.2.0"
   }
 }

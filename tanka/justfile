@@ -10,6 +10,9 @@ build-auth:
 build-monitoring:
   tk export dist/monitoring environments/monitoring --merge-strategy replace-envs
 
+build-arr:
+  tk export dist/arr environments/arr --merge-strategy replace-envs
+
 encrypt-secrets:
   age --encrypt --recipients-file ../id_dani.pub --output ./lib/secrets.json.age ./lib/secrets.json
 
@@ -18,3 +21,6 @@ decrypt-secrets:
 
 deploy:
   tk apply environments/databases
+
+deploy-arr:
+  tk apply environments/arr
