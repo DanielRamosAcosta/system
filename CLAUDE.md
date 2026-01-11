@@ -214,3 +214,8 @@ just test
 ```
 
 This evaluates `utilities/utilities.test.nix` which uses `lib.runTests` to validate utility functions like `toBase64`.
+
+## Code Guidelines for Claude
+
+- **Never add comments to code** - Code should be self-explanatory through clear naming and structure
+- **Commits must be single-line** - No multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`

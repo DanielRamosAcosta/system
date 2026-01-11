@@ -8,5 +8,6 @@
     ./cloudflared.nix
     ./dnsmasq.nix
     ./strongswan.nix
+    ./network-monitor.nix
   ];
 }
