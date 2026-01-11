@@ -7,7 +7,7 @@ local u = import '../utils.libsonnet';
   local containerPort = k.core.v1.containerPort,
   local volumeMount = k.core.v1.volumeMount,
 
-  new(image='docker.io/hotio/sonarr', version):: {
+  new(image='ghcr.io/hotio/sonarr', version):: {
     statefulSet: statefulSet.new('sonarr', replicas=1, containers=[
       container.new('sonarr', u.image(image, version)) +
       container.withPorts([

@@ -68,7 +68,7 @@
     "version": "4.0.6"
   },
   "sonarr": {
-    "repo": "hotio/sonarr",
+    "repo": "ghcr.io/hotio/sonarr",
     "version": "release-4.0.16.2944"
   },
   "deluge": {
