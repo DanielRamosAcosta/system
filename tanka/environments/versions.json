@@ -74,5 +74,9 @@
   "deluge": {
     "repo": "linuxserver/deluge",
     "version": "2.2.0"
+  },
+  "prowlarr": {
+    "repo": "ghcr.io/hotio/prowlarr",
+    "version": "release-2.3.0.5236"
   }
 }
