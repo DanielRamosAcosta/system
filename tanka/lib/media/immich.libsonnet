@@ -54,6 +54,7 @@ local immichConfig = importstr './immich.config.json';
       REDIS_HOSTNAME: 'valkey.databases.svc.cluster.local',
       IMMICH_CONFIG_FILE: '/app/config/immich.json',
       IMMICH_TELEMETRY_INCLUDE: 'all',
+      IMMICH_LOG_FORMAT: 'json',
       IMMICH_PORT: '2283',
     }),
 

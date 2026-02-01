@@ -1,5 +1,5 @@
-local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 local u = import '../utils.libsonnet';
+local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 
 {
   local statefulSet = k.apps.v1.statefulSet,
@@ -9,22 +9,22 @@ local u = import '../utils.libsonnet';
 
   new(image='ghcr.io/hotio/sonarr', version):: {
     statefulSet: statefulSet.new('sonarr', replicas=1, containers=[
-      container.new('sonarr', u.image(image, version)) +
-      container.withPorts([
-        containerPort.new('http', 8989),
-      ]) +
-      container.withEnv(
-        u.envVars.fromConfigMap(self.configEnv)
-      ) +
-      container.withVolumeMounts([
-        volumeMount.new('config', '/config'),
-        volumeMount.new('data', '/data'),
-      ])
-    ]) +
-    statefulSet.spec.template.spec.withVolumes([
-      u.volume.fromHostPath('config', '/data/arr/sonarr'),
-      u.volume.fromHostPath('data', '/cold-data/media'),
-    ]),
+                   container.new('sonarr', u.image(image, version)) +
+                   container.withPorts([
+                     containerPort.new('http', 8989),
+                   ]) +
+                   container.withEnv(
+                     u.envVars.fromConfigMap(self.configEnv)
+                   ) +
+                   container.withVolumeMounts([
+                     volumeMount.new('config', '/config'),
+                     volumeMount.new('data', '/data'),
+                   ]),
+                 ]) +
+                 statefulSet.spec.template.spec.withVolumes([
+                   u.volume.fromHostPath('config', '/data/arr/sonarr'),
+                   u.volume.fromHostPath('data', '/cold-data/media'),
+                 ]),
 
     service: k.util.serviceFor(self.statefulSet),
 
@@ -33,6 +33,7 @@ local u = import '../utils.libsonnet';
       PGID: '100',
       UMASK: '002',
       TZ: 'Europe/Madrid',
+      SONARR__LOG__CONSOLEFORMAT: 'Clef',
     }),
   },
 }

@@ -8,6 +8,7 @@
     cmatrix
     dua
     exiftool
+    ffmpeg
     git
     liquidctl
     lm_sensors

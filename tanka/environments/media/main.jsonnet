@@ -1,11 +1,9 @@
 local versions = import '../versions.json';
-local immich = import 'media/immich.libsonnet';
-local sftpgo = import 'media/sftpgo.libsonnet';
-local gitea = import 'media/gitea.libsonnet';
 local booklore = import 'media/booklore.libsonnet';
+local gitea = import 'media/gitea.libsonnet';
+local immich = import 'media/immich.libsonnet';
 local jellyfin = import 'media/jellyfin.libsonnet';
-local jdownloader = import 'media/jdownloader.libsonnet';
-local transmission = import 'media/transmission.libsonnet';
+local sftpgo = import 'media/sftpgo.libsonnet';
 
 {
   immich: immich.new(
@@ -22,11 +20,5 @@ local transmission = import 'media/transmission.libsonnet';
   ),
   jellyfin: jellyfin.new(
     version=versions.jellyfin.version,
-  ),
-  jdownloader: jdownloader.new(
-    version=versions.jdownloader.version,
-  ),
-  transmission: transmission.new(
-    version=versions.transmission.version,
   ),
 }

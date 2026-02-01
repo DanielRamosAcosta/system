@@ -85,10 +85,8 @@ local u = import 'utils.libsonnet';
 
     ingressRoute: u.ingressRoute.from(self.service, {
       '3000': 'git.danielramos.me',
-      // '8081': 'webdav.danielramos.me',
     }),
 
-    // RBAC para permitir kubectl exec desde el host
     rbac: {
       service_account:
         serviceAccount.new('git-ssh'),

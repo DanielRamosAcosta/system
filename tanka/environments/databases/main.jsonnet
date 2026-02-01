@@ -1,7 +1,7 @@
 local versions = import '../versions.json';
+local mariadb = import 'databases/mariadb.libsonnet';
 local postgres = import 'databases/postgres.libsonnet';
 local valkey = import 'databases/valkey.libsonnet';
-local mariadb = import 'databases/mariadb.libsonnet';
 
 {
   postgres: postgres.new(

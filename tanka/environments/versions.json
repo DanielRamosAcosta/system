@@ -1,7 +1,7 @@
 {
   "immich": {
     "repo": "immich-app/immich",
-    "version": "v2.4.1"
+    "version": "v2.5.2"
   },
   "sftpgo": {
     "repo": "drakkan/sftpgo",
@@ -53,7 +53,7 @@
   },
   "booklore": {
     "repo": "booklore-app/booklore",
-    "version": "v1.16.0"
+    "version": "v1.17.0"
   },
   "jellyfin": {
     "repo": "jellyfin/jellyfin",
@@ -63,20 +63,16 @@
     "repo": "jlesage/docker-jdownloader-2",
     "version": "v26.01.1"
   },
-  "transmission": {
-    "repo": "linuxserver/docker-transmission",
-    "version": "4.0.6"
-  },
   "sonarr": {
     "repo": "ghcr.io/hotio/sonarr",
     "version": "release-4.0.16.2944"
   },
+  "radarr": {
+    "repo": "ghcr.io/hotio/radarr",
+    "version": "release-6.0.4.10291"
+  },
   "deluge": {
     "repo": "linuxserver/deluge",
     "version": "2.2.0"
-  },
-  "prowlarr": {
-    "repo": "ghcr.io/hotio/prowlarr",
-    "version": "release-2.3.0.5236"
   }
 }

@@ -18,7 +18,6 @@ local sftpgoConfig = importstr './sftpgo.config.json';
                    container.new('sftpgo', u.image(image, version)) +
                    container.withPorts([
                      containerPort.new('server', 8080),
-                     // containerPort.new('webdav', 8081),
                      containerPort.new('metrics', 9219),
                    ]) +
                    container.withEnv(
@@ -52,7 +51,6 @@ local sftpgoConfig = importstr './sftpgo.config.json';
 
     ingressRoute: u.ingressRoute.from(self.service, {
       '8080': 'cloud.danielramos.me',
-      // '8081': 'webdav.danielramos.me',
     }),
   },
 }

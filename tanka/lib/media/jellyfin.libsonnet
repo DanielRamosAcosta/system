@@ -10,26 +10,26 @@ local u = import 'utils.libsonnet';
 
   new(image='docker.io/jellyfin/jellyfin', version):: {
     statefulSet: statefulSet.new('jellyfin', replicas=1, containers=[
-      container.new('jellyfin', u.image(image, version)) +
-      container.withPorts([containerPort.new('http', 8096)]) +
-      container.withEnv(
-        u.envVars.fromConfigMap(self.configEnv)
-      ) +
-      container.withVolumeMounts([
-        volumeMount.new('config', '/config'),
-        volumeMount.new('cache', '/cache'),
-        volumeMount.new('media', '/media', true),
-        volumeMount.new('dri', '/dev/dri/renderD128') + volumeMount.withSubPath('renderD128'),
-      ])
-    ]) +
-    statefulSet.spec.template.spec.withVolumes([
-      volume.fromPersistentVolumeClaim('config', self.configPvc.metadata.name),
-      volume.fromPersistentVolumeClaim('cache', self.cachePvc.metadata.name),
-      volume.fromHostPath('media', '/cold-data/media') + volume.hostPath.withType('DirectoryOrCreate'),
-      volume.fromHostPath('dri', '/dev/dri') + volume.hostPath.withType('Directory'),
-    ]) +
-    statefulSet.spec.template.spec.securityContext.withSupplementalGroups([303, 26]) +
-    statefulSet.spec.template.spec.securityContext.withFsGroup(1000),
+                   container.new('jellyfin', u.image(image, version)) +
+                   container.withPorts([containerPort.new('http', 8096)]) +
+                   container.withEnv(
+                     u.envVars.fromConfigMap(self.configEnv)
+                   ) +
+                   container.withVolumeMounts([
+                     volumeMount.new('config', '/config'),
+                     volumeMount.new('cache', '/cache'),
+                     volumeMount.new('media', '/media', true),
+                     volumeMount.new('dri', '/dev/dri/renderD128') + volumeMount.withSubPath('renderD128'),
+                   ]),
+                 ]) +
+                 statefulSet.spec.template.spec.withVolumes([
+                   volume.fromPersistentVolumeClaim('config', self.configPvc.metadata.name),
+                   volume.fromPersistentVolumeClaim('cache', self.cachePvc.metadata.name),
+                   volume.fromHostPath('media', '/cold-data/media') + volume.hostPath.withType('DirectoryOrCreate'),
+                   volume.fromHostPath('dri', '/dev/dri') + volume.hostPath.withType('Directory'),
+                 ]) +
+                 statefulSet.spec.template.spec.securityContext.withSupplementalGroups([303, 26]) +
+                 statefulSet.spec.template.spec.securityContext.withFsGroup(1000),
 
     service: k.util.serviceFor(self.statefulSet),
 

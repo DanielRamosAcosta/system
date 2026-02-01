@@ -85,48 +85,48 @@ local u = import 'utils.libsonnet';
 
     // Base Backup CronJob - runs daily at 2 AM
     baseBackupCron: cronJob.new(
-      name='postgres-base-backup',
-      schedule='0 2 * * *',
-      containers=[
-        container.new('backup', u.image(image, version)) +
-        container.withCommand(['/bin/bash', '/mnt/scripts/postgres.backup.sh']) +
-        container.withEnv(
-          u.envVars.fromSecret(self.backupSecrets)
-        ) +
-        container.withVolumeMounts([
-          volumeMount.new('backup-storage', '/backups'),
-          u.volumeMount.fromFile(self.backupScriptConfigMap, '/mnt/scripts'),
-        ]),
-      ]
-    ) +
-    cronJob.spec.jobTemplate.spec.template.spec.withRestartPolicy('OnFailure') +
-    cronJob.spec.withConcurrencyPolicy('Forbid') +
-    cronJob.spec.withSuccessfulJobsHistoryLimit(3) +
-    cronJob.spec.withFailedJobsHistoryLimit(3) +
-    cronJob.spec.jobTemplate.spec.template.spec.withVolumes([
-      volume.fromPersistentVolumeClaim('backup-storage', self.backupPvc.metadata.name),
-      u.volume.fromConfigMap(self.backupScriptConfigMap),
-    ]),
+                      name='postgres-base-backup',
+                      schedule='0 2 * * *',
+                      containers=[
+                        container.new('backup', u.image(image, version)) +
+                        container.withCommand(['/bin/bash', '/mnt/scripts/postgres.backup.sh']) +
+                        container.withEnv(
+                          u.envVars.fromSecret(self.backupSecrets)
+                        ) +
+                        container.withVolumeMounts([
+                          volumeMount.new('backup-storage', '/backups'),
+                          u.volumeMount.fromFile(self.backupScriptConfigMap, '/mnt/scripts'),
+                        ]),
+                      ]
+                    ) +
+                    cronJob.spec.jobTemplate.spec.template.spec.withRestartPolicy('OnFailure') +
+                    cronJob.spec.withConcurrencyPolicy('Forbid') +
+                    cronJob.spec.withSuccessfulJobsHistoryLimit(3) +
+                    cronJob.spec.withFailedJobsHistoryLimit(3) +
+                    cronJob.spec.jobTemplate.spec.template.spec.withVolumes([
+                      volume.fromPersistentVolumeClaim('backup-storage', self.backupPvc.metadata.name),
+                      u.volume.fromConfigMap(self.backupScriptConfigMap),
+                    ]),
 
     // Cleanup CronJob - runs daily at 3 AM (after backup)
     cleanupCron: cronJob.new(
-      name='postgres-backup-cleanup',
-      schedule='0 3 * * *',
-      containers=[
-        container.new('cleanup', 'busybox:latest') +
-        container.withCommand(['sh', '/mnt/scripts/postgres.cleanup.sh']) +
-        container.withVolumeMounts([
-          volumeMount.new('backup-storage', '/backups'),
-          u.volumeMount.fromFile(self.cleanupScriptConfigMap, '/mnt/scripts'),
-        ]),
-      ]
-    ) +
-    cronJob.spec.jobTemplate.spec.template.spec.withRestartPolicy('OnFailure') +
-    cronJob.spec.withConcurrencyPolicy('Forbid') +
-    cronJob.spec.jobTemplate.spec.template.spec.withVolumes([
-      volume.fromPersistentVolumeClaim('backup-storage', self.backupPvc.metadata.name),
-      u.volume.fromConfigMap(self.cleanupScriptConfigMap),
-    ]),
+                   name='postgres-backup-cleanup',
+                   schedule='0 3 * * *',
+                   containers=[
+                     container.new('cleanup', 'busybox:latest') +
+                     container.withCommand(['sh', '/mnt/scripts/postgres.cleanup.sh']) +
+                     container.withVolumeMounts([
+                       volumeMount.new('backup-storage', '/backups'),
+                       u.volumeMount.fromFile(self.cleanupScriptConfigMap, '/mnt/scripts'),
+                     ]),
+                   ]
+                 ) +
+                 cronJob.spec.jobTemplate.spec.template.spec.withRestartPolicy('OnFailure') +
+                 cronJob.spec.withConcurrencyPolicy('Forbid') +
+                 cronJob.spec.jobTemplate.spec.template.spec.withVolumes([
+                   volume.fromPersistentVolumeClaim('backup-storage', self.backupPvc.metadata.name),
+                   u.volume.fromConfigMap(self.cleanupScriptConfigMap),
+                 ]),
 
     createUser(name, password, configMap, secret):: {
       migrationJob: k.batch.v1.job.new('postgres-create-user-' + name) +

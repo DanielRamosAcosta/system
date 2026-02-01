@@ -64,7 +64,14 @@
       "mcp__playwright__browser_type",
       "Bash(openssl pkcs12:*)",
       "Bash(tcpdump:*)",
-      "mcp__nixos-search__search_nixos_options"
+      "mcp__nixos-search__search_nixos_options",
+      "Bash(kubectl delete:*)",
+      "Bash(tk show:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(just build-arr:*)",
+      "Bash(just deploy-arr:*)",
+      "Bash(rsync:*)"
     ],
     "deny": [],
     "ask": []

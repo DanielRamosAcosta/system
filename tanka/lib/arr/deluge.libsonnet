@@ -1,5 +1,5 @@
-local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 local u = import '../utils.libsonnet';
+local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet';
 
 {
   local statefulSet = k.apps.v1.statefulSet,
@@ -9,25 +9,25 @@ local u = import '../utils.libsonnet';
 
   new(image='docker.io/linuxserver/deluge', version):: {
     statefulSet: statefulSet.new('deluge', replicas=1, containers=[
-      container.new('deluge', u.image(image, version)) +
-      container.withPorts([
-        containerPort.new('web', 8112),
-        containerPort.new('daemon', 58846),
-        containerPort.new('peer-tcp', 58946),
-        containerPort.newUDP('peer-udp', 58946),
-      ]) +
-      container.withEnv(
-        u.envVars.fromConfigMap(self.configEnv)
-      ) +
-      container.withVolumeMounts([
-        volumeMount.new('config', '/config'),
-        volumeMount.new('data', '/data'),
-      ])
-    ]) +
-    statefulSet.spec.template.spec.withVolumes([
-      u.volume.fromHostPath('config', '/data/arr/deluge'),
-      u.volume.fromHostPath('data', '/cold-data/media'),
-    ]),
+                   container.new('deluge', u.image(image, version)) +
+                   container.withPorts([
+                     containerPort.new('web', 8112),
+                     containerPort.new('daemon', 58846),
+                     containerPort.new('peer-tcp', 58946),
+                     containerPort.newUDP('peer-udp', 58946),
+                   ]) +
+                   container.withEnv(
+                     u.envVars.fromConfigMap(self.configEnv)
+                   ) +
+                   container.withVolumeMounts([
+                     volumeMount.new('config', '/config'),
+                     volumeMount.new('data', '/data'),
+                   ]),
+                 ]) +
+                 statefulSet.spec.template.spec.withVolumes([
+                   u.volume.fromHostPath('config', '/data/arr/deluge'),
+                   u.volume.fromHostPath('data', '/cold-data/media'),
+                 ]),
 
     service: k.util.serviceFor(self.statefulSet),
 

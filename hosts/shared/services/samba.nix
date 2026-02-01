@@ -44,6 +44,7 @@ in
       ana = sambaShare "ana" "/cold-data/sftpgo/data/ana";
       gabriel = sambaShare "gabriel" "/cold-data/sftpgo/data/gabriel";
       dani = sambaShare "dani" "/cold-data/sftpgo/data/dani";
+      cris = sambaShare "cris" "/cold-data/sftpgo/data/cris";
       downloads = {
         path = "/cold-data/downloads";
         browseable = "yes";
