@@ -71,7 +71,10 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(just build-arr:*)",
       "Bash(just deploy-arr:*)",
-      "Bash(rsync:*)"
+      "Bash(rsync:*)",
+      "Bash(TANKA_DANGEROUS_ALLOW_REDIRECT=true tk show:*)",
+      "Bash(yes:*)",
+      "mcp__playwright__browser_handle_dialog"
     ],
     "deny": [],
     "ask": []

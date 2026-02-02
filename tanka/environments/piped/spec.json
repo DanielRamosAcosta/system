@@ -1,0 +1,8 @@
+{
+  "apiVersion": "tanka.dev/v1alpha1",
+  "kind": "Environment",
+  "spec": {
+    "apiServer": "https://localhost:6443",
+    "namespace": "piped"
+  }
+}
