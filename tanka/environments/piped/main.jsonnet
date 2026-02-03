@@ -1,11 +1,9 @@
 local versions = import '../versions.json';
-local piped = import 'piped/piped.libsonnet';
+local invidious = import 'piped/invidious.libsonnet';
 
 {
-  piped: piped.new(
-    frontendVersion=versions.piped.version,
-    backendVersion=versions.pipedBackend.version,
-    proxyVersion=versions.pipedProxy.version,
-    bgHelperVersion=versions.pipedBgHelper.version,
+  invidious: invidious.new(
+    invidiousVersion='2026.01.30-b521e3b',
+    invidiousCompanionVersion='master-05cd859'
   ),
 }

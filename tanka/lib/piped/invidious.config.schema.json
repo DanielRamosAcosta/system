@@ -1,0 +1,525 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Invidious Configuration Schema",
+  "description": "Configuration schema for Invidious - an alternative front-end to YouTube",
+  "type": "object",
+  "properties": {
+    "db": {
+      "type": "object",
+      "description": "Database configuration with separate parameters. This setting is MANDATORY, unless 'database_url' is used.",
+      "properties": {
+        "user": {
+          "type": "string",
+          "description": "Database user name"
+        },
+        "password": {
+          "type": "string",
+          "description": "Database password"
+        },
+        "host": {
+          "type": "string",
+          "description": "Database host address"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Database port number",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "dbname": {
+          "type": "string",
+          "description": "Database name"
+        }
+      },
+      "required": [
+        "user",
+        "host",
+        "port",
+        "dbname"
+      ]
+    },
+    "database_url": {
+      "type": "string",
+      "description": "Database configuration using a single URI. This is an alternative to the 'db' parameter above. If both forms are used, then only database_url is used. This setting is MANDATORY, unless 'db' is used.\n\nNote: The 'database_url' setting allows the use of UNIX sockets. To do so, remove the IP address (or FQDN) and port and append the 'host' parameter. E.g: postgres://kemal:kemal@/invidious?host=/var/run/postgresql\n\nAccepted values: a postgres:// URI\nDefault: postgres://kemal:kemal@localhost:5432/invidious",
+      "pattern": "^postgres://",
+      "default": "postgres://kemal:kemal@localhost:5432/invidious"
+    },
+    "check_tables": {
+      "type": "boolean",
+      "description": "Enable automatic table integrity check. This will create the required tables and columns if anything is missing.\n\nAccepted values: true, false\nDefault: false",
+      "default": false
+    },
+    "invidious_companion": {
+      "type": "array",
+      "description": "Invidious companion is an external program for loading the video streams from YouTube servers.\n\nWhen this setting is commented out, Invidious companion is not used. Otherwise, Invidious will proxy the requests to Invidious companion.\n\nNote: multiple URL can be configured. In this case, Invidious will randomly pick one every time video data needs to be retrieved. This URL is then kept in the video metadata cache to allow video playback to work. Once said cache has expired, requesting that video's data again will cause a new companion URL to be picked.\n\nThe parameter private_url is required for the internal communication between Invidious companion and Invidious.\n\nThe optional parameter public_url is the public URL from which Invidious companion is listening to the requests from the user(s). When this setting is commented out, Invidious proxy all requests to Invidious companion. Useful for simple setups. Otherwise, requests from the user(s) will reach Invidious companion directly. And you will need to configure a reverse proxy with separate routes for Invidious and Invidious companion.\n\nRead the post-install documentation for advanced reverse proxy documentation: https://docs.invidious.io/installation/#post-install-configuration\n\nAccepted values: \"http(s)://<IP-HOSTNAME>:<Port>\"",
+      "items": {
+        "type": "object",
+        "properties": {
+          "private_url": {
+            "type": "string",
+            "description": "Private URL for internal communication between Invidious and Invidious companion",
+            "pattern": "^https?://"
+          },
+          "public_url": {
+            "type": "string",
+            "description": "Public URL from which Invidious companion listens to requests from users (optional)",
+            "pattern": "^https?://"
+          }
+        },
+        "required": [
+          "private_url"
+        ]
+      }
+    },
+    "invidious_companion_key": {
+      "type": "string",
+      "description": "API key for Invidious companion, used for securing the communication between Invidious and Invidious companion. The key needs to be exactly 16 characters long.\n\nNote: This parameter is mandatory when Invidious companion is enabled and should be a random string. Such random string can be generated on linux with the following command: `pwgen 16 1`\n\nAccepted values: a string (of length 16)",
+      "minLength": 16,
+      "maxLength": 16
+    },
+    "port": {
+      "type": "integer",
+      "description": "Port to listen on for incoming connections.\n\nNote: Ports lower than 1024 requires either root privileges (not recommended) or the \"CAP_NET_BIND_SERVICE\" capability (See https://stackoverflow.com/a/414258 and `man capabilities`)\n\nAccepted values: 1-65535\nDefault: 3000",
+      "minimum": 1,
+      "maximum": 65535,
+      "default": 3000
+    },
+    "external_port": {
+      "type": "integer",
+      "description": "When the invidious instance is behind a proxy, and the proxy listens on a different port than the instance does, this lets invidious know about it. This is used to craft absolute URLs to the instance (e.g in the API).\n\nNote: This setting is MANDATORY if invidious is behind a reverse proxy.\n\nAccepted values: 1-65535",
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "host_binding": {
+      "type": "string",
+      "description": "Interface address to listen on for incoming connections.\n\nAccepted values: a valid IPv4 or IPv6 address.\ndefault: 0.0.0.0  (listen on all interfaces)",
+      "default": "0.0.0.0"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Domain name under which this instance is hosted. This is used to craft absolute URLs to the instance (e.g in the API). The domain MUST be defined if your instance is accessed from a domain name (like 'example.com').\n\nAccepted values: a fully qualified domain name (FQDN)"
+    },
+    "https_only": {
+      "type": "boolean",
+      "description": "Tell Invidious that it is behind a proxy that provides only HTTPS, so all links must use the https:// scheme. This setting MUST be set to true if invidious is behind a reverse proxy serving HTTPs.\n\nAccepted values: true, false\nDefault: false",
+      "default": false
+    },
+    "hsts": {
+      "type": "boolean",
+      "description": "Enable/Disable 'Strict-Transport-Security'. Make sure that the domain specified under 'domain' is served securely.\n\nAccepted values: true, false\nDefault: true",
+      "default": true
+    },
+    "socket_binding": {
+      "type": "object",
+      "description": "Path and permissions of a UNIX socket to listen on for incoming connections.\n\nNote: Enabling socket will make invidious stop listening on the address specified by 'host_binding' and 'port'.\n\nAccepted values: Any path to a new file (that doesn't exist yet) and its permissions following the UNIX octal convention.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to the UNIX socket file"
+        },
+        "permissions": {
+          "type": "integer",
+          "description": "Socket permissions in octal format",
+          "minimum": 0,
+          "maximum": 777
+        }
+      },
+      "required": [
+        "path",
+        "permissions"
+      ]
+    },
+    "disable_proxy": {
+      "type": [
+        "boolean",
+        "string"
+      ],
+      "description": "Disable proxying server-wide. Can be disable as a whole, or only for a single function.\n\nAccepted values: true, false, dash, livestreams, downloads, local\nDefault: false",
+      "enum": [
+        true,
+        false,
+        "dash",
+        "livestreams",
+        "downloads",
+        "local"
+      ],
+      "default": false
+    },
+    "pool_size": {
+      "type": "integer",
+      "description": "Size of the HTTP pool used to connect to youtube. Each domain ('youtube.com', 'ytimg.com', ...) has its own pool.\n\nAccepted values: a positive integer\nDefault: 100",
+      "minimum": 1,
+      "default": 100
+    },
+    "cookies": {
+      "type": "string",
+      "description": "Additional cookies to be sent when requesting the youtube API.\n\nAccepted values: a string in the format \"name1=value1; name2=value2...\""
+    },
+    "force_resolve": {
+      "type": "string",
+      "description": "Force connection to youtube over a specific IP family.\n\nNote: This may sometimes resolve issues involving rate-limiting. See https://github.com/ytdl-org/youtube-dl/issues/21729.\n\nAccepted values: ipv4, ipv6",
+      "enum": [
+        "ipv4",
+        "ipv6"
+      ]
+    },
+    "http_proxy": {
+      "type": "object",
+      "description": "Configuration for using a HTTP proxy. If unset, then no HTTP proxy will be used. Proxy type supported: HTTP, HTTPS\n\nThis is not used for loading the video streams from YouTube servers (circumvent YouTube restrictions). Please instead configure the proxy in Invidious companion: https://github.com/iv-org/invidious-companion/blob/master/config/config.example.toml",
+      "properties": {
+        "user": {
+          "type": "string",
+          "description": "Proxy username"
+        },
+        "password": {
+          "type": "string",
+          "description": "Proxy password"
+        },
+        "host": {
+          "type": "string",
+          "description": "Proxy host address"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Proxy port number",
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    },
+    "use_innertube_for_captions": {
+      "type": "boolean",
+      "description": "Use Innertube's transcripts API instead of timedtext for closed captions\n\nUseful for larger instances as InnerTube is **not ratelimited**. See https://github.com/iv-org/invidious/issues/2567\n\nSubtitle experience may differ slightly on Invidious.\n\nAccepted values: true, false\nDefault: false",
+      "default": false
+    },
+    "output": {
+      "type": "string",
+      "description": "Path to log file. Can be absolute or relative to the invidious binary. This is overridden if \"-o OUTPUT\" or \"--output=OUTPUT\" are passed on the command line.\n\nAccepted values: a filesystem path or 'STDOUT'\nDefault: STDOUT",
+      "default": "STDOUT"
+    },
+    "log_level": {
+      "type": "string",
+      "description": "Logging Verbosity. This is overridden if \"-l LEVEL\" or \"--log-level=LEVEL\" are passed on the command line.\n\nAccepted values: All, Trace, Debug, Info, Warn, Error, Fatal, Off\nDefault: Info",
+      "enum": [
+        "All",
+        "Trace",
+        "Debug",
+        "Info",
+        "Warn",
+        "Error",
+        "Fatal",
+        "Off"
+      ],
+      "default": "Info"
+    },
+    "colorize_logs": {
+      "type": "boolean",
+      "description": "Enables colors in logs. Useful for debugging purposes. This is overridden if \"-k\" or \"--colorize\" are passed on the command line. Colors are also disabled if the environment variable NO_COLOR is present and has any value\n\nAccepted values: true, false\nDefault: true",
+      "default": true
+    },
+    "popular_enabled": {
+      "type": "boolean",
+      "description": "Enable/Disable the \"Popular\" tab on the main page.\n\nAccepted values: true, false\nDefault: true",
+      "default": true
+    },
+    "statistics_enabled": {
+      "type": "boolean",
+      "description": "Enable/Disable statstics (available at /api/v1/stats). The following data is available:\n- Software name (\"invidious\") and version+branch (same data as displayed in the footer, e.g: \"2021.05.13-75e5b49\" / \"master\")\n- The value of the 'registration_enabled' config (true/false)\n- Number of currently registered users\n- Number of registered users who connected in the last month\n- Number of registered users who connected in the last 6 months\n- Timestamp of the last server restart\n- Timestamp of the last \"Channel Refresh\" job execution\n\nWarning: This setting MUST be set to true if you plan to run multiple instances of Invidious behind a load balancer (e.g nginx) using the 'statistics_enabled' configuration."
+    },
+    "default_user_preferences": {
+      "type": "object",
+      "description": "Default user preferences that will be used for new users and unauthenticated users",
+      "properties": {
+        "locale": {
+          "type": "string",
+          "description": "Interface language.\n\nAccepted values: ar, de, en-US, es, eu, fr, id, it, nb-NO, nl, pl, pt, pt-BR, ro, ru, tr, uk, vi, zh-CN, zh-TW\nDefault: en-US",
+          "enum": [
+            "ar",
+            "de",
+            "en-US",
+            "es",
+            "eu",
+            "fr",
+            "id",
+            "it",
+            "nb-NO",
+            "nl",
+            "pl",
+            "pt",
+            "pt-BR",
+            "ro",
+            "ru",
+            "tr",
+            "uk",
+            "vi",
+            "zh-CN",
+            "zh-TW"
+          ],
+          "default": "en-US"
+        },
+        "region": {
+          "type": "string",
+          "description": "Content region. Only affects the 'Trending' tab.\n\nAccepted values: a valid ISO 3166 country code (2 letters)\nDefault: US",
+          "pattern": "^[A-Z]{2}$",
+          "default": "US"
+        },
+        "captions": {
+          "type": "array",
+          "description": "Default closed captions language(s).\n\nNote: invisible default captions (default: []) won't force captions to be displayed. User must manually enable them.\n\nAccepted values: Array of language codes\nDefault: []",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "dark_mode": {
+          "type": "string",
+          "description": "Enable/Disable dark mode.\n\nAccepted values: dark, light, auto\nDefault: auto",
+          "enum": [
+            "dark",
+            "light",
+            "auto"
+          ],
+          "default": "auto"
+        },
+        "thin_mode": {
+          "type": "boolean",
+          "description": "Enable/Disable thin mode (less padding/margins).\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "feed_menu": {
+          "type": "array",
+          "description": "List of feeds available on the home page.\n\nNote: \"Subscriptions\" and \"Playlists\" are only visible when the user is logged in.\n\nAccepted values: A list of strings. Each entry can be one of: \"Popular\", \"Trending\", \"Subscriptions\", \"Playlists\"\n\nDefault: [\"Popular\", \"Trending\", \"Subscriptions\", \"Playlists\"]  (show all feeds)",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Popular",
+              "Trending",
+              "Subscriptions",
+              "Playlists"
+            ]
+          },
+          "default": [
+            "Popular",
+            "Trending",
+            "Subscriptions",
+            "Playlists"
+          ]
+        },
+        "default_home": {
+          "type": "string",
+          "description": "Default feed to display on the home page.\n\nNote: setting this option to \"Popular\" has no effect when 'popular_enabled' is set to false.\n\nAccepted values: Popular, Trending, Subscriptions, Playlists, <none>\nDefault: Popular",
+          "enum": [
+            "Popular",
+            "Trending",
+            "Subscriptions",
+            "Playlists",
+            ""
+          ],
+          "default": "Popular"
+        },
+        "max_results": {
+          "type": "integer",
+          "description": "Default number of results to display per page.\n\nNote: this affects invidious-generated pages only, such as watch history and subscription feeds. Playlists, search results and channel videos depend on the data returned by the Youtube API.\n\nAccepted values: any positive integer\nDefault: 40",
+          "minimum": 1,
+          "default": 40
+        },
+        "annotations": {
+          "type": "boolean",
+          "description": "Show/hide annotations.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "annotations_subscribed": {
+          "type": "boolean",
+          "description": "Show/hide annotation for subscribed channels.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "comments": {
+          "type": "array",
+          "description": "Type of comments to display below video.\n\nAccepted values: a two-entries array. Each entry can be one of: \"youtube\", \"reddit\", \"\"\n\nDefault: [\"youtube\", \"\"]",
+          "items": {
+            "type": "string",
+            "enum": [
+              "youtube",
+              "reddit",
+              ""
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [
+            "youtube",
+            ""
+          ]
+        },
+        "player_style": {
+          "type": "string",
+          "description": "Default player style.\n\nAccepted values: invidious, youtube\nDefault: invidious",
+          "enum": [
+            "invidious",
+            "youtube"
+          ],
+          "default": "invidious"
+        },
+        "related_videos": {
+          "type": "boolean",
+          "description": "Show/Hide the \"related videos\" sidebar when watching a video.\n\nAccepted values: true, false\nDefault: true",
+          "default": true
+        },
+        "preload": {
+          "type": "boolean",
+          "description": "This option controls the value of the HTML5 <video> element's \"preload\" attribute.\n\nIf set to 'false', no video data will be loaded until the user explicitly starts the video by clicking the \"Play\" button. If set to 'true', the web browser will buffer some video data while the page is loading.\n\nSee: https://www.w3schools.com/tags/att_video_preload.asp\n\nAccepted values: true, false\nDefault: true",
+          "default": true
+        },
+        "autoplay": {
+          "type": "boolean",
+          "description": "Automatically play videos on page load.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "continue": {
+          "type": "boolean",
+          "description": "Automatically load the \"next\" video (either next in playlist or proposed) when the current video ends.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "continue_autoplay": {
+          "type": "boolean",
+          "description": "Autoplay next video by default.\n\nNote: Only effective if 'continue' is set to true.\n\nAccepted values: true, false\nDefault: true",
+          "default": true
+        },
+        "listen": {
+          "type": "boolean",
+          "description": "Play videos in Audio-only mode by default.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "video_loop": {
+          "type": "boolean",
+          "description": "Loop videos automatically.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "quality": {
+          "type": "string",
+          "description": "Default video quality.\n\nAccepted values: dash, hd720, medium, small\nDefault: dash",
+          "enum": [
+            "dash",
+            "hd720",
+            "medium",
+            "small"
+          ],
+          "default": "dash"
+        },
+        "quality_dash": {
+          "type": "string",
+          "description": "Default dash video quality.\n\nNote: this setting only takes effect if the 'quality' parameter is set to \"dash\".\n\nAccepted values: auto, best, 4320p, 2160p, 1440p, 1080p, 720p, 480p, 360p, 240p, 144p, worst\nDefault: auto",
+          "enum": [
+            "auto",
+            "best",
+            "4320p",
+            "2160p",
+            "1440p",
+            "1080p",
+            "720p",
+            "480p",
+            "360p",
+            "240p",
+            "144p",
+            "worst"
+          ],
+          "default": "auto"
+        },
+        "speed": {
+          "type": "number",
+          "description": "Default video playback speed.\n\nAccepted values: 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0\nDefault: 1.0",
+          "enum": [
+            0.25,
+            0.5,
+            0.75,
+            1,
+            1.25,
+            1.5,
+            1.75,
+            2
+          ],
+          "default": 1
+        },
+        "volume": {
+          "type": "integer",
+          "description": "Default volume.\n\nAccepted values: 0-100\nDefault: 100",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 100
+        },
+        "vr_mode": {
+          "type": "boolean",
+          "description": "Allow 360° videos to be played.\n\nNote: This feature requires a WebGL-enabled browser.\n\nAccepted values: true, false\nDefault: true",
+          "default": true
+        },
+        "save_player_pos": {
+          "type": "boolean",
+          "description": "Save the playback position. Allow to continue watching at the previous position when watching the same video.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "latest_only": {
+          "type": "boolean",
+          "description": "In the \"Subscription\" feed, only show the latest video of each channel the user is subscribed to.\n\nNote: when combined with 'unseen_only', the latest unseen video of each channel will be displayed instead of the latest by date.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "notifications_only": {
+          "type": "boolean",
+          "description": "Enable/Disable user subscriptions desktop notifications.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "unseen_only": {
+          "type": "boolean",
+          "description": "In the \"Subscription\" feed, Only show the videos that the user haven't watched yet (i.e which are not in their watch history).\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "sort": {
+          "type": "string",
+          "description": "Default sorting parameter for subscription feeds.\n\nAccepted values: 'alphabetically', 'alphabetically - reverse', 'channel name', 'channel name - reverse', 'published', 'published - reverse'\n\nDefault: published",
+          "enum": [
+            "alphabetically",
+            "alphabetically - reverse",
+            "channel name",
+            "channel name - reverse",
+            "published",
+            "published - reverse"
+          ],
+          "default": "published"
+        },
+        "local": {
+          "type": "boolean",
+          "description": "Proxy videos through instance by default.\n\nWarning: As most users won't change this setting in their preferences, defaulting to true will significantly increase the instance's network usage, so make sure that your server's connection can handle it.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "show_nick": {
+          "type": "boolean",
+          "description": "Show the connected user's nick at the top right.\n\nAccepted values: true, false\nDefault: true",
+          "default": true
+        },
+        "automatic_instance_redirect": {
+          "type": "boolean",
+          "description": "Automatically redirect to a random instance when the user uses any \"switch invidious instance\" link (For videos, it's the plane icon, next to \"watch on youtube\" and \"listen\"). When set to false, the user is sent to https://redirect.invidious.io instead, where they can manually select an instance.\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        },
+        "extend_desc": {
+          "type": "boolean",
+          "description": "Show the entire video description by default (when set to 'false', only the first few lines of the description are shown and a \"show more\" button allows to expand it).\n\nAccepted values: true, false\nDefault: false",
+          "default": false
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "db",
+        "domain"
+      ]
+    },
+    {
+      "required": [
+        "database_url",
+        "domain"
+      ]
+    }
+  ]
+}
