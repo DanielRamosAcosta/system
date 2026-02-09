@@ -49,6 +49,19 @@
       "description": "Enable automatic table integrity check. This will create the required tables and columns if anything is missing.\n\nAccepted values: true, false\nDefault: false",
       "default": false
     },
+    "registration_enabled": {
+      "type": "boolean",
+      "description": "Allow/Forbid Invidious (local) account creation. Invidious accounts allow users to subscribe to channels and to create playlists without a Google account.",
+      "default": true
+    },
+    "admins": {
+      "type": "array",
+      "description": "List of usernames that will be granted administrator rights. A user with administrator rights will be able to change the server configuration options listed below in /preferences, in addition to the usual user preferences. ",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
     "invidious_companion": {
       "type": "array",
       "description": "Invidious companion is an external program for loading the video streams from YouTube servers.\n\nWhen this setting is commented out, Invidious companion is not used. Otherwise, Invidious will proxy the requests to Invidious companion.\n\nNote: multiple URL can be configured. In this case, Invidious will randomly pick one every time video data needs to be retrieved. This URL is then kept in the video metadata cache to allow video playback to work. Once said cache has expired, requesting that video's data again will cause a new companion URL to be picked.\n\nThe parameter private_url is required for the internal communication between Invidious companion and Invidious.\n\nThe optional parameter public_url is the public URL from which Invidious companion is listening to the requests from the user(s). When this setting is commented out, Invidious proxy all requests to Invidious companion. Useful for simple setups. Otherwise, requests from the user(s) will reach Invidious companion directly. And you will need to configure a reverse proxy with separate routes for Invidious and Invidious companion.\n\nRead the post-install documentation for advanced reverse proxy documentation: https://docs.invidious.io/installation/#post-install-configuration\n\nAccepted values: \"http(s)://<IP-HOSTNAME>:<Port>\"",
@@ -103,6 +116,11 @@
       "type": "boolean",
       "description": "Tell Invidious that it is behind a proxy that provides only HTTPS, so all links must use the https:// scheme. This setting MUST be set to true if invidious is behind a reverse proxy serving HTTPs.\n\nAccepted values: true, false\nDefault: false",
       "default": false
+    },
+    "captcha_enabled": {
+      "type": "boolean",
+      "description": "Enable/Disable the captcha challenge on the login page. Note: this is a basic captcha challenge that doesn't depend on any third parties.",
+      "default": true
     },
     "hsts": {
       "type": "boolean",

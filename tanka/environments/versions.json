@@ -75,20 +75,12 @@
     "repo": "linuxserver/deluge",
     "version": "2.2.0"
   },
-  "piped": {
-    "repo": "TeamPiped/Piped-Frontend",
+  "invidious": {
+    "repo": "iv-org/invidious",
     "version": "latest"
   },
-  "pipedBackend": {
-    "repo": "TeamPiped/Piped-Backend",
-    "version": "latest"
-  },
-  "pipedProxy": {
-    "repo": "TeamPiped/piped-proxy",
-    "version": "latest"
-  },
-  "pipedBgHelper": {
-    "repo": "TeamPiped/piped-bg-helper",
+  "invidiousCompanion": {
+    "repo": "iv-org/invidious",
     "version": "latest"
   }
 }

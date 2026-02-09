@@ -2,6 +2,7 @@ local versions = import '../versions.json';
 local booklore = import 'media/booklore.libsonnet';
 local gitea = import 'media/gitea.libsonnet';
 local immich = import 'media/immich.libsonnet';
+local invidious = import 'media/invidious.libsonnet';
 local jellyfin = import 'media/jellyfin.libsonnet';
 local sftpgo = import 'media/sftpgo.libsonnet';
 
@@ -20,5 +21,9 @@ local sftpgo = import 'media/sftpgo.libsonnet';
   ),
   jellyfin: jellyfin.new(
     version=versions.jellyfin.version,
+  ),
+  invidious: invidious.new(
+    invidiousVersion=versions.invidious.version,
+    invidiousCompanionVersion=versions.invidiousCompanion.version,
   ),
 }

@@ -9,13 +9,15 @@
   "check_tables": true,
   "invidious_companion": [
     {
-      "private_url": "http://invidious-companion.piped.svc.cluster.local:8282/companion"
+      "private_url": "http://invidious-companion.media.svc.cluster.local:8282/companion"
     }
   ],
   "domain": "invidious.danielramos.me",
   "https_only": true,
   "registration_enabled": false,
-  "admins": null,
+  "admins": [
+    "dani"
+  ],
   "default_user_preferences": {
     "locale": "es",
     "region": "ES",

@@ -48,7 +48,13 @@ local invidiousConfig = import './invidious.config.json';
                            container.withPorts([containerPort.new('http', 8282)]) +
                            container.withEnv(
                              u.envVars.fromSecret(self.companionSecretEnv)
-                           ),
+                           ) +
+                           container.withVolumeMounts([
+                             volumeMount.new('cache', '/var/tmp/youtubei.js'),
+                           ]),
+                         ]) +
+                         deployment.spec.template.spec.withVolumes([
+                           volume.fromHostPath('cache', '/data/invidious/companion-cache') + volume.hostPath.withType('DirectoryOrCreate'),
                          ]) +
                          deployment.spec.template.spec.withEnableServiceLinks(false),
 
