@@ -74,7 +74,8 @@
       "Bash(rsync:*)",
       "Bash(TANKA_DANGEROUS_ALLOW_REDIRECT=true tk show:*)",
       "Bash(yes:*)",
-      "mcp__playwright__browser_handle_dialog"
+      "mcp__playwright__browser_handle_dialog",
+      "Bash(gh issue view:*)"
     ],
     "deny": [],
     "ask": []

@@ -12,6 +12,7 @@
     git
     liquidctl
     lm_sensors
+    mkvtoolnix
     openssl
     smartmontools
     strongswan
