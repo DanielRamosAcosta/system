@@ -36,7 +36,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       KEEP_APP_RUNNING: '1',
       DISPLAY_WIDTH: '1920',
       DISPLAY_HEIGHT: '1080',
-      TZ: 'Europe/Madrid',
+      TZ: 'Atlantic/Canary',
     }),
   },
 }

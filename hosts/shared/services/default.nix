@@ -9,5 +9,6 @@
     ./dnsmasq.nix
     ./strongswan.nix
     ./network-monitor.nix
+    ./ups-watchdog.nix
   ];
 }

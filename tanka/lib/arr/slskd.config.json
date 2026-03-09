@@ -1,0 +1,8 @@
+{
+  "$schema": "./slskd.config.schema.json",
+  "debug": true,
+  "directories": {
+    "downloads": "/downloads",
+    "incomplete": "/incomplete"
+  }
+}

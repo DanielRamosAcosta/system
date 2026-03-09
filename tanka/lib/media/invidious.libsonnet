@@ -32,7 +32,7 @@ local invidiousConfig = import './invidious.config.json';
     service: k.util.serviceFor(self.deployment),
 
     secretEnv: u.secret.forEnv(self.deployment, {
-      INVIDIOUS_CONFIG: std.manifestYamlDoc(invidiousConfig + {
+      INVIDIOUS_CONFIG: std.manifestYamlDoc(invidiousConfig {
         db+: {
           password: s.POSTGRES_PASSWORD_INVIDIOUS,
         },

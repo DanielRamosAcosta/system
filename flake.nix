@@ -23,7 +23,12 @@
         lib = nixpkgs.lib;
       };
       localPkgs = nixpkgs.legacyPackages.${localSystem};
+      remotePkgs = nixpkgs.legacyPackages.${remoteSystem};
     in {
+      packages.${remoteSystem} = {
+        godeez = remotePkgs.callPackage ./packages/godeez.nix {};
+      };
+
       devShells.${localSystem}.default = localPkgs.mkShell {
         packages = with localPkgs; [
           nixos-rebuild
@@ -42,6 +47,13 @@
             ./hosts/nas
             disko.nixosModules.disko
             agenix.nixosModules.default
+            {
+              nixpkgs.overlays = [
+                (final: prev: {
+                  godeez = remotePkgs.callPackage ./packages/godeez.nix {};
+                })
+              ];
+            }
           ];
         };
 

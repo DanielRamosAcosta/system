@@ -9,14 +9,19 @@
 
     ups.salicru = {
       description = "Salicru UPS";
-      driver = "blazer_usb";
+      driver = "nutdrv_qx";
       port = "auto";
-      directives = [ "pollinterval = 15" ];
+      directives = [
+        "pollinterval = 10"
+        "maxretry = 3"
+      ];
     };
 
     users.monuser = {
       passwordFile = config.age.secrets.dani-hashed-password.path;
       upsmon = "primary";
+      actions = [ "SET" "FSD" ];
+      instcmds = [ "ALL" ];
     };
 
     upsd = {

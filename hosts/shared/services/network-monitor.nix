@@ -7,6 +7,12 @@
     wantedBy = [ "multi-user.target" ];
     restartIfChanged = false;
 
+    path = with pkgs; [
+      iproute2
+      dhcpcd
+      coreutils
+    ];
+
     serviceConfig = {
       Type = "simple";
       Restart = "on-failure";

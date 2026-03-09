@@ -21,15 +21,16 @@ local immichConfig = importstr './immich.config.json';
                      [containerPort.new('server', 4533)]
                    ) +
                    container.withEnv(
-                     u.envVars.fromConfigMap(self.configEnv)
+                     u.envVars.fromConfigMap(self.configEnv) +
+                     u.envVars.fromSecret(self.secretsEnv)
                    ) +
                    container.withVolumeMounts([
-                     volumeMount.new('music-dani', '/music', true),
+                     volumeMount.new('library', '/library', true),
                      volumeMount.new('data', '/data'),
                    ]),
                  ]) +
                  statefulSet.spec.template.spec.withVolumes([
-                   volume.fromHostPath('music-dani', '/cold-data/media/music/library'),
+                   volume.fromHostPath('library', '/cold-data/media/music/library'),
                    volume.fromHostPath('data', '/data/navidrome/data'),
                  ]),
 
@@ -37,6 +38,13 @@ local immichConfig = importstr './immich.config.json';
 
     configEnv: u.configMap.forEnv(self.statefulSet, {
       ND_BASEURL: 'https://music.danielramos.me',
+    }),
+
+    secretsEnv: u.secret.forEnv(self.statefulSet, {
+      ND_SPOTIFY_ID: s.ND_SPOTIFY_ID,
+      ND_SPOTIFY_SECRET: s.ND_SPOTIFY_SECRET,
+      ND_LASTFM_APIKEY: s.ND_LASTFM_APIKEY,
+      ND_LASTFM_SECRET: s.ND_LASTFM_SECRET,
     }),
 
     ingressRoute: u.ingressRoute.from(self.service, 'music.danielramos.me'),

@@ -10,6 +10,7 @@
     exiftool
     ffmpeg
     git
+    godeez
     liquidctl
     lm_sensors
     mkvtoolnix

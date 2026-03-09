@@ -22,6 +22,16 @@ scrape_configs:
     - role: pod
   pipeline_stages:
     - cri: {}
+    - regex:
+        expression: '(?i)(?:level[=:"\ ]+|\[)(?P<level>trace|debug|info|warn(?:ing)?|error|fatal|critical|panic)'
+    - template:
+        source: level
+        template: '{{ .Value | ToLower }}'
+    - template:
+        source: level
+        template: '{{ if eq .Value "warning" }}warn{{ else }}{{ .Value }}{{ end }}'
+    - labels:
+        level:
   relabel_configs:
     - action: replace
       source_labels: [__meta_kubernetes_namespace]
@@ -42,6 +52,8 @@ scrape_configs:
       source_labels: [__meta_kubernetes_pod_uid]
       target_label: __path__
       replacement: /host/var/log/pods/*$1/*/*.log
+    - target_label: source
+      replacement: kubernetes
 - job_name: systemd-journal
   journal:
     path: /host/var/log/journal
@@ -49,18 +61,30 @@ scrape_configs:
     labels:
       job: systemd-journal
   relabel_configs:
-    - source_labels: ['__journal__hostname']
-      target_label: host
     - source_labels: ['__journal__systemd_unit']
       action: keep
     - source_labels: ['__journal_priority']
+      regex: '[0-3]'
       target_label: level
-    - source_labels: ['__journal__systemd_unit']
-      target_label: systemd_unit
+      replacement: error
+    - source_labels: ['__journal_priority']
+      regex: '4'
+      target_label: level
+      replacement: warn
+    - source_labels: ['__journal_priority']
+      regex: '[56]'
+      target_label: level
+      replacement: info
+    - source_labels: ['__journal_priority']
+      regex: '7'
+      target_label: level
+      replacement: debug
     - source_labels: ['__journal__systemd_unit']
       regex: '([a-z0-9-]+)(@|\.service)'
       target_label: service
       replacement: '$1'
+    - target_label: source
+      replacement: systemd
 - job_name: samba
   static_configs:
     - targets:
@@ -69,11 +93,7 @@ scrape_configs:
         job: samba
         __path__: /host/var/log/samba/log.*
   relabel_configs:
-    - source_labels: [__path__]
-      regex: '/host/var/log/samba/log\.(.+?)(?:\.old)?$'
-      target_label: samba_log_type
-      replacement: '${1}'
-    - target_label: host
-      replacement: 'nas'
     - target_label: service
       replacement: 'samba'
+    - target_label: source
+      replacement: file

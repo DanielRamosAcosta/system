@@ -36,11 +36,13 @@ local logbackConfig = importstr './booklore.logback-spring.xml';
     configEnv: u.configMap.forEnv(self.statefulSet, {
       USER_ID: '0',
       GROUP_ID: '0',
-      TZ: 'Europe/Madrid',
+      TZ: 'Atlantic/Canary',
       BOOKLORE_PORT: '6060',
       DATABASE_URL: 'jdbc:mariadb://mariadb.databases.svc.cluster.local:3306/booklore',
       DATABASE_USERNAME: 'booklore',
       LOGGING_CONFIG: '/config/logback-spring.xml',
+      SPRINGDOC_API_DOCS_ENABLED: 'false',
+      SPRINGDOC_SWAGGER_UI_ENABLED: 'false',
     }),
 
     secretsEnv: u.secret.forEnv(self.statefulSet, {

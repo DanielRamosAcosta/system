@@ -32,7 +32,7 @@ local k = import 'github.com/grafana/jsonnet-libs/ksonnet-util/kausal.libsonnet'
       PUID: '1000',
       PGID: '100',
       UMASK: '002',
-      TZ: 'Europe/Madrid',
+      TZ: 'Atlantic/Canary',
       RADARR__LOG__CONSOLEFORMAT: 'Clef',
     }),
   },

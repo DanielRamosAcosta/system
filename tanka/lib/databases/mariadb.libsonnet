@@ -35,7 +35,7 @@ local u = import 'utils.libsonnet';
       MYSQL_ROOT_PASSWORD: s.MARIADB_ROOT_PASSWORD,
       PUID: '1000',
       PGID: '1000',
-      TZ: 'Europe/Madrid',
+      TZ: 'Atlantic/Canary',
     }),
 
     userBooklore: self.createUser('booklore', s.MARIADB_PASSWORD_BOOKLORE, self.createUserMigration, self.secretsEnv),

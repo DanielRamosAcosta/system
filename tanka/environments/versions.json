@@ -1,7 +1,7 @@
 {
   "immich": {
     "repo": "immich-app/immich",
-    "version": "v2.5.2"
+    "version": "v2.5.6"
   },
   "navidrome": {
     "repo": "deluan/navidrome",
@@ -57,7 +57,7 @@
   },
   "booklore": {
     "repo": "booklore-app/booklore",
-    "version": "v1.17.0"
+    "version": "v2.0.6"
   },
   "jellyfin": {
     "repo": "jellyfin/jellyfin",
@@ -75,6 +75,14 @@
     "repo": "ghcr.io/hotio/radarr",
     "version": "release-6.0.4.10291"
   },
+  "lidarr": {
+    "repo": "ghcr.io/hotio/lidarr",
+    "version": "release-3.1.0.4875"
+  },
+  "slskd": {
+    "repo": "slskd/slskd",
+    "version": "0.24.3"
+  },
   "deluge": {
     "repo": "linuxserver/deluge",
     "version": "2.2.0"
@@ -86,5 +94,17 @@
   "invidiousCompanion": {
     "repo": "iv-org/invidious",
     "version": "latest"
+  },
+  "beets": {
+    "repo": "linuxserver/docker-beets",
+    "version": "2.6.1-ls311"
+  },
+  "amule": {
+    "repo": "ngosang/amule",
+    "version": "2.3.3-20"
+  },
+  "gluetun": {
+    "repo": "qdm12/gluetun",
+    "version": "v3.41.1"
   }
 }

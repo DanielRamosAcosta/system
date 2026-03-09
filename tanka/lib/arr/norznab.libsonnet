@@ -18,12 +18,19 @@ local s = import 'secrets.json';
         u.envVars.fromSecret(self.secrets) +
         u.envVars.fromConfigMap(self.config)
       ),
-    ]),
+    ]) +
+    deployment.spec.strategy.withType('Recreate'),
 
     service: k.util.serviceFor(self.statefulSet),
 
     config: u.configMap.forEnv(self.statefulSet, {
       DON_TORRENT_BASE_URL: 'https://dontorrent.promo',
+      MARCIANO_TORRENT_BASE_URL: 'https://marcianotorrent.net',
+      REQUEST_TIMEOUT_MS: '20000',
+      HTTP_PROXY: 'http://gluetun.system.svc.cluster.local:8888',
+      HTTPS_PROXY: 'http://gluetun.system.svc.cluster.local:8888',
+      NO_PROXY: 'localhost,127.0.0.1,.svc.cluster.local',
+      NODE_USE_ENV_PROXY: '1',
     }),
 
     secrets: u.secret.forEnv(self.statefulSet, {
