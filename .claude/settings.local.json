@@ -87,7 +87,9 @@
       "mcp__backlog__task_create",
       "mcp__backlog__task_edit",
       "mcp__backlog__task_list",
-      "mcp__backlog__task_view"
+      "mcp__backlog__task_view",
+      "Bash(git commit:*)",
+      "Bash(git:*)"
     ],
     "deny": [],
     "ask": []
