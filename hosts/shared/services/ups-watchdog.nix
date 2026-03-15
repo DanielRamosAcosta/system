@@ -20,7 +20,7 @@
       coreutils
       gnugrep
       gnused
-      usbutils
+      systemd
     ];
 
     serviceConfig = {
