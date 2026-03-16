@@ -1,5 +1,3 @@
-mod tanka
-
 # Build documentation PDF from Typst source
 docs:
   typst compile "docs/NAS DIY.typ"
@@ -12,10 +10,6 @@ deploy-nas:
     --use-remote-sudo \
     --build-host nas \
     --target-host nas
-
-# Port-forward to Kubernetes dashboard
-dashboard:
-  kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 
 # Install NixOS on target host using nixos-anywhere
 install:
