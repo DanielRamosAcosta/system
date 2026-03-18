@@ -93,7 +93,8 @@
       "mcp__backlog__task_search",
       "Bash(gh release:*)",
       "Bash(gh pr:*)",
-      "Read(//Users/danielramos/Documents/repos/mines/nas-k3s/tanka/lib/**)"
+      "Read(//Users/danielramos/Documents/repos/mines/nas-k3s/tanka/lib/**)",
+      "Bash(argocd context:*)"
     ],
     "deny": [],
     "ask": []
