@@ -5,37 +5,38 @@ UPS_NAME="salicru"
 DRIVER_NAME="nutdrv_qx"
 USB_VENDOR="0665"
 STATE_FILE="/tmp/ups-watchdog-failures"
-ESCALATION_FILE="/tmp/ups-watchdog-escalations"
-MAX_SOFT_FAILURES=3
-MAX_HARD_FAILURES=5
-MAX_ESCALATIONS=3
+MAX_FAILURES=3
 
 log() {
   echo "[ups-watchdog] $1"
 }
 
-get_count() {
-  if [[ -f "$1" ]]; then
-    cat "$1"
+get_failure_count() {
+  if [[ -f "$STATE_FILE" ]]; then
+    cat "$STATE_FILE"
   else
     echo 0
   fi
 }
 
-set_count() {
-  echo "$2" > "$1"
+set_failure_count() {
+  echo "$1" > "$STATE_FILE"
 }
 
 kill_driver() {
-  local pidfile="/var/state/ups/${UPS_NAME}-${DRIVER_NAME}.pid"
-  if [[ -f "$pidfile" ]]; then
-    local pid
-    pid=$(cat "$pidfile")
+  local pid
+  pid=$(pgrep -x "$DRIVER_NAME" 2>/dev/null || true)
+  if [[ -n "$pid" ]]; then
     log "Killing driver process $pid"
     kill "$pid" 2>/dev/null || true
     sleep 2
+    if pgrep -x "$DRIVER_NAME" >/dev/null 2>&1; then
+      log "Driver still alive, sending SIGKILL"
+      kill -9 "$pid" 2>/dev/null || true
+      sleep 1
+    fi
   else
-    log "No PID file found at $pidfile, skipping kill"
+    log "No driver process found"
   fi
 }
 
@@ -58,42 +59,36 @@ reset_usb_device() {
   sleep 2
 }
 
+recover() {
+  log "Starting recovery: kill driver → USB re-enumerate → restart driver"
+  kill_driver
+  reset_usb_device || true
+  systemctl restart upsdrv
+  sleep 3
+
+  if upsc "$UPS_NAME@localhost" ups.status 2>/dev/null; then
+    log "Recovery successful"
+    set_failure_count 0
+  else
+    log "Recovery failed, will retry in $MAX_FAILURES minutes"
+    set_failure_count 0
+  fi
+}
+
 if upsc "$UPS_NAME@localhost" ups.status 2>/dev/null; then
-  failures=$(get_count "$STATE_FILE")
+  failures=$(get_failure_count)
   if [[ "$failures" -gt 0 ]]; then
     log "Communication restored after $failures failures"
-    set_count "$STATE_FILE" 0
-    set_count "$ESCALATION_FILE" 0
+    set_failure_count 0
   fi
   exit 0
 fi
 
-failures=$(get_count "$STATE_FILE")
+failures=$(get_failure_count)
 failures=$((failures + 1))
-set_count "$STATE_FILE" "$failures"
-log "Communication check failed (failure $failures)"
+set_failure_count "$failures"
+log "Communication check failed (failure $failures/$MAX_FAILURES)"
 
-escalations=$(get_count "$ESCALATION_FILE")
-
-if [[ "$escalations" -ge "$MAX_ESCALATIONS" ]]; then
-  log "Escalation limit reached ($escalations), restarting full NUT stack"
-  systemctl restart upsdrv upsd
-  set_count "$STATE_FILE" 0
-  set_count "$ESCALATION_FILE" 0
-
-elif [[ "$failures" -ge "$MAX_HARD_FAILURES" ]]; then
-  log "Reached $MAX_HARD_FAILURES failures, performing USB re-enumerate + driver restart"
-  kill_driver
-  reset_usb_device || true
-  systemctl restart upsdrv
-  set_count "$STATE_FILE" 0
-  escalations=$((escalations + 1))
-  set_count "$ESCALATION_FILE" "$escalations"
-  log "Escalation counter: $escalations/$MAX_ESCALATIONS"
-
-elif [[ "$failures" -ge "$MAX_SOFT_FAILURES" ]]; then
-  log "Reached $MAX_SOFT_FAILURES failures, restarting driver"
-  kill_driver
-  systemctl restart upsdrv
-  set_count "$STATE_FILE" 0
+if [[ "$failures" -ge "$MAX_FAILURES" ]]; then
+  recover
 fi

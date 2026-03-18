@@ -1,7 +1,16 @@
 { config, ... }:
+let
+  vendor = "0665";
+  product = "5161";
+  HID_QUIRK_IGNORE = "0x0004";
+in
 {
+  boot.kernelParams = [
+    "usbhid.quirks=0x${vendor}:0x${product}:${HID_QUIRK_IGNORE}"
+  ];
+
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0665", ATTRS{idProduct}=="5161", ATTR{power/control}="on", ATTR{power/autosuspend_delay_ms}="0"
+    ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="${vendor}", ATTRS{idProduct}=="${product}", ATTR{power/control}="on", ATTR{power/autosuspend}="-1", ATTR{power/autosuspend_delay_ms}="-1"
   '';
 
   power.ups = {

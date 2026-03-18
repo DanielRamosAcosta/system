@@ -89,7 +89,11 @@
       "mcp__backlog__task_list",
       "mcp__backlog__task_view",
       "Bash(git commit:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "mcp__backlog__task_search",
+      "Bash(gh release:*)",
+      "Bash(gh pr:*)",
+      "Read(//Users/danielramos/Documents/repos/mines/nas-k3s/tanka/lib/**)"
     ],
     "deny": [],
     "ask": []

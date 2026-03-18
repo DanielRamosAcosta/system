@@ -21,6 +21,7 @@
       gnugrep
       gnused
       systemd
+      procps
     ];
 
     serviceConfig = {
