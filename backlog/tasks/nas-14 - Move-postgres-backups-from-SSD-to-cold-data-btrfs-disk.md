@@ -1,10 +1,10 @@
 ---
 id: NAS-14
 title: Move postgres-backups from SSD to cold-data btrfs disk
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-09 17:10'
-updated_date: '2026-03-21 19:24'
+updated_date: '2026-03-21 20:27'
 labels:
   - infrastructure
   - storage
@@ -35,10 +35,10 @@ The `/cold-data/postgres-backups/` directory is NOT a btrfs subvolume mount — 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 postgres-backups is a btrfs subvolume @postgres-backups on /dev/sda (cold-data)
-- [ ] #2 Mount entry exists in hardware-configuration.nix with compress=zstd
-- [ ] #3 WAL archives and base backups are stored on HDD not SSD
-- [ ] #4 Old data removed from root SSD — SSD space reclaimed
+- [x] #1 postgres-backups is a btrfs subvolume @postgres-backups on /dev/sda (cold-data)
+- [x] #2 Mount entry exists in hardware-configuration.nix with compress=zstd
+- [x] #3 WAL archives and base backups are stored on HDD not SSD
+- [x] #4 Old data removed from root SSD — SSD space reclaimed
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -387,4 +387,30 @@ The `/cold-data/postgres-backups/` directory is NOT a btrfs subvolume mount — 
 - **systemd adopta mounts manuales:** al hacer deploy-nas en Phase 8, NixOS crea el `.mount` unit y systemd normalmente adopta el mount manual si las opciones coinciden. Verificar con `systemctl status` que no queda marcado como failed/changed
 
 - **Precaución con rm -rf:** verificar que el directorio `-old` NO es un mount point antes de borrarlo
+
+## NOTAS POST TERMINAR LA TAREA (2026-03-21)
+
+### Lo que salió bien
+- La estrategia de pre-sync fue clave — el delta en downtime fueron solo 8 WAL segments (~128MB, segundos) en vez de 342GB (~1 hora)
+- El `nofail` como red de seguridad para el reboot fue acertado
+- El orden consumidores→productor→migración→productor→consumidores funcionó limpio
+- Mount sobrevivió tanto el deploy como el reboot a la primera
+- 355GB liberados en SSD (52% → 14%)
+
+### Lo que no salió a la primera
+- `argocd app set --sync-policy none` no desactivó nada — hay que añadir `--self-heal=false --auto-prune=false` para que haga efecto
+- `btrfs subvolume list` sin sudo falló por permisos
+- invidious era un deployment, no statefulset como decía el plan — el scale falló
+- `kubectl wait --for=delete -l app=postgres` no encontró el pod (label incorrecto), aunque el pod sí se había terminado
+- sftpgo crasheó post-reboot por dependencia con authelia (OIDC) — se resolvió solo con restarts automáticos
+- Sesión de ArgoCD expiró durante el reboot
+
+### Correcciones durante ejecución
+- kubectl se puede usar directamente desde local (sin ssh nas + sudo kubectl)
+- Existía un `dry-activate.sh` preparado que el plan no contemplaba
+
+### Qué cambiar para futuras migraciones
+- Verificar tipos de recursos k8s (deployment vs statefulset) antes de ejecutar, no asumir
+- Documentar el comportamiento real de `argocd app set --sync-policy none` (no basta solo con eso)
+- Quitar nofail se puede hacer en la misma sesión — no hace falta esperar a otra sesión
 <!-- SECTION:NOTES:END -->

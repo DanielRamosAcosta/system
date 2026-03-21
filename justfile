@@ -5,9 +5,18 @@ docs:
 # Deploy to NAS host
 deploy-nas:
   nixos-rebuild switch \
-    --fast \
+    --no-reexec \
     --flake .#nas \
-    --use-remote-sudo \
+    --sudo \
+    --build-host nas \
+    --target-host nas
+
+# Dry-activate: build and show what would change without applying
+dry-activate:
+  nixos-rebuild dry-activate \
+    --no-reexec \
+    --flake .#nas \
+    --sudo \
     --build-host nas \
     --target-host nas
 

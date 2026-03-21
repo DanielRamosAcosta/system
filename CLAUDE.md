@@ -13,61 +13,24 @@ Kubernetes application deployments are managed separately in the `nas-k3s` repos
 
 ## Common Commands
 
-### NixOS System Management
+### Commands that require the dev container (NixOS builds/deploys)
+
+These must run inside the dev container because the flake targets `x86_64-linux` and requires nix tooling. From outside the container, use `./scripts/inside-devcontainer.sh`:
 
 ```bash
-# Deploy configuration to NAS
-just deploy-nas
+./scripts/inside-devcontainer.sh just deploy-nas
+./scripts/inside-devcontainer.sh just dry-activate
+./scripts/inside-devcontainer.sh just install
+./scripts/inside-devcontainer.sh just iso
+./scripts/inside-devcontainer.sh just test
+```
 
-# Install NixOS on new hardware (uses nixos-anywhere)
-just install
+From inside the dev container, run `just` commands directly.
 
-# Build ISO image
-just iso
+### Commands that run locally (no dev container needed)
 
-# Build documentation PDF from Typst source
+```bash
 just docs
-
-# Run Nix utility tests
-just test
-# Or directly: nix eval --impure --expr 'import ./utilities/utilities.test.nix {}'
-```
-
-### Development Environment
-
-```bash
-# Enter dev shell with nixos-rebuild and agenix
-nix develop
-```
-
-### Deploying NixOS Configuration
-
-#### Quick Deploy (from outside dev container)
-
-```bash
-# THIS IS THE FASTEST WAY - Automatically finds and uses the dev container
-./deploy.sh
-```
-
-This script:
-- Automatically finds the VSCode dev container
-- Sources the nix environment
-- Executes the deployment with all required setup
-- Works with or without VPN
-
-#### Deploy from Inside Dev Container
-
-When working inside the VSCode dev container, SSH keys are automatically mounted from `.hostssh/` to `.ssh/`.
-
-**Deploy Command (from inside dev container):**
-```bash
-# Quick method using justfile
-just --unstable deploy-nas
-```
-
-Or directly:
-```bash
-/home/vscode/.nix-profile/bin/nixos-rebuild switch --no-reexec --flake '.#nas' --sudo --build-host nas --target-host nas
 ```
 
 ## Architecture

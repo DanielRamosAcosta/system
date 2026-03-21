@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-# Find the dev container by image containing 'vsc-nas'
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <command> [args...]"
+    exit 1
+fi
+
 CONTAINER_ID=$(docker ps --format "{{.ID}}\t{{.Image}}" | grep "vsc-nas" | awk '{print $1}' | head -1)
 
 if [ -z "$CONTAINER_ID" ]; then
@@ -9,14 +13,9 @@ if [ -z "$CONTAINER_ID" ]; then
     exit 1
 fi
 
-echo "Found dev container: $CONTAINER_ID"
-echo "Deploying NixOS configuration..."
-echo ""
-
-# Execute deployment inside the container
-docker exec "$CONTAINER_ID" bash -c '
+docker exec "$CONTAINER_ID" bash -c "
 export USER=vscode
 . /home/vscode/.nix-profile/etc/profile.d/nix.sh
 cd /workspace
-just --unstable deploy-nas
-'
+$(printf '%q ' "$@")
+"

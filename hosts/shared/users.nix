@@ -10,7 +10,7 @@
         extraGroups = [ "wheel" ];
         hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
         openssh.authorizedKeys.keys = [
-          (builtins.readFile ../../id_dani.pub)
+          (builtins.readFile ../../keys/id_dani.pub)
         ];
       };
 
@@ -19,7 +19,7 @@
         extraGroups = [ "wheel" ];
         hashedPasswordFile = config.age.secrets.alex-hashed-password.path;
         openssh.authorizedKeys.keys = [
-          (builtins.readFile ../../id_alex.pub)
+          (builtins.readFile ../../keys/id_alex.pub)
         ];
       };
 
