@@ -28,7 +28,6 @@ Kubernetes application deployments are managed separately in the [nas-k3s](https
 ### NixOS Hosts
 
 - `nas` - Production NAS server (x86_64-linux)
-- `playground` - Testing/development environment (x86_64-linux)
 - `iso` - Installation media generator
 
 ### Directory Structure
@@ -37,10 +36,8 @@ Kubernetes application deployments are managed separately in the [nas-k3s](https
 .
 ├── flake.nix              # NixOS flake definition
 ├── hosts/
-│   ├── nas/               # NAS-specific configuration
-│   ├── playground/        # Test environment
-│   ├── iso/               # Installation media
-│   └── shared/            # Shared modules (services, users)
+│   ├── nas/               # NAS configuration (all modules)
+│   └── iso/               # Installation media
 ├── utilities/             # Pure Nix utility functions
 ├── secrets/               # Encrypted secrets (.age files)
 └── justfile               # Task automation

@@ -1,12 +1,12 @@
 {
   imports = [
     ../../utilities/liquidctl.nix
-    ../shared/configuration.nix
-    ../shared/secrets.nix
-    ../shared/users.nix
-    ../shared/ups.nix
-    ../shared/snapper.nix
-    ../shared/services
+    ./base.nix
+    ./secrets.nix
+    ./users.nix
+    ./ups.nix
+    ./snapper.nix
+    ./services
     ./configuration.nix
     ./hardware-configuration.nix
   ];

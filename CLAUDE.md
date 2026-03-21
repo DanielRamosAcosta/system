@@ -37,23 +37,22 @@ just docs
 
 ### NixOS Structure
 
-The repository defines three NixOS configurations in `flake.nix`:
+The repository defines two NixOS configurations in `flake.nix`:
 
 1. **nas** (`hosts/nas/`) - Main production NAS server (x86_64-linux)
-2. **playground** (`hosts/playground/`) - Testing environment (x86_64-linux)
-3. **iso** (`hosts/iso/`) - Installation media
+2. **iso** (`hosts/iso/`) - Installation media
 
 **Module Organization:**
-- `hosts/shared/` - Common configuration imported by both nas and playground
-  - `configuration.nix` - Base system packages and nix settings
+- `hosts/nas/` - All NAS configuration
+  - `default.nix` - Import aggregator
+  - `base.nix` - Base system packages and nix settings
+  - `configuration.nix` - Boot loader and hardware-specific settings (it87 kernel module)
+  - `hardware-configuration.nix` - Disk layout, kernel modules, udev rules
   - `users.nix` - User account definitions
   - `secrets.nix` - agenix secret definitions
-  - `services/` - Service modules (k3s, samba, ssh, smart, fans, cloudflared, dnsmasq, strongswan, network-monitor, ups-watchdog)
   - `ups.nix` - UPS monitoring configuration
   - `snapper.nix` - Btrfs snapshot management
-- `hosts/nas/` - NAS-specific configuration
-  - Imports liquidctl for fan control
-  - Hardware-specific settings (it87 kernel module)
+  - `services/` - Service modules (k3s, samba, ssh, smart, fans, cloudflared, dnsmasq, strongswan, network-monitor, ups-watchdog)
 - `utilities/` - Pure Nix utility functions
   - `utilities.nix` - Reusable functions (e.g., `toBase64`)
   - `utilities.test.nix` - Unit tests for utilities
