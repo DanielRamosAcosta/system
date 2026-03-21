@@ -78,6 +78,12 @@
     options = [ "compress=zstd" "subvol=@postgres-backups" ];
   };
 
+  fileSystems."/cold-data/git" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@git" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;

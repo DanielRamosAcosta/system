@@ -95,7 +95,16 @@
       "Bash(gh pr:*)",
       "Read(//Users/danielramos/Documents/repos/mines/nas-k3s/tanka/lib/**)",
       "Bash(argocd context:*)",
-      "mcp__nixos__nix"
+      "mcp__nixos__nix",
+      "Bash(argocd app:*)",
+      "Bash(kubectl scale:*)",
+      "Bash(kubectl patch:*)",
+      "Bash(for app:*)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "Read(//private/tmp/**)",
+      "Bash(for asin:*)",
+      "Bash(python3 -c \":*)"
     ],
     "deny": [],
     "ask": []
