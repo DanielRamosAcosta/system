@@ -94,7 +94,8 @@
       "Bash(gh release:*)",
       "Bash(gh pr:*)",
       "Read(//Users/danielramos/Documents/repos/mines/nas-k3s/tanka/lib/**)",
-      "Bash(argocd context:*)"
+      "Bash(argocd context:*)",
+      "mcp__nixos__nix"
     ],
     "deny": [],
     "ask": []

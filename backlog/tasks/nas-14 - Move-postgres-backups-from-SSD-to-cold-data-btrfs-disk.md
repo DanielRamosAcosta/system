@@ -1,16 +1,16 @@
 ---
 id: NAS-14
 title: Move postgres-backups from SSD to cold-data btrfs disk
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-03-09 17:10'
-updated_date: '2026-03-18 22:36'
+updated_date: '2026-03-21 19:24'
 labels:
   - infrastructure
   - storage
 dependencies: []
 priority: high
-ordinal: 2500
+ordinal: 1000
 ---
 
 ## Description

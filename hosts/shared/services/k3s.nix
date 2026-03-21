@@ -6,6 +6,7 @@
   services.k3s = {
     enable = true;
     role = "server";
+    disable = [ "traefik" ];
     extraFlags = toString [];
   };
 
