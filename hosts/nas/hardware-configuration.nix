@@ -72,6 +72,12 @@
     options = [ "compress=zstd" "subvol=@downloads" ];
   };
 
+  fileSystems."/cold-data/postgres-backups" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@postgres-backups" ];
+  };
+
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
