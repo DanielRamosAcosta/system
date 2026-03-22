@@ -27,16 +27,7 @@
       gabriel.isNormalUser = true;
       cris.isNormalUser = true;
 
-      git = {
-        isSystemUser = true;
-        description = "Gitea SSH passthrough user";
-        home = "/var/lib/git";
-        shell = "/etc/gitea-shell";
-        group = "git";
-      };
     };
-
-    groups.git = {};
   };
 
   security.sudo.extraRules = [
