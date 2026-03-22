@@ -104,7 +104,8 @@
       "Bash(done)",
       "Read(//private/tmp/**)",
       "Bash(for asin:*)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "Bash(./scripts/inside-devcontainer.sh just:*)"
     ],
     "deny": [],
     "ask": []

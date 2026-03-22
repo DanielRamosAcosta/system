@@ -10,12 +10,12 @@
 
   boot = {
     initrd = {
-      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
+      availableKernelModules = [ "xhci_pci" "ahci" "nvme" "sd_mod" ];
       kernelModules = [ ];
     };
 
-    kernelModules = [ "kvm-intel" "it87-custom" ];
-    extraModulePackages = [ (pkgs.callPackage ./it87.nix { kernel = config.boot.kernelPackages.kernel; }) ];
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
   };
 
   fileSystems."/" =
@@ -35,54 +35,6 @@
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
-
-  fileSystems."/cold-data/immich" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@immich" ];
-  };
-
-  fileSystems."/cold-data/sftpgo" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@sftpgo" ];
-  };
-
-  fileSystems."/cold-data/gitea" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@gitea" ];
-  };
-
-  fileSystems."/cold-data/booklore" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@booklore" ];
-  };
-
-  fileSystems."/cold-data/media" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@media" ];
-  };
-
-  fileSystems."/cold-data/downloads" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@downloads" ];
-  };
-
-  fileSystems."/cold-data/postgres-backups" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@postgres-backups" ];
-  };
-
-  fileSystems."/cold-data/git" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@git" ];
-  };
 
   swapDevices = [ ];
 

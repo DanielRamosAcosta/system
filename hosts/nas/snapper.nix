@@ -22,7 +22,6 @@ in
     configs = {
       immich = snapshotConfig "/cold-data/immich";
       sftpgo = snapshotConfig "/cold-data/sftpgo";
-      gitea = snapshotConfig "/cold-data/gitea";
       booklore = snapshotConfig "/cold-data/booklore";
       media = snapshotConfig "/cold-data/media";
       git = snapshotConfig "/cold-data/git";

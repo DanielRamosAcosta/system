@@ -9,5 +9,7 @@
     ./services
     ./configuration.nix
     ./hardware-configuration.nix
+    ./kernel-modules.nix
+    ./storage.nix
   ];
 }
