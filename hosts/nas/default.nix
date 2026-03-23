@@ -1,6 +1,6 @@
 {
   imports = [
-    ../../utilities/liquidctl.nix
+    ../../utilities/quadro-ctl.nix
     ./base.nix
     ./secrets.nix
     ./users.nix
@@ -10,6 +10,7 @@
     ./configuration.nix
     ./hardware-configuration.nix
     ./kernel-modules
+    ./hardware
     ./storage.nix
   ];
 }

@@ -4,7 +4,6 @@
     ./ssh.nix
     ./samba.nix
     ./smart.nix
-    ./fans.nix
     ./cloudflared.nix
     ./dnsmasq.nix
     ./strongswan.nix

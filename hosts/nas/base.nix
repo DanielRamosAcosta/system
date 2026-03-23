@@ -13,7 +13,6 @@
     gcc
     git
     godeez
-    liquidctl
     lm_sensors
     mkvtoolnix
     openssl

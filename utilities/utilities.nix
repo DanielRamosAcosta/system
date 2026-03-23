@@ -1,4 +1,40 @@
 {lib, ...}: {
+  interpolateCurve = points:
+    let
+      inherit (builtins) length elemAt genList head;
+      sorted = lib.sort (a: b: a.temp < b.temp) points;
+      n = length sorted;
+      minTemp = (head sorted).temp;
+      maxTemp = (elemAt sorted (n - 1)).temp;
+      range = maxTemp - minTemp;
+
+      tempAt = i:
+        if i == 0 then minTemp
+        else if i == 15 then maxTemp
+        else minTemp + (i * range) / 15;
+
+      findSegment = temp: idx:
+        if idx >= n - 1 then n - 2
+        else if (elemAt sorted (idx + 1)).temp >= temp then idx
+        else findSegment temp (idx + 1);
+
+      interpolateSpeed = temp:
+        let
+          idx = findSegment temp 0;
+          a = elemAt sorted idx;
+          b = elemAt sorted (idx + 1);
+          dt = b.temp - a.temp;
+          ds = b.speedPercentage - a.speedPercentage;
+        in
+          if dt == 0 then a.speedPercentage
+          else a.speedPercentage + ((temp - a.temp) * ds) / dt;
+
+      makePoint = i:
+        let temp = tempAt i;
+        in { inherit temp; speedPercentage = interpolateSpeed temp; };
+    in
+      genList makePoint 16;
+
   toBase64 = text: let
     inherit (lib) sublist mod stringToCharacters concatMapStrings;
     inherit (lib.strings) charToInt;

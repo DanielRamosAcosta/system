@@ -24,6 +24,7 @@
     in {
       packages.${remoteSystem} = {
         godeez = remotePkgs.callPackage ./packages/godeez.nix {};
+        quadro-ctl = remotePkgs.callPackage ./packages/quadro-ctl.nix {};
       };
 
       devShells.${localSystem}.default = localPkgs.mkShell {
@@ -48,6 +49,7 @@
               nixpkgs.overlays = [
                 (final: prev: {
                   godeez = remotePkgs.callPackage ./packages/godeez.nix {};
+                  quadro-ctl = remotePkgs.callPackage ./packages/quadro-ctl.nix {};
                 })
               ];
             }
