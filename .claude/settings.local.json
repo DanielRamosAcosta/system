@@ -107,7 +107,8 @@
       "Bash(python3 -c \":*)",
       "Bash(./scripts/inside-devcontainer.sh just:*)",
       "mcp__backlog__document_list",
-      "mcp__backlog__document_view"
+      "mcp__backlog__document_view",
+      "Bash(rustup target:*)"
     ],
     "deny": [],
     "ask": []

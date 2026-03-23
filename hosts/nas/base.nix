@@ -5,16 +5,19 @@
   environment.systemPackages = with pkgs; [
     bottom
     btrfs-progs
+    cargo
     cmatrix
     dua
     exiftool
     ffmpeg
+    gcc
     git
     godeez
     liquidctl
     lm_sensors
     mkvtoolnix
     openssl
+    rustc
     smartmontools
     strongswan
     tcpdump
