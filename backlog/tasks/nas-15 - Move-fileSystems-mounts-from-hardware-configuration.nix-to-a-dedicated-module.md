@@ -1,10 +1,10 @@
 ---
 id: NAS-15
 title: Move fileSystems mounts from hardware-configuration.nix to a dedicated module
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-18 22:39'
-updated_date: '2026-03-18 22:39'
+updated_date: '2026-03-22 01:07'
 labels:
   - infrastructure
   - nix
@@ -12,7 +12,7 @@ dependencies: []
 references:
   - hosts/nas/hardware-configuration.nix
 priority: low
-ordinal: 7500
+ordinal: 500
 ---
 
 ## Description

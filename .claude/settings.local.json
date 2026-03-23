@@ -105,7 +105,9 @@
       "Read(//private/tmp/**)",
       "Bash(for asin:*)",
       "Bash(python3 -c \":*)",
-      "Bash(./scripts/inside-devcontainer.sh just:*)"
+      "Bash(./scripts/inside-devcontainer.sh just:*)",
+      "mcp__backlog__document_list",
+      "mcp__backlog__document_view"
     ],
     "deny": [],
     "ask": []

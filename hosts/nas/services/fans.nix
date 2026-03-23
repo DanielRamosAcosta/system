@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  services.liquidctl = {
+  /*services.liquidctl = {
     enable = true;
     interval = "30s";
     
@@ -23,5 +23,5 @@
         percentage = 50;
       }
     ];
-  };
+  };*/
 }

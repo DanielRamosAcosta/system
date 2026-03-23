@@ -4,11 +4,13 @@ title: Investigate UPS FSD ACCESS-DENIED error for monuser
 status: Done
 assignee: []
 created_date: '2026-03-09 16:55'
+updated_date: '2026-03-22 01:07'
 labels:
   - ups
   - non-critical
 dependencies: []
 priority: low
+ordinal: 3000
 ---
 
 ## Description
