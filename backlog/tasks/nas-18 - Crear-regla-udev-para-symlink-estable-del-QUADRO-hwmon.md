@@ -1,14 +1,15 @@
 ---
 id: NAS-18
 title: Crear regla udev para symlink estable del QUADRO hwmon
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-03-23 08:27'
-updated_date: '2026-03-23 08:35'
+updated_date: '2026-03-23 09:30'
 labels:
   - hardware
   - config
   - nixos
+  - cancelled
 dependencies: []
 references:
   - hosts/nas/hardware-configuration.nix
@@ -22,11 +23,9 @@ ordinal: 1000
 ## Description
 
 <!-- SECTION:DESCRIPTION:BEGIN -->
-El número de hwmon del Aqua Computer QUADRO puede cambiar entre reboots (actualmente hwmon4) dependiendo del orden de carga de drivers. Necesitamos un symlink estable para que otros servicios puedan referenciar el dispositivo sin hardcodear el número.
+**CANCELADA** - No es viable crear un symlink udev estable para hwmon porque los hwmon no tienen device nodes en `/dev/` (viven en sysfs bajo `/sys/class/hwmon/`). La directiva `SYMLINK+=` de udev opera sobre device nodes en devtmpfs, no sobre directorios sysfs.
 
-Crear una regla udev en NixOS que genere un symlink tipo `/dev/quadro-hwmon` que apunte siempre al directorio hwmon correcto del QUADRO. La regla debe matchear por vendor/product ID (`0c70:f00d`) o por el nombre del driver (`aquacomputer_d5next`).
-
-Este symlink será consumido por el módulo `services.quadro-fans` (NAS-19) para configurar curvas de temperatura y PWM manual sin depender del número de hwmon.
+La solución se absorbe en NAS-19: el servicio de control de ventiladores resolverá el hwmon correcto dinámicamente al arrancar con `grep -l "quadro" /sys/class/hwmon/hwmon*/name | xargs dirname`.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
@@ -36,3 +35,9 @@ Este symlink será consumido por el módulo `services.quadro-fans` (NAS-19) para
 - [ ] #3 El symlink apunta correctamente al directorio hwmon cuyo name es 'quadro'
 - [ ] #4 El symlink sobrevive reboots y es independiente del número de hwmon asignado
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Cancelada tras investigación. Los hwmon no exponen device nodes en /dev/, solo directorios en sysfs. Udev SYMLINK+= no aplica. La resolución dinámica del hwmon se implementará directamente en NAS-19.
+<!-- SECTION:FINAL_SUMMARY:END -->
