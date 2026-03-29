@@ -7,8 +7,8 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "DanielRamosAcosta";
     repo = "quadro-ctl";
-    rev = "a814f917e4181788f74a12f7278a276e5fba822f";
-    hash = "sha256-OtA/Vcwe4q+bXdr5tCQJNrDulpmd7m11ooakgZMWNhU=";
+    rev = "2176d73870e3d5095f136da08bca2ffa226dde46";
+    hash = "sha256-ir00HwNwe5JPcHNGAC0GFXaGyuljV3XuIHV16nn20go=";
   };
 
   cargoHash = "sha256-+D1H57AO3XKae1M5dN7C/tskA5vDo6OURnxxNoQNY6M=";

@@ -1,10 +1,12 @@
 ---
 id: NAS-19
-title: Crear módulo NixOS services.quadro-fans para control de ventiladores vía quadro-ctl
-status: In Progress
+title: >-
+  Crear módulo NixOS services.quadro-fans para control de ventiladores vía
+  quadro-ctl
+status: Done
 assignee: []
 created_date: '2026-03-23 08:27'
-updated_date: '2026-03-23 09:30'
+updated_date: '2026-03-29 13:28'
 labels:
   - hardware
   - config
@@ -14,11 +16,11 @@ references:
   - hosts/nas/services/fans.nix
   - utilities/liquidctl.nix
   - hosts/nas/kernel-modules/aquacomputer-d5next.nix
-  - https://github.com/DanielRamosAcosta/quadro-ctl
+  - 'https://github.com/DanielRamosAcosta/quadro-ctl'
 documentation:
   - 'doc-4 - Hardware: Aqua Computer QUADRO - Controlador de ventiladores PWM'
 priority: medium
-ordinal: 1000
+ordinal: 125
 ---
 
 ## Description

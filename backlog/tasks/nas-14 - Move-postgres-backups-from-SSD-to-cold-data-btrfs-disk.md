@@ -4,13 +4,13 @@ title: Move postgres-backups from SSD to cold-data btrfs disk
 status: Done
 assignee: []
 created_date: '2026-03-09 17:10'
-updated_date: '2026-03-22 01:07'
+updated_date: '2026-03-29 13:28'
 labels:
   - infrastructure
   - storage
 dependencies: []
 priority: high
-ordinal: 2000
+ordinal: 3000
 ---
 
 ## Description

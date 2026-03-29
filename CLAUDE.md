@@ -94,6 +94,7 @@ This evaluates `utilities/utilities.test.nix` which uses `lib.runTests` to valid
 
 - **Never add comments to code** - Code should be self-explanatory through clear naming and structure
 - **Commits must be single-line** - No multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`
+- **Documentation edits** - When modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
 
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 

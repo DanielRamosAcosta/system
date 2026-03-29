@@ -4,7 +4,7 @@ title: Create @git btrfs subvolume on cold-data
 status: Done
 assignee: []
 created_date: '2026-03-21 21:16'
-updated_date: '2026-03-21 21:29'
+updated_date: '2026-03-29 13:28'
 labels:
   - infrastructure
   - storage
@@ -15,7 +15,7 @@ references:
     Move-postgres-backups-from-SSD-to-cold-data-btrfs-disk.md
   - hosts/nas/hardware-configuration.nix
 priority: medium
-ordinal: 1000
+ordinal: 2000
 ---
 
 ## Description
