@@ -23,7 +23,6 @@
       remotePkgs = nixpkgs.legacyPackages.${remoteSystem};
     in {
       packages.${remoteSystem} = {
-        godeez = remotePkgs.callPackage ./packages/godeez.nix {};
         quadro-ctl = remotePkgs.callPackage ./packages/quadro-ctl.nix {};
       };
 
@@ -48,7 +47,6 @@
             {
               nixpkgs.overlays = [
                 (final: prev: {
-                  godeez = remotePkgs.callPackage ./packages/godeez.nix {};
                   quadro-ctl = remotePkgs.callPackage ./packages/quadro-ctl.nix {};
                 })
               ];

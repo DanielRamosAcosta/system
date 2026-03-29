@@ -6,13 +6,14 @@
     bottom
     btrfs-progs
     cargo
+    chromaprint
     cmatrix
     dua
     exiftool
     ffmpeg
     gcc
     git
-    godeez
+    id3v2
     lm_sensors
     mkvtoolnix
     openssl
