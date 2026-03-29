@@ -112,7 +112,10 @@
       "Bash(nix-prefetch-url --unpack \"https://github.com/DanielRamosAcosta/quadro-ctl/archive/a814f917e4181788f74a12f7278a276e5fba822f.tar.gz\")",
       "mcp__backlog__task_complete",
       "mcp__backlog__document_create",
-      "mcp__backlog__document_update"
+      "mcp__backlog__document_update",
+      "WebFetch(domain:www.kingston.com)",
+      "WebFetch(domain:www.jonsbo.com)",
+      "WebFetch(domain:www.newegg.com)"
     ],
     "deny": [],
     "ask": []
