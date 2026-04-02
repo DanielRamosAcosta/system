@@ -1,16 +1,16 @@
 ---
 id: NAS-17
 title: Documentar componentes del NAS e investigar soporte de hotswapping de HDD
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-03-22 22:14'
-updated_date: '2026-03-23 08:34'
+updated_date: '2026-03-29 18:34'
 labels:
   - documentation
   - hardware
 dependencies: []
 priority: low
-ordinal: 2000
+ordinal: 62.5
 ---
 
 ## Description

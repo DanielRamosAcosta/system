@@ -11,6 +11,7 @@
     dua
     exiftool
     ffmpeg
+    flac
     gcc
     git
     id3v2
@@ -18,6 +19,7 @@
     mkvtoolnix
     openssl
     rustc
+    shntool
     smartmontools
     strongswan
     tcpdump
