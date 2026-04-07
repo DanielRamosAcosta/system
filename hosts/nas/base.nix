@@ -1,5 +1,7 @@
 { config, lib, pkgs, ... }:
 {
+  time.timeZone = "Atlantic/Canary";
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [
@@ -15,6 +17,8 @@
     gcc
     git
     id3v2
+    ifuse
+    libimobiledevice
     lm_sensors
     mkvtoolnix
     openssl
@@ -30,6 +34,12 @@
     util-linux
     zip
   ];
+
+  services.usbmuxd.enable = true;
+
+  networking.dhcpcd.extraConfig = ''
+    denyinterfaces eth*
+  '';
 
   system.stateVersion = "25.05";
 }
