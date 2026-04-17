@@ -8,6 +8,7 @@
     ./snapper.nix
     ./services
     ./configuration.nix
+    ./scanner.nix
     ./hardware-configuration.nix
     ./kernel-modules
     ./hardware

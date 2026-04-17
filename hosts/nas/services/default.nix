@@ -9,5 +9,6 @@
     ./strongswan.nix
     ./network-monitor.nix
     ./ups-watchdog.nix
+    ./scan-server.nix
   ];
 }

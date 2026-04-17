@@ -25,6 +25,7 @@ in
       booklore = snapshotConfig "/cold-data/booklore";
       media = snapshotConfig "/cold-data/media";
       git = snapshotConfig "/cold-data/git";
+      contabilidad = snapshotConfig "/cold-data/contabilidad";
     };
   };
 }

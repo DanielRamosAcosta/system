@@ -42,4 +42,10 @@
     fsType = "btrfs";
     options = [ "compress=zstd" "subvol=@git" ];
   };
+
+  fileSystems."/cold-data/contabilidad" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@contabilidad" ];
+  };
 }

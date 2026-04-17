@@ -21,9 +21,11 @@
     libimobiledevice
     lm_sensors
     mkvtoolnix
+    nmap
     openssl
+    (python3.withPackages (ps: with ps; [ opencv4 numpy onnxruntime pillow ]))
     rustc
-    shntool
+shntool
     smartmontools
     strongswan
     tcpdump

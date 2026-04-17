@@ -4,11 +4,10 @@ let
   defaultCurve = {
     sensor = 1;
     curve = [
-      { temp = 20; speedPercentage = 25; }
-      { temp = 28; speedPercentage = 40; }
-      { temp = 33; speedPercentage = 60; }
-      { temp = 38; speedPercentage = 80; }
-      { temp = 45; speedPercentage = 100; }
+      { temp = 20; speedPercentage = 50; }
+      { temp = 25; speedPercentage = 70; }
+      { temp = 30; speedPercentage = 85; }
+      { temp = 35; speedPercentage = 100; }
     ];
   };
 in
