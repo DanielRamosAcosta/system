@@ -1,4 +1,11 @@
-# Fan Temperature Analysis (2026-04-16)
+---
+id: doc-20
+title: Caracterización térmica de los HDDs
+type: other
+created_date: '2026-04-17 19:46'
+---
+
+# Caracterización térmica de los HDDs
 
 Objetivo: medir el impacto de cada fan en las temperaturas de los HDDs tras cambiar la disposicion de los discos (mejor airflow).
 
@@ -49,12 +56,31 @@ Objetivo: medir el impacto de cada fan en las temperaturas de los HDDs tras camb
 
 **Conclusiones Run 2**: fan3 (exhaust superior) tiene impacto leve pero real: 2°C de rango entre 100% y el suelo. Rango util: 100%→40%, por debajo no baja mas RPM. Afecta mas a sdb/sdc/sdd que a sda.
 
+## Run 3: todos los fans al 30% (suelo RPM), estabilizacion a largo plazo
+
+Configuracion: fan1=30%, fan2=30%, fan3=30%, fan4=30%
+Duracion: ~12 horas (partiendo de discos calientes a 51°C tras horas sin ventilacion)
+
+| # | hora | sda | sdb | sdc | sdd | max |
+|---|------|-----|-----|-----|-----|-----|
+| 0 | 20:48 | 45 | 49 | 51 | 51 | 51 |
+| 1 | 21:03 | 42 | 45 | 47 | 46 | 47 |
+| 2 | 21:18 | 40 | 42 | 44 | 43 | 44 |
+| 3 | 21:33 | 38 | 40 | 42 | 41 | 42 |
+| 4 | 21:48 | 37 | 39 | 41 | 40 | 41 |
+| 5 | 22:04 | 36 | 38 | 41 | 40 | 41 |
+| 6 | 06:48 | 36 | 37 | 40 | 39 | 40 |
+| 7-16 | 07:03-09:36 | 36 | 37 | 40 | 39 | 40 |
+
+**Conclusiones Run 3**: con todos los fans al minimo util (30%), los HDDs se estabilizan en sda=36, sdb=37, sdc=40, sdd=39 (max 40°C). 11 lecturas consecutivas identicas confirman estabilizacion total. Los discos sdc/sdd (Exos 10TB) son los mas calientes.
+
 ## Conclusiones generales
 
 - **Objetivo**: mantener HDDs por debajo de 40°C en todo momento
-- **Peor caso medido**: fan3=0%, fan4=40%, fan1/2=100% → max 37°C (3°C de margen)
 - **Mejora de airflow**: con la nueva disposicion de discos, las temperaturas baseline (todos al 100%) bajaron de 38/36/32/34 a 28/29/31/31 — mejora de ~6°C
 - **fan4** es el fan mas relevante para los HDDs, pero su impacto total es de ~4°C (100%→suelo)
 - **fan3** aporta ~2°C adicionales
 - **Suelo de RPM**: ambos fans (fan3 y fan4) dejan de responder por debajo del ~30% PWM
+- **Minimo absoluto (todos al 30%)**: max 40°C (sdc), justo en el objetivo
 - Hay margen de sobra para curvas silenciosas sin acercarse al limite de 40°C
+- En verano (temperatura ambiente mas alta) habra que tener en cuenta que estas mediciones se hicieron en abril

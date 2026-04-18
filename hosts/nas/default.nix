@@ -1,6 +1,7 @@
 {
   imports = [
     ../../utilities/quadro-ctl.nix
+    ../../utilities/quadro-sensors.nix
     ./base.nix
     ./secrets.nix
     ./users.nix

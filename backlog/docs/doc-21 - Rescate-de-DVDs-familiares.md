@@ -1,3 +1,10 @@
+---
+id: doc-21
+title: Rescate de DVDs familiares
+type: other
+created_date: '2026-04-17 19:47'
+---
+
 # DVDs
 
 | Etiqueta | Nombre real | % copiado |
@@ -104,3 +111,10 @@
 | Van Helsing | VAN_HELSING | ~55% |
 | V de Vendetta | V_FOR_VENDETTA | 100% |
 | X-Men III (La decisión final) | X_MEN_3_THE_LAST_STAND | 100% |
+| Los Chicos del Coro | LOS_CHICOS_DEL_CORO_SCN | ~45% |
+| Tierra de Pasiones | TIERRA_DE_PASIONES_SCN | 100% |
+| Una Historia de Violencia | DVDVOLUME | 100% |
+| Syriana | SYRIANA | 100% |
+| Poseidón | POSEIDON | 100% |
+| Munich | MUNICH | ~99% |
+| Máster and comander | MASTER_AND_COMAN | ~80% |

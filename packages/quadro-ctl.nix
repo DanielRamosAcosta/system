@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "quadro-ctl";
-  version = "0.1.0";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "DanielRamosAcosta";
     repo = "quadro-ctl";
-    rev = "2176d73870e3d5095f136da08bca2ffa226dde46";
-    hash = "sha256-ir00HwNwe5JPcHNGAC0GFXaGyuljV3XuIHV16nn20go=";
+    rev = "v0.2.0";
+    hash = "sha256-1+SetGvZ/WD3c7S6hdeUQFyO13i7znkrO5giezAYwGc=";
   };
 
-  cargoHash = "sha256-+D1H57AO3XKae1M5dN7C/tskA5vDo6OURnxxNoQNY6M=";
+  cargoHash = "sha256-3oaay4drDuA+pqPB+ThdYVeu185TCA4C6laH5iDSEO4=";
 
   meta = {
     description = "CLI tool to control Aqua Computer QUADRO fan controller via hidraw";

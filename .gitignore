@@ -8,3 +8,4 @@ temp.*
 *.priv.yaml
 .playwright-mcp
 .claude/settings.local.json
+.claude/scheduled_tasks.lock

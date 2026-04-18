@@ -9,6 +9,18 @@ let
 
   fanNames = [ "fan1" "fan2" "fan3" "fan4" ];
 
+  sensorModule = types.submodule {
+    options = {
+      source = mkOption {
+        type = types.enum [ "hardware" "virtual" "flow" ];
+      };
+      index = mkOption {
+        type = types.nullOr types.ints.positive;
+        default = null;
+      };
+    };
+  };
+
   fanModule = types.submodule {
     options = {
       percentage = mkOption {
@@ -17,8 +29,8 @@ let
       };
 
       sensor = mkOption {
-        type = types.ints.between 1 4;
-        default = 1;
+        type = types.nullOr sensorModule;
+        default = null;
       };
 
       curve = mkOption {
@@ -37,18 +49,36 @@ let
     };
   };
 
+  sensorToInt = sensor:
+    if sensor.source == "hardware" then sensor.index - 1
+    else if sensor.source == "flow" then 4
+    else if sensor.source == "virtual" then 4 + sensor.index
+    else throw "invalid sensor source";
+
   fanToJson = fan:
     if fan.percentage != null then {
       mode = "manual";
       percentage = fan.percentage;
-    } else {
-      mode = "curve";
-      sensor = fan.sensor - 1;
-      points = map (p: {
-        temp = p.temp * 1000;
-        percentage = p.speedPercentage;
-      }) (utilities.interpolateCurve fan.curve);
-    };
+    } else
+      let
+        raw = utilities.interpolateCurve fan.curve;
+        # Enforce strict monotonicity: when interpolation produces duplicate
+        # integer temps (curve range < 15), nudge by 0.01 °C to satisfy
+        # the firmware's "monotonically increasing" constraint.
+        dedupe = acc: p:
+          let
+            prev = if acc == [] then null else (lib.last acc).temp;
+            t = if prev != null && p.temp <= prev then prev + 0.01 else p.temp * 1.0;
+          in acc ++ [ { inherit (p) speedPercentage; temp = t; } ];
+        fixed = lib.foldl' dedupe [] raw;
+      in {
+        mode = "curve";
+        sensor = sensorToInt fan.sensor;
+        points = map (p: {
+          temp = p.temp;
+          percentage = p.speedPercentage;
+        }) fixed;
+      };
 
   configJson = pkgs.writeText "fans-config.json" (builtins.toJSON {
     fans = mapAttrs (_: fanToJson) cfg.fans;
@@ -56,8 +86,14 @@ let
 
   applyScript = pkgs.writeShellScript "apply-fans" ''
     set -e
-    ${pkgs.quadro-ctl}/bin/quadro-ctl apply --config-file ${configJson}
+    ${pkgs.quadro-ctl}/bin/quadro-ctl fans set --config-file ${configJson}
   '';
+
+  validSensor = sensor:
+    sensor != null &&
+    ((sensor.source == "hardware" && sensor.index != null && sensor.index >= 1 && sensor.index <= 4)
+     || (sensor.source == "virtual" && sensor.index != null && sensor.index >= 1 && sensor.index <= 8)
+     || (sensor.source == "flow"));
 
 in
 {
@@ -85,6 +121,11 @@ in
       (mapAttrsToList (name: fan: {
         assertion = fan.curve == null || length fan.curve >= 2;
         message = "Fan '${name}' curve must have at least 2 points.";
+      }) cfg.fans)
+      ++
+      (mapAttrsToList (name: fan: {
+        assertion = fan.curve == null || validSensor fan.sensor;
+        message = "Fan '${name}' curve requires a valid sensor (hardware 1-4, virtual 1-8, or flow).";
       }) cfg.fans)
       ++
       (mapAttrsToList (name: fan:
