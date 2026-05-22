@@ -10,9 +10,11 @@
       "env": {}
     },
     "nixos": {
-      "command": "uvx",
+      "command": "nix",
       "args": [
-        "mcp-nixos"
+        "run",
+        "github:utensils/mcp-nixos",
+        "--"
       ]
     },
     "context7": {
