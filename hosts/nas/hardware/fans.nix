@@ -21,5 +21,27 @@ in
       fan3 = defaultCurve;
       fan4 = defaultCurve;
     };
+
+    sensors = {
+      virtual1 = {
+        type = "hwmonByDevicePath";
+        devicePath = "/sys/class/nvme/nvme0";
+        label = "Composite";
+      };
+      virtual2 = {
+        type = "hwmonByDevicePath";
+        devicePath = "/sys/class/nvme/nvme1";
+        label = "Composite";
+      };
+      virtual3 = {
+        type = "hwmonName";
+        name = "coretemp";
+        label = "Package id 0";
+      };
+      virtual4 = {
+        type = "hwmonMaxByName";
+        name = "drivetemp";
+      };
+    };
   };
 }

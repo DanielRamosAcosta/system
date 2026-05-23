@@ -59,6 +59,149 @@ let
     ${pkgs.quadro-ctl}/bin/quadro-ctl apply --config-file ${configJson}
   '';
 
+  sensorModule = types.submodule {
+    options = {
+      type = mkOption {
+        type = types.enum [ "hwmonByDevicePath" "hwmonName" "hwmonMaxByName" ];
+      };
+
+      devicePath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+      };
+
+      name = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+      };
+
+      label = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+      };
+    };
+  };
+
+  sensorToShellBlock = name: sensor:
+    if sensor.type == "hwmonByDevicePath" then ''
+      {
+        v_milli=""
+        hp=$(ls -d ${sensor.devicePath}/hwmon* 2>/dev/null | head -1) || hp=""
+      if [ -n "$hp" ]; then
+        v_milli=$(read_temp_labeled "$hp" "${optionalString (sensor.label != null) sensor.label}") || v_milli=""
+      fi
+
+        if [ -n "$v_milli" ]; then
+          v_c=$(awk -v m="$v_milli" 'BEGIN{printf "%.2f", m/1000}')
+          json=$(echo "$json" | jq --arg v "$v_c" '."${name}" = ($v | tonumber)')
+        fi
+      }
+    ''
+    else if sensor.type == "hwmonName" then ''
+      {
+        v_milli=""
+        hp=$(hwmon_path_by_name "${sensor.name}") || hp=""
+      if [ -n "$hp" ]; then
+        v_milli=$(read_temp_labeled "$hp" "${optionalString (sensor.label != null) sensor.label}") || v_milli=""
+      fi
+
+        if [ -n "$v_milli" ]; then
+          v_c=$(awk -v m="$v_milli" 'BEGIN{printf "%.2f", m/1000}')
+          json=$(echo "$json" | jq --arg v "$v_c" '."${name}" = ($v | tonumber)')
+        fi
+      }
+    ''
+    else ''
+      {
+        v_milli=""
+        v_milli=$(max_temp_across_hwmons "${sensor.name}") || v_milli=""
+
+        if [ -n "$v_milli" ]; then
+          v_c=$(awk -v m="$v_milli" 'BEGIN{printf "%.2f", m/1000}')
+          json=$(echo "$json" | jq --arg v "$v_c" '."${name}" = ($v | tonumber)')
+        fi
+      }
+    '';
+
+  feederScript = pkgs.writeShellScript "quadro-sensors-feeder" ''
+    set -u
+    export PATH=${lib.makeBinPath (with pkgs; [ jq coreutils gnugrep gawk findutils quadro-ctl ])}:$PATH
+
+    readonly INTERVAL=2
+    readonly STATE_FILE=/run/quadro-sensors/last.json
+    mkdir -p /run/quadro-sensors
+
+    hwmon_path_by_name() {
+      local want="$1"
+      for h in /sys/class/hwmon/hwmon*; do
+        [ -r "$h/name" ] || continue
+        if [ "$(cat "$h/name")" = "$want" ]; then
+          echo "$h"
+          return 0
+        fi
+      done
+      return 1
+    }
+
+    read_temp_labeled() {
+      local hp="$1" label="$2" f idx
+      if [ -z "$label" ]; then
+        if [ -r "$hp/temp1_input" ]; then
+          cat "$hp/temp1_input"
+          return 0
+        fi
+        return 1
+      fi
+      for f in "$hp"/temp*_label; do
+        [ -r "$f" ] || continue
+        if [ "$(cat "$f")" = "$label" ]; then
+          idx="''${f##*/temp}"
+          idx="''${idx%_label}"
+          cat "$hp/temp''${idx}_input"
+          return 0
+        fi
+      done
+      return 1
+    }
+
+    max_temp_across_hwmons() {
+      local want="$1" best="" h f val
+      for h in /sys/class/hwmon/hwmon*; do
+        [ -r "$h/name" ] || continue
+        [ "$(cat "$h/name")" = "$want" ] || continue
+        for f in "$h"/temp*_input; do
+          [ -r "$f" ] || continue
+          val=$(cat "$f") || continue
+          [ -z "$val" ] && continue
+          if [ -z "$best" ] || [ "$val" -gt "$best" ]; then
+            best="$val"
+          fi
+        done
+      done
+      [ -n "$best" ] && echo "$best"
+    }
+
+    tick() {
+      local json="{}"
+      ${concatStringsSep "\n" (mapAttrsToList sensorToShellBlock cfg.sensors)}
+
+      if [ "$(echo "$json" | jq 'length')" -eq 0 ]; then
+        echo "[feeder] no sensor values readable this tick" >&2
+        return
+      fi
+
+      echo "$json" > "$STATE_FILE.tmp"
+      mv "$STATE_FILE.tmp" "$STATE_FILE"
+      quadro-ctl sensors set --config-file "$STATE_FILE" >/dev/null 2>&1 || \
+        echo "[feeder] quadro-ctl sensors set failed" >&2
+    }
+
+    while true; do
+      tick
+      sleep "$INTERVAL"
+    done
+  '';
+
 in
 {
   options.services.fans = {
@@ -66,6 +209,11 @@ in
 
     fans = mkOption {
       type = types.attrsOf fanModule;
+      default = {};
+    };
+
+    sensors = mkOption {
+      type = types.attrsOf sensorModule;
       default = {};
     };
   };
@@ -106,6 +254,20 @@ in
         ExecStart = applyScript;
         Restart = "on-failure";
         RestartSec = 5;
+      };
+    };
+
+    systemd.services.quadro-sensors = mkIf (cfg.sensors != {}) {
+      description = "Feed QUADRO virtual sensors from host hwmon";
+      after = [ "fans.service" ];
+      wantedBy = [ "multi-user.target" ];
+
+      serviceConfig = {
+        Type = "simple";
+        ExecStart = feederScript;
+        Restart = "always";
+        RestartSec = 2;
+        RuntimeDirectory = "quadro-sensors";
       };
     };
   };
