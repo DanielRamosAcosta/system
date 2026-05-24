@@ -11,7 +11,7 @@
     useTextGreeter = true;
     settings = {
       default_session = {
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd sway";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd sway";
         user = "greeter";
       };
     };

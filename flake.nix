@@ -15,6 +15,9 @@
   inputs.home-manager.url = "github:nix-community/home-manager/release-25.11";
   inputs.home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.fresh.url = "github:sinelaw/fresh";
+  inputs.fresh.inputs.nixpkgs.follows = "nixpkgs";
+
   outputs = {
     self,
     nixpkgs,
@@ -22,6 +25,7 @@
     agenix,
     stylix,
     home-manager,
+    fresh,
     ...
   } @ inputs:
     let
@@ -73,6 +77,11 @@
             stylix.nixosModules.stylix
             home-manager.nixosModules.home-manager
             {
+              nixpkgs.overlays = [
+                (final: prev: {
+                  fresh = fresh.packages.x86_64-linux.fresh;
+                })
+              ];
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.dani = import ./hosts/siemens/home.nix;

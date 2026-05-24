@@ -9,13 +9,20 @@ in
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
+    deno
+    fresh
     gh
+    git-lfs
     google-chrome
     grim
+    helix
     himalaya
     nodejs
+    obsidian
+    (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
     qrencode
     slurp
+    swaylock
     uv
     unzip
     vscode
@@ -25,7 +32,13 @@ in
 
   home.sessionVariables = {
     DISABLE_AUTOUPDATER = "1";
+    NPM_CONFIG_PREFIX = "$HOME/.npm-global";
   };
+
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.npm-global/bin"
+  ];
 
   wayland.windowManager.sway = {
     enable = true;
@@ -62,6 +75,7 @@ in
         "${mod}+Shift+j" = "move down";
         "${mod}+Shift+k" = "move up";
         "${mod}+Shift+l" = "move right";
+        "${mod}+Escape" = "exec swaylock -f -c 282a36";
         "${mod}+Shift+Left" = "move left";
         "${mod}+Shift+Down" = "move down";
         "${mod}+Shift+Up" = "move up";
@@ -162,7 +176,7 @@ in
   programs.foot = {
     enable = true;
     settings = {
-      main.font = "monospace:size=14";
+      main.font = "monospace:size=10";
       colors = {
         foreground = "f8f8f2";
         background = "282a36";

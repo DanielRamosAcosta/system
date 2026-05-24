@@ -11,6 +11,8 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
 
+  time.timeZone = "Europe/Madrid";
+
   console.keyMap = "es";
 
   stylix.enable = true;
@@ -42,7 +44,6 @@
 
   environment.systemPackages = with pkgs; [
     git
-    helix
   ];
 
   security.sudo.extraRules = [
