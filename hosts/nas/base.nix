@@ -15,6 +15,7 @@
     gcc
     git
     git-lfs
+    git-lfs-transfer
     id3v2
     lm_sensors
     mkvtoolnix
