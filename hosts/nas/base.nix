@@ -14,6 +14,7 @@
     flac
     gcc
     git
+    git-lfs
     id3v2
     lm_sensors
     mkvtoolnix
