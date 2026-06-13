@@ -38,6 +38,7 @@
     };
 
     casks = [
+      "ghostty"
       "google-chrome"
       "obsidian"
       "visual-studio-code"
