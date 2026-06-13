@@ -18,6 +18,9 @@
   inputs.fresh.url = "github:sinelaw/fresh";
   inputs.fresh.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+  inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
   outputs = {
     self,
     nixpkgs,
@@ -26,6 +29,7 @@
     stylix,
     home-manager,
     fresh,
+    nix-darwin,
     ...
   } @ inputs:
     let
@@ -95,6 +99,21 @@
           modules = [
             ./hosts/iso
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+          ];
+        };
+      };
+
+      darwinConfigurations = {
+        macbook = nix-darwin.lib.darwinSystem {
+          system = "aarch64-darwin";
+          modules = [
+            ./hosts/macbook
+            home-manager.darwinModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.danielramos = import ./hosts/macbook/home.nix;
+            }
           ];
         };
       };
