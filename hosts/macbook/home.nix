@@ -61,6 +61,18 @@
     };
   };
 
+  programs.ghostty = {
+    enable = true;
+    package = null;
+    enableFishIntegration = true;
+    settings = {
+      theme = "Dracula";
+      font-size = 13;
+      cursor-style = "block";
+      mouse-hide-while-typing = true;
+    };
+  };
+
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
