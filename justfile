@@ -4,7 +4,7 @@ docs:
 
 # Deploy to NAS host
 deploy-nas:
-  nixos-rebuild switch \
+  nixos-rebuild-ng switch \
     --no-reexec \
     --flake .#nas \
     --sudo \
@@ -13,7 +13,7 @@ deploy-nas:
 
 # Dry-activate: build and show what would change without applying
 dry-activate:
-  nixos-rebuild dry-activate \
+  nixos-rebuild-ng dry-activate \
     --no-reexec \
     --flake .#nas \
     --sudo \

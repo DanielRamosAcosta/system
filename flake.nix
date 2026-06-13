@@ -46,7 +46,7 @@
         in {
           default = pkgs.mkShell {
             packages = with pkgs; [
-              nixos-rebuild
+              nixos-rebuild-ng
               agenix.packages.${system}.default
             ];
 
