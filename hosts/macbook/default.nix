@@ -50,6 +50,7 @@
     dock.show-recents = false;
     finder.AppleShowAllExtensions = true;
     finder.FXPreferredViewStyle = "Nlsv";
+    trackpad.TrackpadThreeFingerDrag = true;
     NSGlobalDomain.AppleShowAllExtensions = true;
     NSGlobalDomain.InitialKeyRepeat = 15;
     NSGlobalDomain.KeyRepeat = 2;
