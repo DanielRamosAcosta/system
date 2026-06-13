@@ -35,7 +35,7 @@
     let
       nasSystem = "x86_64-linux";
       nasPkgs = nixpkgs.legacyPackages.${nasSystem};
-      forAllSystems = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" ];
+      forAllSystems = nixpkgs.lib.genAttrs [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" ];
     in {
       packages.${nasSystem} = {
         quadro-ctl = nasPkgs.callPackage ./packages/quadro-ctl.nix {};
