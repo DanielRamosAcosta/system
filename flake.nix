@@ -74,6 +74,7 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/siemens
+            agenix.nixosModules.default
             stylix.nixosModules.stylix
             home-manager.nixosModules.home-manager
             {

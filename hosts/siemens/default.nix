@@ -6,6 +6,8 @@
     ./sway.nix
   ];
 
+  age.secrets.dani-hashed-password.file = ../../secrets/dani-hashed-password.age;
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   boot.loader.grub.enable = true;
@@ -31,7 +33,7 @@
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       shell = pkgs.fish;
-      password = "changeme";
+      hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq21O6t1Q2QHfp9ypCIeDUqJ0PjauigrMXKKvvVL4I/ dani@mac"
       ];
@@ -44,6 +46,7 @@
 
   environment.systemPackages = with pkgs; [
     git
+    imagemagick
   ];
 
   security.sudo.extraRules = [
