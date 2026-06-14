@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 let
   sambaShare = user: path: {
     "path" = path;

@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchFromGitHub, kernel, kmod, ... }:
+{ stdenv, lib, fetchFromGitHub, kernel, ... }:
 
 stdenv.mkDerivation rec {
   pname = "it87-custom";

@@ -1,4 +1,4 @@
-{ pkgs, modulesPath, ... }: {
+{ pkgs, ... }: {
   services.openssh.enable = true;
   systemd.services.sshd.wantedBy = pkgs.lib.mkForce [ "multi-user.target" ];
   

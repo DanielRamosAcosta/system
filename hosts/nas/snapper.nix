@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 let
   snapshotConfig = subvolume: {
     SUBVOLUME          = subvolume;

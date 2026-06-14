@@ -24,7 +24,6 @@
   inputs.nixpkgs-node26.url = "github:NixOS/nixpkgs/4df1b885";
 
   outputs = {
-    self,
     nixpkgs,
     disko,
     agenix,
@@ -34,7 +33,7 @@
     nix-darwin,
     nixpkgs-node26,
     ...
-  } @ inputs:
+  }:
     let
       nasSystem = "x86_64-linux";
       nasPkgs = nixpkgs.legacyPackages.${nasSystem};
@@ -69,7 +68,7 @@
             agenix.nixosModules.default
             {
               nixpkgs.overlays = [
-                (final: prev: {
+                (_final: _prev: {
                   quadro-ctl = nasPkgs.callPackage ./packages/quadro-ctl.nix {};
                 })
               ];
@@ -86,7 +85,7 @@
             home-manager.nixosModules.home-manager
             {
               nixpkgs.overlays = [
-                (final: prev: {
+                (_final: _prev: {
                   fresh = fresh.packages.x86_64-linux.fresh;
                 })
               ];
@@ -114,7 +113,7 @@
             home-manager.darwinModules.home-manager
             {
               nixpkgs.overlays = [
-                (final: prev: {
+                (_final: prev: {
                   nodejs_26 = nixpkgs-node26.legacyPackages.${prev.system}.nodejs_26;
                 })
               ];
