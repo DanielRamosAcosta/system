@@ -7,7 +7,7 @@
     users = {
       dani = {
         isNormalUser = true;
-        extraGroups = [ "wheel" "scanner" "lp" ];
+        extraGroups = [ "wheel" ];
         hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
         openssh.authorizedKeys.keys = [
           (builtins.readFile ../../keys/id_dani.pub)

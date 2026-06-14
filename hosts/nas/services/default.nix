@@ -9,7 +9,6 @@
     ./strongswan.nix
     ./network-monitor.nix
     ./ups-watchdog.nix
-    ./scan-server.nix
     ./dvd-server.nix
     ./usbmuxd.nix
   ];
