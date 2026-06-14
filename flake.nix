@@ -21,6 +21,8 @@
   inputs.nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
   inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.nixpkgs-node26.url = "github:NixOS/nixpkgs/4df1b885";
+
   outputs = {
     self,
     nixpkgs,
@@ -30,6 +32,7 @@
     home-manager,
     fresh,
     nix-darwin,
+    nixpkgs-node26,
     ...
   } @ inputs:
     let
@@ -110,6 +113,11 @@
             ./hosts/macbook
             home-manager.darwinModules.home-manager
             {
+              nixpkgs.overlays = [
+                (final: prev: {
+                  nodejs_26 = nixpkgs-node26.legacyPackages.${prev.system}.nodejs_26;
+                })
+              ];
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.danielramos = import ./hosts/macbook/home.nix;

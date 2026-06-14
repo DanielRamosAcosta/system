@@ -13,7 +13,7 @@
     pinentry_mac
     helix
     himalaya
-    nodejs
+    nodejs_26
     (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
     qrencode
     uv
@@ -36,6 +36,7 @@
     settings = {
       user.name = "Daniel Ramos";
       user.email = "danielramosacosta1@gmail.com";
+      init.defaultBranch = "main";
       gpg.program = "${pkgs.gnupg}/bin/gpg";
     };
     signing = {
@@ -60,9 +61,27 @@
     shellAliases = {
       cat = "bat";
       ls = "eza";
+      l = "eza -l";
       ll = "eza -la";
       la = "eza -a";
       lt = "eza --tree";
+    };
+  };
+
+  programs.vscode = {
+    enable = true;
+    profiles.default = {
+      extensions = with pkgs.vscode-extensions; [
+        jnoortheen.nix-ide
+      ];
+      userSettings = {
+        "nix.enableLanguageServer" = true;
+        "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
+        "nix.formatterPath" = "${pkgs.nixfmt}/bin/nixfmt";
+        "nix.serverSettings".nixd = {
+          formatting.command = [ "${pkgs.nixfmt}/bin/nixfmt" ];
+        };
+      };
     };
   };
 
@@ -89,6 +108,17 @@
   };
 
   programs.eza.enable = true;
+
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+    options = [ "--cmd cd" ];
+  };
 
   programs.tmux = {
     enable = true;

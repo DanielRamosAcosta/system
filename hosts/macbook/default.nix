@@ -9,6 +9,8 @@
 
   nix.enable = false;
 
+  security.pam.services.sudo_local.touchIdAuth = true;
+
   users.knownUsers = [ "danielramos" ];
 
   users.users.danielramos = {
@@ -41,7 +43,7 @@
       "ghostty"
       "google-chrome"
       "obsidian"
-      "visual-studio-code"
+      "telegram"
     ];
   };
 
