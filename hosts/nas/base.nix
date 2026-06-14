@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  time.timeZone = "Atlantic/Canary";
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [
@@ -17,11 +19,15 @@
     git-lfs
     git-lfs-transfer
     id3v2
+    ifuse
+    libimobiledevice
     lm_sensors
     mkvtoolnix
+    nmap
     openssl
+    (python3.withPackages (ps: with ps; [ opencv4 numpy onnxruntime pillow ]))
     rustc
-    shntool
+shntool
     smartmontools
     strongswan
     tcpdump
@@ -32,6 +38,12 @@
     util-linux
     zip
   ];
+
+  services.usbmuxd.enable = true;
+
+  networking.dhcpcd.extraConfig = ''
+    denyinterfaces eth*
+  '';
 
   system.stateVersion = "25.05";
 }

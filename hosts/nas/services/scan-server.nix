@@ -16,6 +16,8 @@ in
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
 
+    path = [ pythonEnv "/run/current-system/sw" ];
+
     environment = {
       SANE_CONFIG_DIR = "/etc/sane-config";
       LD_LIBRARY_PATH = "/etc/sane-libs";
@@ -29,4 +31,6 @@ in
       RestartSec = 5;
     };
   };
+
+  networking.firewall.allowedTCPPorts = [ 7777 ];
 }

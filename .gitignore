@@ -8,4 +8,5 @@ temp.*
 *.priv.yaml
 .playwright-mcp
 .direnv
-
+.claude/settings.local.json
+.claude/scheduled_tasks.lock

@@ -1,6 +1,7 @@
 {
   imports = [
     ../../utilities/quadro-ctl.nix
+    ../../utilities/quadro-sensors.nix
     ./base.nix
     ./secrets.nix
     ./users.nix
@@ -8,6 +9,7 @@
     ./snapper.nix
     ./services
     ./configuration.nix
+    ./scanner.nix
     ./hardware-configuration.nix
     ./kernel-modules
     ./hardware

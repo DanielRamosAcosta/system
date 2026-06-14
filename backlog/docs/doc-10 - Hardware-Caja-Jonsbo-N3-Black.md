@@ -3,7 +3,7 @@ id: doc-10
 title: "Hardware: Caja Jonsbo N3 Black"
 type: other
 created_date: '2026-03-29 14:40'
-updated_date: '2026-03-29 14:40'
+updated_date: '2026-04-15 19:10'
 ---
 # Hardware: Caja Jonsbo N3 Black
 
@@ -51,6 +51,10 @@ La caja tiene dos compartimentos independientes con canales de refrigeración se
 - **Compartimento inferior (HDD)**: 8 bahías 3.5" hot-swap con backplane
 
 Tapa superior removible para facilitar la instalación.
+
+## Mapa de bahías HDD
+
+Ver doc-18 para la configuración actual e histórico de cambios.
 
 ## Refrigeración
 
