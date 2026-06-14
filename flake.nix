@@ -120,7 +120,7 @@
               ];
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.danielramos = import ./hosts/macbook/home.nix;
+              home-manager.users.danielramos = import ./hosts/macbook/home;
             }
           ];
         };
