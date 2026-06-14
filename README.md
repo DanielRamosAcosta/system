@@ -1,106 +1,73 @@
-# Personal NAS Server
+# Nix configs
 
-A personal NixOS-based Network Attached Storage (NAS) server configuration.
+Personal Nix configuration for all my machines, managed from a single flake.
 
-## Overview
+## Machines
 
-This project provides a declarative, reproducible configuration for a home NAS server using:
+| Host | Platform | Role | Stack |
+|------|----------|------|-------|
+| `macbook` | aarch64-darwin | Primary dev laptop | nix-darwin + home-manager |
+| `siemens` | x86_64-linux | Sway/Wayland workstation | NixOS + home-manager + stylix |
+| `nas` | x86_64-linux | Home NAS server | NixOS + disko |
+| `iso` | x86_64-linux | Installation media | NixOS |
 
-- **NixOS** for immutable system configuration
-- **Agenix** for secure secrets management
-- **Disko** for declarative disk partitioning
+Kubernetes application deployments for the NAS live in a separate repository, [nas-k3s](https://github.com/DanielRamosAcosta/nas-k3s), via GitOps. This repo only configures the k3s server itself.
 
-Kubernetes application deployments are managed separately in the [nas-k3s](https://github.com/DanielRamosAcosta/nas-k3s) repository via GitOps.
+## Stack
 
-## Features
+- **Nix flakes** for all system configuration
+- **home-manager** for user-level config (macbook, siemens)
+- **nix-darwin** for macOS system config (macbook)
+- **agenix** for secrets management
+- **disko** for declarative disk partitioning (nas)
+- **stylix** for theming (siemens)
 
-- **Declarative Infrastructure**: Entire system defined in code
-- **Secrets Management**: Encrypted secrets using age/agenix
-- **Automated Deployment**: Single-command deployment to NAS hardware
-- **Hardware Monitoring**: SMART disk monitoring and fan control via liquidctl
-- **UPS Integration**: Power monitoring and graceful shutdown support
-- **Snapshot Management**: Automated Btrfs snapshots via snapper
-- **File Sharing**: Samba network shares for home network access
-- **Networking**: Cloudflare tunnel, dnsmasq, StrongSwan VPN
-
-## Architecture
-
-### NixOS Hosts
-
-- `nas` - Production NAS server (x86_64-linux)
-- `iso` - Installation media generator
-
-### Directory Structure
+## Layout
 
 ```
 .
-├── flake.nix              # NixOS flake definition
+├── flake.nix          # Flake: all host configurations + dev shells + packages
+├── Makefile           # Task automation (activate / dry-activate per host)
 ├── hosts/
-│   ├── nas/               # NAS configuration (all modules)
-│   └── iso/               # Installation media
-├── utilities/             # Pure Nix utility functions
-├── secrets/               # Encrypted secrets (.age files)
-└── justfile               # Task automation
+│   ├── macbook/       # nix-darwin: system/ + home/
+│   ├── siemens/       # NixOS workstation: sway + home-manager
+│   ├── nas/           # NixOS server: services/, hardware/, storage…
+│   └── iso/           # Minimal installer image
+├── utilities/         # Pure Nix functions (+ tests) and the quadro fan module
+├── packages/          # quadro-ctl package
+├── secrets/           # agenix-encrypted .age files
+└── docs/              # Typst hardware documentation
 ```
 
-### System Services
+## Usage
 
-- **K3s** - Kubernetes (applications managed via GitOps in nas-k3s repo)
-- **Samba** - File sharing
-- **SSH** - Remote access
-- **Cloudflared** - Cloudflare tunnel
-- **dnsmasq** - DNS
-- **StrongSwan** - VPN
-- **SMART monitoring** - Disk health
-- **Fan control** - liquidctl-based cooling management
-- **Network monitor** - Link monitoring
-- **UPS watchdog** - UPS monitoring and safe shutdown
-
-## Quick Start
-
-### Prerequisites
-
-- Nix with flakes enabled
-- SSH access to target NAS hardware
-- Private SSH key for secrets decryption (if managing secrets)
-
-### Commands
+Each host has an `activate` (switch) and a `dry-activate` target:
 
 ```bash
-# Deploy NixOS configuration to NAS
-just deploy-nas
+make activate-nas          # Build + activate on the NAS over SSH
+make dry-activate-nas      # Show what would change on the NAS
 
-# Install NixOS on new hardware
-just install
+make activate-siemens      # Run locally on siemens
+make dry-activate-siemens
 
-# Build installation ISO
-just iso
+make activate-macbook      # Run locally on the mac (sudo darwin-rebuild)
+make dry-activate-macbook  # Build without activating
 
-# Build documentation PDF
-just docs
-
-# Enter development shell
-nix develop
-
-# Run utility tests
-just test
+make install               # Provision fresh NAS hardware via nixos-anywhere
+make iso                   # Build the installation ISO
+make docs                  # Compile the hardware docs PDF
+make test                  # Run the pure-Nix utility tests
 ```
+
+The `nas` targets build and activate on the NAS host itself (`--build-host nas --target-host nas`), so they work from the aarch64 macbook without local cross-compilation. The `siemens` targets build locally and are meant to be run from siemens.
+
+The dev shell (`nixos-rebuild-ng`, `agenix`) loads automatically via direnv (`.envrc` is `use flake`), or manually with `nix develop`.
 
 ## Secrets
 
-Secrets are encrypted with agenix using age encryption:
-- Public keys defined in `secrets/secrets.nix`
-- Encrypted files stored in `secrets/*.age`
-- Requires SSH private key for decryption
+Secrets are encrypted with agenix using age:
 
-## Hardware
-
-The NAS configuration includes:
-- Custom fan control via liquidctl
-- it87 kernel module for hardware sensors
-- UPS monitoring and management
-- SMART monitoring for disk health
-
-## Development
-
-This repository is developed on aarch64-linux (development machine) but targets x86_64-linux (NAS hardware). Cross-compilation is handled automatically via remote builds on the NAS host.
+- Recipient public keys are defined in `secrets/secrets.nix`
+- Encrypted files are stored in `secrets/*.age`
+- Decryption requires the matching SSH private key
+- Host modules consume them via `age.secrets.<name>`

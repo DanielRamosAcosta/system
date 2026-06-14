@@ -4,97 +4,100 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a NixOS configuration repository for a home NAS server. The project uses:
-- **NixOS flakes** for system configuration
-- **agenix** for secrets management
-- **disko** for disk partitioning (on the main NAS)
+This is Daniel Ramos' personal Nix configuration repository. It declaratively manages every machine he owns from a single flake:
 
-Kubernetes application deployments are managed separately in the `nas-k3s` repository via GitOps.
+- **macbook** — Apple Silicon laptop, his primary development machine (nix-darwin + home-manager)
+- **siemens** — x86_64 Linux workstation running Sway/Wayland (NixOS + home-manager)
+- **nas** — x86_64 home NAS server (NixOS)
+- **iso** — minimal NixOS installation media generator
+
+The stack uses:
+- **Nix flakes** for all system configuration (`flake.nix`)
+- **home-manager** for user-level config on macbook and siemens
+- **nix-darwin** for macOS system config on macbook
+- **agenix** for secrets management
+- **disko** for declarative disk partitioning (nas)
+- **stylix** for theming (siemens)
+
+Kubernetes application deployments for the NAS are managed separately in the [nas-k3s](https://github.com/DanielRamosAcosta/nas-k3s) repository via GitOps; this repo only configures the k3s server itself.
+
+## Local development
+
+The **macbook is the local development machine** and has native Nix installed. Unless stated otherwise, assume any requested configuration or tweak applies to the macbook (`hosts/macbook/`).
+
+`direnv` loads the flake dev shell automatically on `cd` (`.envrc` is `use flake`). The dev shell provides `nixos-rebuild-ng` and `agenix`. To enter it manually: `nix develop`.
 
 ## Common Commands
 
-### Commands that require the dev container (NixOS builds/deploys)
-
-These must run inside the dev container because the flake targets `x86_64-linux` and requires nix tooling. From outside the container, use `./scripts/inside-devcontainer.sh`:
+Task automation lives in the `Makefile`. Each host has an `activate` (switch) and a `dry-activate` target:
 
 ```bash
-./scripts/inside-devcontainer.sh just deploy-nas
-./scripts/inside-devcontainer.sh just dry-activate
-./scripts/inside-devcontainer.sh just install
-./scripts/inside-devcontainer.sh just iso
-./scripts/inside-devcontainer.sh just test
+make activate-nas          # Switch the NAS config (builds + activates on the nas host over SSH)
+make dry-activate-nas      # Show what would change on the NAS without applying
+
+make activate-siemens      # Switch siemens (run locally on siemens)
+make dry-activate-siemens  # Dry-activate siemens (run locally on siemens)
+
+make activate-macbook      # Switch the macbook config (sudo darwin-rebuild, run locally on the mac)
+make dry-activate-macbook  # Build the macbook config without activating (darwin-rebuild build)
+
+make install               # Provision a fresh NAS via nixos-anywhere (root@192.168.1.41)
+make iso                   # Build the installation ISO image
+make docs                  # Compile the Typst hardware docs to PDF (docs/NAS DIY.typ)
+make test                  # Evaluate the pure-Nix utility tests (default goal)
 ```
 
-From inside the dev container, run `just` commands directly.
-
-### Commands that run locally (no dev container needed)
-
-```bash
-just docs
-```
+Host targets reflect how each machine is reached:
+- **nas** uses `--build-host nas --target-host nas`, so the x86_64 build happens on the NAS itself — it runs fine from the aarch64 macbook without local cross-compilation.
+- **siemens** builds and activates locally (no build/target host); run it from siemens.
+- **macbook** uses `darwin-rebuild` locally; there is no native darwin `dry-activate`, so the dry target is `darwin-rebuild build`.
 
 ## Architecture
 
-### NixOS Structure
+The flake defines `nixosConfigurations` (`nas`, `siemens`, `iso`), `darwinConfigurations` (`macbook`), a `quadro-ctl` package, and dev shells for `aarch64-linux`, `x86_64-linux`, and `aarch64-darwin`.
 
-The repository defines two NixOS configurations in `flake.nix`:
+### Host module organization
 
-1. **nas** (`hosts/nas/`) - Main production NAS server (x86_64-linux)
-2. **iso** (`hosts/iso/`) - Installation media
+Each host lives under `hosts/<name>/` with a `default.nix` that aggregates imports.
 
-**Module Organization:**
-- `hosts/nas/` - All NAS configuration
-  - `default.nix` - Import aggregator
-  - `base.nix` - Base system packages and nix settings
-  - `configuration.nix` - Boot loader and hardware-specific settings (it87 kernel module)
-  - `hardware-configuration.nix` - Disk layout, kernel modules, udev rules
-  - `users.nix` - User account definitions
-  - `secrets.nix` - agenix secret definitions
-  - `ups.nix` - UPS monitoring configuration
-  - `snapper.nix` - Btrfs snapshot management
-  - `services/` - Service modules (k3s, samba, ssh, smart, fans, cloudflared, dnsmasq, strongswan, network-monitor, ups-watchdog)
-- `utilities/` - Pure Nix utility functions
-  - `utilities.nix` - Reusable functions (e.g., `toBase64`)
-  - `utilities.test.nix` - Unit tests for utilities
-  - `liquidctl.nix` - Fan control service module
+- **`hosts/macbook/`** — nix-darwin system + home-manager, split by concern:
+  - `system/` — darwin modules: `nix.nix`, `users.nix`, `homebrew.nix`, `defaults.nix`, `packages.nix`
+  - `home/` — home-manager modules: `packages.nix`, `git.nix`, `shell.nix`, `terminal.nix`, `editors.nix`
+  - Node 26 comes from a pinned `nixpkgs-node26` input via overlay
+- **`hosts/siemens/`** — NixOS workstation: `default.nix` (boot, stylix, users), `hardware-configuration.nix`, `sway.nix` (Sway + greetd), `home.nix` (home-manager for user `dani`: Sway WM, foot, fish, etc.)
+- **`hosts/nas/`** — NAS server, organized by domain:
+  - `base.nix`, `configuration.nix`, `hardware-configuration.nix`, `users.nix`, `secrets.nix`, `storage.nix`, `snapper.nix`, `ups.nix`
+  - `hardware/` — fan control; `kernel-modules/` — it87 sensor module
+  - `services/` — one module per service: k3s, ssh, samba, smart, cloudflared, dnsmasq, strongswan, network-monitor, ups-watchdog, scan-server, dvd-server, usbmuxd
+- **`hosts/iso/`** — minimal installer image with sshd and Dani's authorized key
 
-**Secrets Management:**
-- Secrets are encrypted with agenix
-- Public keys defined in `secrets/secrets.nix`
-- Encrypted `.age` files stored in `secrets/`
-- Decrypt requires SSH key access
+### Shared code
 
-### System Services
+- `utilities/` — pure Nix functions (`utilities.nix`: `toBase64`, `interpolateCurve`) with `lib.runTests` unit tests in `utilities.test.nix`. The quadro fan-control module lives in `utilities/quadro-ctl.nix`.
+- `packages/quadro-ctl.nix` — package for the Aqua Computer QUADRO PWM fan controller, exposed as `packages.x86_64-linux.quadro-ctl` and as an overlay on the NAS.
 
-- K3s - Kubernetes (single-node server, applications managed via GitOps in `nas-k3s` repo)
-- Samba - File sharing
-- SSH - Remote access
-- SMART monitoring - Disk health
-- Fan control - liquidctl-based cooling management
-- Cloudflared - Cloudflare tunnel
-- dnsmasq - DNS
-- StrongSwan - VPN
-- Network monitor - Link monitoring
-- UPS watchdog - UPS monitoring and safe shutdown
+### Secrets
 
-### Cross-Platform Considerations
-
-The flake is developed on `aarch64-linux` (dev shell) but targets `x86_64-linux` (NAS hardware). The `nixos-rebuild` command in `just deploy-nas` handles cross-compilation by building on the NAS host itself (`--build-host nas`).
+Secrets are encrypted with agenix using age:
+- Recipient public keys are defined in `secrets/secrets.nix` (per-file `publicKeys`)
+- Encrypted `.age` files live in `secrets/`
+- Decryption requires the corresponding SSH private key
+- Host modules reference them via `age.secrets.<name>`
 
 ## Testing
 
-Run utility function tests:
 ```bash
-just test
+make test
 ```
 
-This evaluates `utilities/utilities.test.nix` which uses `lib.runTests` to validate utility functions like `toBase64`.
+Evaluates `utilities/utilities.test.nix` (via `lib.runTests`) to validate the pure utility functions.
 
 ## Code Guidelines for Claude
 
-- **Never add comments to code** - Code should be self-explanatory through clear naming and structure
-- **Commits must be single-line** - No multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`
-- **Documentation edits** - When modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
+- **Never add comments to code** — code should be self-explanatory through clear naming and structure
+- **Group attributes by shared prefix** — prefer a nested block over repeated dotted paths (e.g. `foo.bar = { baz = 1; fii = 2; };` instead of `foo.bar.baz = 1; foo.bar.fii = 2;`). Exception: literal dotted keys such as VSCode setting names (`"nix.serverPath"`) stay as quoted strings.
+- **Commits must be single-line** — no multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`
+- **Documentation edits** — when modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
 
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 
