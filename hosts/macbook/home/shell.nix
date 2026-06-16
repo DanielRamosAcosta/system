@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   programs = {
@@ -12,6 +12,14 @@
         la = "eza -a";
         lt = "eza --tree";
       };
+      shellInit = ''
+        if test -r ${config.age.secrets.grafana-self-hosted-token.path}
+          set -gx GRAFANA_SELF_HOSTED_TOKEN (cat ${config.age.secrets.grafana-self-hosted-token.path})
+        end
+        if test -r ${config.age.secrets.context7-api-key.path}
+          set -gx CONTEXT7_API_KEY (cat ${config.age.secrets.context7-api-key.path})
+        end
+      '';
     };
 
     direnv = {

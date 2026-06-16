@@ -1,6 +1,7 @@
 {
   imports = [
     ./packages.nix
+    ./secrets.nix
     ./git.nix
     ./shell.nix
     ./terminal.nix

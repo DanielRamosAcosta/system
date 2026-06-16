@@ -119,7 +119,10 @@
               ];
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.danielramos = import ./hosts/macbook/home;
+              home-manager.users.danielramos.imports = [
+                ./hosts/macbook/home
+                agenix.homeManagerModules.default
+              ];
             }
           ];
         };
