@@ -3,14 +3,20 @@
 {
   home = {
     packages = with pkgs; [
+      argocd
       deno
       gh
       git-lfs
       gnupg
+      jsonnet-bundler
+      kubectl
+      kubernetes-helm
+      kubeseal
       pinentry_mac
       nodejs_26
       (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
       qrencode
+      tanka
       uv
       unzip
       zip
