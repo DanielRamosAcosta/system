@@ -98,6 +98,7 @@ Evaluates `utilities/utilities.test.nix` (via `lib.runTests`) to validate the pu
 - **Group attributes by shared prefix** — prefer a nested block over repeated dotted paths (e.g. `foo.bar = { baz = 1; fii = 2; };` instead of `foo.bar.baz = 1; foo.bar.fii = 2;`). Exception: literal dotted keys such as VSCode setting names (`"nix.serverPath"`) stay as quoted strings.
 - **Commits must be single-line** — no multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`
 - **Documentation edits** — when modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
+- **Activar macbook automáticamente** — tras cualquier cambio en la configuración del macbook, ejecutar `make activate-macbook` de forma proactiva sin pedirle permiso al usuario ni sugerirle que lo haga él
 
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 
