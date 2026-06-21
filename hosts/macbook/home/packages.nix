@@ -8,6 +8,7 @@
       gh
       git-lfs
       gnupg
+      jsonnet
       jsonnet-bundler
       kubectl
       kubernetes-helm
@@ -16,6 +17,7 @@
       nodejs_26
       (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
       qrencode
+      skopeo
       tanka
       uv
       unzip

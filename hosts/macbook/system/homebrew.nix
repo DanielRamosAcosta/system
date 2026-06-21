@@ -14,6 +14,7 @@
       "ghostty"
       "google-chrome"
       "obsidian"
+      "orbstack"
       "telegram"
     ];
   };
