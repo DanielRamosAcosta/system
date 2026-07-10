@@ -11,10 +11,12 @@
     };
 
     casks = [
+      "adobe-acrobat-reader"
       "ghostty"
       "google-chrome"
       "obsidian"
       "orbstack"
+      "slack"
       "telegram"
     ];
   };

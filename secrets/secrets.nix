@@ -12,6 +12,7 @@ in
   "strongswan-ca-key.pem.age".publicKeys = [ nas dani ];
   "strongswan-server-key.pem.age".publicKeys = [ nas dani ];
   "strongswan-server-cert.pem.age".publicKeys = [ nas dani ];
+  "dani-rclone-gdrive.age".publicKeys = [ nas dani ];
   "grafana-self-hosted-token.age".publicKeys = [ dani ];
   "context7-api-key.age".publicKeys = [ dani ];
 }

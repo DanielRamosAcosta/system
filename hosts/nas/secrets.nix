@@ -7,4 +7,8 @@
   age.secrets.strongswan-ca-key-pem.file = ../../secrets/strongswan-ca-key.pem.age;
   age.secrets.strongswan-server-cert-pem.file = ../../secrets/strongswan-server-cert.pem.age;
   age.secrets.strongswan-server-key-pem.file = ../../secrets/strongswan-server-key.pem.age;
+  age.secrets.dani-rclone-gdrive = {
+    file = ../../secrets/dani-rclone-gdrive.age;
+    owner = "dani";
+  };
 }

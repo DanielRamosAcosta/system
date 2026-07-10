@@ -11,5 +11,6 @@
     ./ups-watchdog.nix
     ./dvd-server.nix
     ./usbmuxd.nix
+    ./gdrive-sync.nix
   ];
 }

@@ -4,10 +4,13 @@
   home = {
     packages = with pkgs; [
       argocd
+      cargo
+      clippy
       deno
       gh
       git-lfs
       gnupg
+      gping
       jsonnet
       jsonnet-bundler
       kubectl
@@ -17,6 +20,9 @@
       nodejs_26
       (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
       qrencode
+      rust-analyzer
+      rustc
+      rustfmt
       skopeo
       tanka
       uv
@@ -32,6 +38,7 @@
     sessionPath = [
       "$HOME/.local/bin"
       "$HOME/.npm-global/bin"
+      "$HOME/.cargo/bin"
     ];
   };
 }
