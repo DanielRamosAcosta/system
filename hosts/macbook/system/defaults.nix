@@ -6,13 +6,9 @@
       autohide = true;
       show-recents = false;
     };
-    finder = {
-      AppleShowAllExtensions = true;
-      FXPreferredViewStyle = "Nlsv";
-    };
+    finder.FXPreferredViewStyle = "Nlsv";
     trackpad.TrackpadThreeFingerDrag = true;
     NSGlobalDomain = {
-      AppleShowAllExtensions = true;
       InitialKeyRepeat = 15;
       KeyRepeat = 2;
     };
