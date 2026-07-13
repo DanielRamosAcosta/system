@@ -18,11 +18,18 @@ let
       Type = "oneshot";
       User = name;
       Environment = "HOME=/home/${name}";
+      StateDirectory = "gdrive-sync-${name}";
+      ExecStartPre = pkgs.writeShellScript "gdrive-sync-${name}-seed-config" ''
+        if [ ! -f "$STATE_DIRECTORY/rclone.conf" ]; then
+          install -m600 ${userCfg.rcloneConfigFile} "$STATE_DIRECTORY/rclone.conf"
+        fi
+      '';
       ExecStart = lib.concatStringsSep " " [
         "${pkgs.rclone}/bin/rclone bisync"
         "/cold-data/sftpgo/data/${name}/Crítico"
         "gdrive:Crítico"
-        "--config ${userCfg.rcloneConfigFile}"
+        "--config \${STATE_DIRECTORY}/rclone.conf"
+        "--drive-skip-dangling-shortcuts"
         "--conflict-resolve newer"
         "--conflict-loser delete"
         "--max-delete 50"
