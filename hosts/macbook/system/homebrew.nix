@@ -12,12 +12,14 @@
 
     casks = [
       "adobe-acrobat-reader"
+      "fuse-t"
       "ghostty"
       "google-chrome"
       "obsidian"
       "orbstack"
       "slack"
       "telegram"
+      "vlc"
     ];
   };
 }

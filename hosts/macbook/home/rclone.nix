@@ -1,7 +1,19 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   remote = "nas:/cold-data/sftpgo/data/dani";
+
+  rcloneConf = pkgs.writeText "rclone.conf" ''
+    [nas]
+    type = sftp
+    host = vpn.danielramos.me
+    port = 21873
+    user = dani
+    key_file = /Users/danielramos/.ssh/id_mac
+    known_hosts_file = /Users/danielramos/.ssh/known_hosts
+    host_key_algorithms = ssh-ed25519
+    shell_type = unix
+  '';
 
   nas-mount = pkgs.writeShellScriptBin "nas-mount" ''
     mkdir -p "$HOME/NAS" "$HOME/.cache/rclone"
@@ -25,14 +37,8 @@ in
 {
   home.packages = [ nas-mount nas-unmount ];
 
-  xdg.configFile."rclone/rclone.conf".text = ''
-    [nas]
-    type = sftp
-    host = vpn.danielramos.me
-    port = 21873
-    user = dani
-    key_file = /Users/danielramos/.ssh/id_mac
-    known_hosts_file = /Users/danielramos/.ssh/known_hosts
-    shell_type = unix
+  home.activation.rcloneConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "$HOME/.config/rclone"
+    run install -m600 ${rcloneConf} "$HOME/.config/rclone/rclone.conf"
   '';
 }
