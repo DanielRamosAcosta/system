@@ -9,34 +9,59 @@ let
   cfg = config.services.gdrive-sync;
   enabledUsers = lib.filterAttrs (name: userCfg: userCfg.enable) cfg.users;
 
-  userService = name: userCfg: {
-    description = "Bidirectional rclone bisync of Crítico for ${name}";
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
+  userService =
+    name: userCfg:
+    let
+      localPath = "/cold-data/sftpgo/data/${name}/Crítico";
+      remotePath = "gdrive:Crítico";
+    in
+    {
+      description = "Bidirectional rclone bisync of Crítico for ${name}";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
 
-    serviceConfig = {
-      Type = "oneshot";
-      User = name;
-      Environment = "HOME=/home/${name}";
-      StateDirectory = "gdrive-sync-${name}";
-      ExecStartPre = pkgs.writeShellScript "gdrive-sync-${name}-seed-config" ''
-        if [ ! -f "$STATE_DIRECTORY/rclone.conf" ]; then
-          install -m600 ${userCfg.rcloneConfigFile} "$STATE_DIRECTORY/rclone.conf"
-        fi
-      '';
-      ExecStart = lib.concatStringsSep " " [
-        "${pkgs.rclone}/bin/rclone bisync"
-        "/cold-data/sftpgo/data/${name}/Crítico"
-        "gdrive:Crítico"
-        "--config \${STATE_DIRECTORY}/rclone.conf"
-        "--drive-skip-dangling-shortcuts"
-        "--conflict-resolve newer"
-        "--conflict-loser delete"
-        "--max-delete 50"
-        "--create-empty-src-dirs"
-      ];
+      serviceConfig = {
+        Type = "oneshot";
+        User = name;
+        StateDirectory = "gdrive-sync-${name}";
+        CacheDirectory = "gdrive-sync-${name}";
+        RuntimeMaxSec = "50m";
+
+        NoNewPrivileges = true;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        ReadWritePaths = [ localPath ];
+        PrivateTmp = true;
+        ProtectKernelTunables = true;
+        RestrictAddressFamilies = [
+          "AF_INET"
+          "AF_INET6"
+          "AF_UNIX"
+        ];
+
+        ExecStartPre = pkgs.writeShellScript "gdrive-sync-${name}-seed-config" ''
+          if ! ${pkgs.diffutils}/bin/cmp -s ${userCfg.rcloneConfigFile} "$STATE_DIRECTORY/.seed-source"; then
+            install -m600 ${userCfg.rcloneConfigFile} "$STATE_DIRECTORY/rclone.conf"
+            install -m600 ${userCfg.rcloneConfigFile} "$STATE_DIRECTORY/.seed-source"
+          fi
+        '';
+        ExecStart = lib.concatStringsSep " " [
+          "${pkgs.rclone}/bin/rclone bisync"
+          localPath
+          remotePath
+          "--config \${STATE_DIRECTORY}/rclone.conf"
+          "--workdir \${CACHE_DIRECTORY}/bisync"
+          "--drive-skip-dangling-shortcuts"
+          "--conflict-resolve newer"
+          "--check-access"
+          "--max-delete 50"
+          "--resilient"
+          "--recover"
+          "--max-lock 2m"
+          "--create-empty-src-dirs"
+        ];
+      };
     };
-  };
 
   userTimer = name: userCfg: {
     description = "Schedule rclone bisync of Crítico for ${name}";
@@ -44,6 +69,8 @@ let
     timerConfig = {
       OnBootSec = "10min";
       OnUnitActiveSec = userCfg.interval;
+      Persistent = true;
+      RandomizedDelaySec = "5m";
       Unit = "gdrive-sync-${name}.service";
     };
   };
