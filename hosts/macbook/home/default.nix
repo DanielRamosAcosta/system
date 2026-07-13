@@ -1,6 +1,7 @@
 {
   imports = [
     ./packages.nix
+    ./rclone.nix
     ./secrets.nix
     ./git.nix
     ./shell.nix

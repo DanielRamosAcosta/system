@@ -20,6 +20,7 @@
       nodejs_26
       (python3.withPackages (ps: [ ps.pymupdf ps.pymupdf4llm ]))
       qrencode
+      rclone
       rust-analyzer
       rustc
       rustfmt
