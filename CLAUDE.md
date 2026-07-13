@@ -99,6 +99,7 @@ Evaluates `utilities/utilities.test.nix` (via `lib.runTests`) to validate the pu
 - **Commits must be single-line** — no multi-line messages, no co-authors. Example: `git commit -m "Add network link monitoring service"`
 - **Documentation edits** — when modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
 - **Activar macbook automáticamente** — tras cualquier cambio en la configuración del macbook, ejecutar `make activate-macbook` de forma proactiva sin pedirle permiso al usuario ni sugerirle que lo haga él
+- **`sudo` en el macbook usa TouchID** — no pide contraseña por terminal, sino que levanta el prompt de TouchID; los comandos con `sudo` (como `make activate-macbook`) se pueden ejecutar directamente y el usuario los aprueba con la huella. No hace falta pedirle que los lance él con `!`
 
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 
