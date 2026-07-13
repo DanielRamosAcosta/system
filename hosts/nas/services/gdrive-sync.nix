@@ -14,6 +14,8 @@ let
     let
       localPath = "/cold-data/sftpgo/data/${name}/Crítico";
       remotePath = "gdrive:Crítico";
+      localTrash = "/cold-data/sftpgo/data/${name}/.trash/Crítico";
+      remoteTrash = "gdrive:Crítico-trash";
     in
     {
       description = "Bidirectional rclone bisync of Crítico for ${name}";
@@ -30,7 +32,10 @@ let
         NoNewPrivileges = true;
         ProtectSystem = "strict";
         ProtectHome = true;
-        ReadWritePaths = [ localPath ];
+        ReadWritePaths = [
+          localPath
+          localTrash
+        ];
         PrivateTmp = true;
         ProtectKernelTunables = true;
         RestrictAddressFamilies = [
@@ -53,6 +58,8 @@ let
           "--workdir \${CACHE_DIRECTORY}/bisync"
           "--drive-skip-dangling-shortcuts"
           "--conflict-resolve newer"
+          "--backup-dir1 ${localTrash}"
+          "--backup-dir2 ${remoteTrash}"
           "--check-access"
           "--max-delete 50"
           "--resilient"
@@ -107,6 +114,11 @@ in
 
     (lib.mkIf (enabledUsers != { }) {
       environment.systemPackages = [ pkgs.rclone ];
+
+      systemd.tmpfiles.rules = lib.concatMap (name: [
+        "d /cold-data/sftpgo/data/${name}/.trash 0700 ${name} users -"
+        "d /cold-data/sftpgo/data/${name}/.trash/Crítico 0700 ${name} users -"
+      ]) (lib.attrNames enabledUsers);
 
       systemd.services = lib.mapAttrs' (
         name: userCfg: lib.nameValuePair "gdrive-sync-${name}" (userService name userCfg)

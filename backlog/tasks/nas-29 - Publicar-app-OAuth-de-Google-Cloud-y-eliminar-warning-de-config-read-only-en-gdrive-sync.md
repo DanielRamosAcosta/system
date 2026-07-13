@@ -66,7 +66,9 @@ Tras una revisión de ops (calidad + mejores prácticas rclone bisync) se aplica
 - **Cache/workdir**: el workdir de bisync se fija con `--workdir ''${CACHE_DIRECTORY}/bisync` (systemd `CacheDirectory`), no vía `$HOME` (que `ProtectHome` bloquea). `RCLONE_CACHE_DIR` NO controla el workdir de bisync.
 - **Re-seed automático del token**: el `ExecStartPre` re-siembra `rclone.conf` desde el secreto solo cuando el secreto de agenix cambia (`cmp` contra `.seed-source`), eliminando el paso manual de borrar el fichero al regenerar el token.
 
-Pendiente (fuera de scope de esta task): notificación/alerta ante fallo (Grafana/OnFailure) y papelera de reciclaje (`--backup-dir1/2`), que requiere decidir ubicación y retención.
+- **Papelera de reciclaje** (`--backup-dir1/2`): antes de replicar un borrado/sobrescritura, la versión antigua se aparta a una papelera en cada lado, dando red de seguridad contra borrados accidentales que el sync propagaría. Local: `/cold-data/sftpgo/data/<user>/.trash/Crítico` (creada por `systemd.tmpfiles` con owner del usuario, añadida a `ReadWritePaths`). Remoto: `gdrive:Crítico-trash` (vecino de `Crítico`). Verificado end-to-end: un fichero borrado en Drive desaparece de `Crítico` en el NAS pero se conserva en `.trash`. La papelera crece con el tiempo; su vaciado/retención queda manual por ahora.
+
+Pendiente (fuera de scope de esta task): notificación/alerta ante fallo (Grafana/OnFailure).
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
