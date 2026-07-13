@@ -54,6 +54,19 @@ El directorio `Crítico` contiene datos importantes que se sincronizan bidirecci
 - **AC #2** — Verificado en Google Cloud Console: el proyecto se llama **"rclone"** (`light-river-502019-b0`, project number `800844641851`) y su pantalla de consentimiento **ya está en `In production`** (User type: External, cap 1/100). El "7-day problem" **no aplica**: ese límite es exclusivo del modo "Testing". No había nada que publicar.
 - **Frente 2 (config read-only)** — Abordado en `hosts/nas/services/gdrive-sync.nix`: el servicio ahora usa `StateDirectory=gdrive-sync-<user>` y un `ExecStartPre` que siembra `rclone.conf` desde el secreto de agenix solo si no existe, apuntando `--config` a esa ruta escribible. **Ojo:** el secreto de agenix pasa a ser solo semilla inicial; si se regenera el token hay que borrar `/var/lib/gdrive-sync-<user>/rclone.conf` para re-sembrar. Pendiente de desplegar (`make activate-nas`) y de verificar AC #4/#6.
 - Extra encontrado el mismo día: faltaba el `--resync` inicial (ya ejecutado) y Drive tiene ~309 dangling shortcuts que abortaban la bisync (resuelto con `--drive-skip-dangling-shortcuts`, también añadido al servicio).
+
+## 🛡️ Endurecimiento post-review (2026-07-13)
+
+Tras una revisión de ops (calidad + mejores prácticas rclone bisync) se aplicaron al servicio:
+- **Sin pérdida por conflictos**: eliminado `--conflict-loser delete`; ahora el default renombra el perdedor (`.conflict1`) en vez de borrarlo.
+- **`--check-access`** con ficheros `RCLONE_TEST` en la raíz de ambos lados: si un lado se monta vacío/inaccesible, bisync aborta en vez de propagar borrados masivos. Los `RCLONE_TEST` deben tener el mismo modtime en ambos lados (se copian con `rclone copyto`, no con `touch` independiente).
+- **Resiliencia para timer**: `--resilient --recover --max-lock 2m` → interrupciones/locks huérfanos se auto-recuperan sin `--resync` manual.
+- **Timer**: `Persistent = true` (recupera ventanas perdidas si el NAS estaba apagado) y `RandomizedDelaySec = 5m`.
+- **Servicio**: `RuntimeMaxSec = 50m` (evita solapes con el siguiente disparo) y hardening systemd (`NoNewPrivileges`, `ProtectSystem=strict`, `ProtectHome`, `PrivateTmp`, `RestrictAddressFamilies`, `ProtectKernelTunables`).
+- **Cache/workdir**: el workdir de bisync se fija con `--workdir ''${CACHE_DIRECTORY}/bisync` (systemd `CacheDirectory`), no vía `$HOME` (que `ProtectHome` bloquea). `RCLONE_CACHE_DIR` NO controla el workdir de bisync.
+- **Re-seed automático del token**: el `ExecStartPre` re-siembra `rclone.conf` desde el secreto solo cuando el secreto de agenix cambia (`cmp` contra `.seed-source`), eliminando el paso manual de borrar el fichero al regenerar el token.
+
+Pendiente (fuera de scope de esta task): notificación/alerta ante fallo (Grafana/OnFailure) y papelera de reciclaje (`--backup-dir1/2`), que requiere decidir ubicación y retención.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
