@@ -22,10 +22,10 @@ in
     configs = {
       immich = snapshotConfig "/cold-data/immich";
       sftpgo = snapshotConfig "/cold-data/sftpgo";
-      booklore = snapshotConfig "/cold-data/booklore";
       media = snapshotConfig "/cold-data/media";
       git = snapshotConfig "/cold-data/git";
       contabilidad = snapshotConfig "/cold-data/contabilidad";
+      grimmory = snapshotConfig "/cold-data/grimmory";
     };
   };
 }
