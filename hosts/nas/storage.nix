@@ -13,12 +13,6 @@
     options = [ "compress=zstd" "subvol=@sftpgo" ];
   };
 
-  fileSystems."/cold-data/booklore" = {
-    device = "/dev/disk/by-label/cold-data";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "subvol=@booklore" ];
-  };
-
   fileSystems."/cold-data/media" = {
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
@@ -47,5 +41,17 @@
     device = "/dev/disk/by-label/cold-data";
     fsType = "btrfs";
     options = [ "compress=zstd" "subvol=@contabilidad" ];
+  };
+
+  fileSystems."/cold-data/grimmory" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@grimmory" ];
+  };
+
+  fileSystems."/cold-data/minecraft" = {
+    device = "/dev/disk/by-label/cold-data";
+    fsType = "btrfs";
+    options = [ "compress=zstd" "subvol=@minecraft" ];
   };
 }
