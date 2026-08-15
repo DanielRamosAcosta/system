@@ -10,7 +10,6 @@ in
 
   home.packages = with pkgs; [
     deno
-    fresh
     gh
     git-lfs
     google-chrome
