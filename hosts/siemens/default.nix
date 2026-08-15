@@ -22,7 +22,21 @@
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/dracula.yaml";
   stylix.targets.console.enable = true;
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+
+  services.fail2ban = {
+    enable = true;
+    maxretry = 3;
+    bantime = "1h";
+    bantime-increment.enable = true;
+  };
 
   system.stateVersion = "25.11";
 
