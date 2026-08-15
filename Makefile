@@ -25,13 +25,17 @@ activate-siemens:
 	nixos-rebuild-ng switch \
 		--no-reexec \
 		--flake .#siemens \
-		--sudo
+		--sudo \
+		--build-host siemens \
+		--target-host siemens
 
 dry-activate-siemens:
 	nixos-rebuild-ng dry-activate \
 		--no-reexec \
 		--flake .#siemens \
-		--sudo
+		--sudo \
+		--build-host siemens \
+		--target-host siemens
 
 activate-macbook:
 	sudo darwin-rebuild switch --flake .#macbook
