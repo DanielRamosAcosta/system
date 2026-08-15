@@ -6,6 +6,7 @@
       argocd
       cargo
       clippy
+      cloudflared
       deno
       gh
       git-lfs
@@ -26,6 +27,7 @@
       rustfmt
       skopeo
       tanka
+      typst
       uv
       unzip
       zip
