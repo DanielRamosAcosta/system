@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  secureBoot = false;
+  secureBoot = true;
 in
 {
   environment.systemPackages = [ pkgs.sbctl ];
