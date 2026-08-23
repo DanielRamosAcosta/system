@@ -1,16 +1,22 @@
 ---
 id: NAS-27
 title: Implementar sincronización bidireccional NAS ↔ Google Drive con rclone bisync
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-06-19 19:11'
-updated_date: '2026-06-21 09:57'
+updated_date: '2026-08-15 18:33'
 labels:
   - nas
   - rclone
   - google-drive
   - nixos
 dependencies: []
+modified_files:
+  - hosts/nas/services/gdrive-sync.nix
+  - hosts/nas/services/default.nix
+  - hosts/nas/secrets.nix
+  - secrets/secrets.nix
+  - secrets/dani-rclone-gdrive.age
 priority: medium
 ordinal: 5000
 ---
@@ -81,14 +87,14 @@ rclone bisync <local> gdrive:Crítico \
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 El módulo acepta múltiples usuarios vía `users.<name>` y genera un timer/service por cada uno habilitado
-- [ ] #2 El directorio /cold-data/sftpgo/data/dani/Crítico se sincroniza con gdrive:Crítico cada hora
-- [ ] #3 En conflicto gana el fichero más reciente; el otro se borra
-- [ ] #4 Un borrado de más del 50% aborta la sync y deja error en journald
-- [ ] #5 El token OAuth está cifrado con agenix, owner=dani, y no aparece en el Nix store
-- [ ] #6 El servicio corre como usuario dani, no como root
-- [ ] #7 Un fichero creado en el NAS aparece en Google Drive tras la siguiente sync
-- [ ] #8 Un fichero creado en Google Drive aparece en el NAS tras la siguiente sync
+- [x] #1 El módulo acepta múltiples usuarios vía `users.<name>` y genera un timer/service por cada uno habilitado
+- [x] #2 El directorio /cold-data/sftpgo/data/dani/Crítico se sincroniza con gdrive:Crítico cada hora
+- [x] #3 En conflicto gana el fichero más reciente; el otro se borra
+- [x] #4 Un borrado de más del 50% aborta la sync y deja error en journald
+- [x] #5 El token OAuth está cifrado con agenix, owner=dani, y no aparece en el Nix store
+- [x] #6 El servicio corre como usuario dani, no como root
+- [x] #7 Un fichero creado en el NAS aparece en Google Drive tras la siguiente sync
+- [x] #8 Un fichero creado en Google Drive aparece en el NAS tras la siguiente sync
 <!-- AC:END -->
 
 ## Implementation Plan
@@ -278,3 +284,22 @@ El patrón del repo es un fichero por dominio. La instanciación del módulo va 
 - `path = [...]` vs path completo en ExecStart: ambos correctos, se usa path completo por consistencia con el repo.
 ---
 <!-- COMMENTS:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Implementado y desplegado en producción. El timer `gdrive-sync-dani.timer` está activo y disparándose cada hora; el service oneshot completa con `Result=success` / `ExecMainStatus=0`.
+
+Módulo `hosts/nas/services/gdrive-sync.nix`:
+- `options.services.gdrive-sync.users` como `attrsOf submodule`, genera un service+timer por usuario habilitado vía `mapAttrs'`. Instanciado para `dani`.
+- Corre como `User = dani` (oneshot), con `HOME`/estado gestionado vía `StateDirectory` + `CacheDirectory` de systemd.
+- rclone.conf se siembra desde el secret agenix en `ExecStartPre` (con `cmp` para no reescribir si no cambió).
+- bisync con `--conflict-resolve newer`, `--max-delete 50`, `--check-access`, `--create-empty-src-dirs`, más flags de resiliencia (`--resilient --recover --max-lock 2m`).
+- Hardening systemd: `ProtectSystem=strict`, `ProtectHome`, `NoNewPrivileges`, `RestrictAddressFamilies`, `ReadWritePaths` acotado.
+
+Secreto: `secrets/dani-rclone-gdrive.age` con receptores `[nas dani]` en `secrets/secrets.nix`, declarado en `hosts/nas/secrets.nix` con `owner = "dani"`. No aparece en el Nix store.
+
+Divergencias respecto a la descripción original (mejoras, no fallos):
+- El perdedor de un conflicto se mueve a papelera (`--backup-dir1` local `.trash/Crítico` + `--backup-dir2` `gdrive:Crítico-trash`) en vez de borrarse en seco.
+- `--max-delete 50` es un tope absoluto de 50 ficheros, no un 50% relativo (ya presente en el plan).
+<!-- SECTION:FINAL_SUMMARY:END -->

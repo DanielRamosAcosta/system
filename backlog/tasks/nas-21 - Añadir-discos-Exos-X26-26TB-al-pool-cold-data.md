@@ -15,6 +15,7 @@ references:
   - hosts/nas/snapper.nix
   - docs/NAS DIY.typ
 priority: high
+ordinal: 9000
 ---
 
 ## Description

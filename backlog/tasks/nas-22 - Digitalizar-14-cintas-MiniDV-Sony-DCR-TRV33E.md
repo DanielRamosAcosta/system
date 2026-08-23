@@ -1,16 +1,16 @@
 ---
 id: NAS-22
 title: Digitalizar 14 cintas MiniDV (Sony DCR-TRV33E)
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-04-03 16:33'
-updated_date: '2026-06-19 17:23'
+updated_date: '2026-08-15 18:28'
 labels:
   - hardware
   - media
 dependencies: []
 priority: low
-ordinal: 500
+ordinal: 10000
 ---
 
 ## Description

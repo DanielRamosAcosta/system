@@ -59,8 +59,8 @@ fi
 echo "" | tee -a "$LOG_FILE"
 
 # Generate client private key
-echo "Generating client private key..." | tee -a "$LOG_FILE"
-@openssl@ genrsa -out "$CLIENT_DIR/client-key.pem" 4096 2>&1 | tee -a "$LOG_FILE"
+echo "Generating client private key (ECDSA P-384)..." | tee -a "$LOG_FILE"
+@openssl@ genpkey -algorithm EC -pkeyopt ec_paramgen_curve:P-384 -out "$CLIENT_DIR/client-key.pem" 2>&1 | tee -a "$LOG_FILE"
 chmod 600 "$CLIENT_DIR/client-key.pem"
 echo "✓ Private key generated" | tee -a "$LOG_FILE"
 
@@ -85,7 +85,7 @@ echo "Signing client certificate with CA..." | tee -a "$LOG_FILE"
 @openssl@ x509 -req -in "$CLIENT_DIR/client-csr.pem" \
     -CA "$CA_CERT" -CAkey "$CA_KEY" \
     -CAcreateserial -out "$CLIENT_DIR/client-cert.pem" \
-    -days $CLIENT_VALIDITY -sha384 \
+    -days $CLIENT_VALIDITY -sha512 \
     -extfile "$CLIENT_DIR/client-ext.cnf" 2>&1 | tee -a "$LOG_FILE"
 echo "✓ Client certificate signed" | tee -a "$LOG_FILE"
 
@@ -97,15 +97,14 @@ echo "" | tee -a "$LOG_FILE"
 echo "Generating PKCS#12 bundle..." | tee -a "$LOG_FILE"
 
 # Generate PKCS#12 bundle for macOS (includes client cert + key + CA cert)
-# Password: dani123
-echo "Command: @openssl@ pkcs12 -export -inkey \"$CLIENT_DIR/client-key.pem\" -in \"$CLIENT_DIR/client-cert.pem\" -certfile \"$CA_CERT\" -out \"$CLIENT_DIR/$CLIENT_NAME.p12\" -name \"$CLIENT_NAME\" -passout pass:dani123" | tee -a "$LOG_FILE"
-@openssl@ pkcs12 -export \
+P12_PASSWORD="$(@openssl@ rand -base64 18)"
+@openssl@ pkcs12 -export -legacy \
     -inkey "$CLIENT_DIR/client-key.pem" \
     -in "$CLIENT_DIR/client-cert.pem" \
     -certfile "$CA_CERT" \
     -out "$CLIENT_DIR/$CLIENT_NAME.p12" \
     -name "$CLIENT_NAME" \
-    -passout pass:dani123 2>&1 | tee -a "$LOG_FILE"
+    -passout pass:"$P12_PASSWORD" 2>&1 | tee -a "$LOG_FILE"
 
 if [[ $? -eq 0 ]]; then
     echo "✓ PKCS#12 bundle created successfully" | tee -a "$LOG_FILE"
@@ -137,3 +136,8 @@ echo "  - $CLIENT_DIR/client-cert.pem" | tee -a "$LOG_FILE"
 echo "  - $CLIENT_DIR/client-key.pem" | tee -a "$LOG_FILE"
 echo "  - $CLIENT_DIR/$CLIENT_NAME.p12" | tee -a "$LOG_FILE"
 echo "  - $CLIENT_DIR/logs.log (this file)" | tee -a "$LOG_FILE"
+
+echo ""
+echo "=== PKCS#12 import password (random, NOT stored — copy it now) ==="
+echo "  $P12_PASSWORD"
+echo ""
