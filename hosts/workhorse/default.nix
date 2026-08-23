@@ -6,6 +6,7 @@
     ./secrets.nix
     ./users.nix
     ./gaming.nix
+    ./plymouth-steam.nix
     ./secure-boot.nix
   ];
 }
