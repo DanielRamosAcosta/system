@@ -4,9 +4,26 @@
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
+      timeout = 0;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
+
+    plymouth = {
+      enable = true;
+      theme = "spinner";
+      logo = ./steam-logo.png;
+    };
+
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "udev.log_level=3"
+      "rd.udev.log_level=3"
+      "vt.global_cursor_default=0"
+    ];
   };
 
   networking = {
