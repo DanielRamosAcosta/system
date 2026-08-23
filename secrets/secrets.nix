@@ -1,10 +1,11 @@
 let
   nas = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB4Chuh+45HCl+jMi7xjDgquT8bqZ0S53av6uhgzPiZl";
   siemens = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDERMhNP8G9bE9Znd1omaMAGI54L6lil8v7mRaEgzD8G";
+  workhorse = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH3mFxsxk1jlV+UIF5TAxx9PhdyZz5hDo1lOMHwsx+Ks";
   dani = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKq21O6t1Q2QHfp9ypCIeDUqJ0PjauigrMXKKvvVL4I/";
 in
 {
-  "dani-hashed-password.age".publicKeys = [ nas siemens dani ];
+  "dani-hashed-password.age".publicKeys = [ nas siemens workhorse dani ];
   "alex-hashed-password.age".publicKeys = [ nas dani ];
   "monuser-password.age".publicKeys = [ nas dani ];
   "nas-tunnel-credentials.json.age".publicKeys = [ nas dani ];

@@ -18,6 +18,14 @@
   inputs.nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
   inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
+  inputs.nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  inputs.jovian.url = "github:Jovian-Experiments/Jovian-NixOS";
+  inputs.jovian.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+  inputs.lanzaboote.url = "github:nix-community/lanzaboote/v1.1.0";
+  inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
   inputs.nixpkgs-node26.url = "github:NixOS/nixpkgs/4df1b885";
 
   outputs = {
@@ -28,6 +36,9 @@
     home-manager,
     nix-darwin,
     nixpkgs-node26,
+    nixpkgs-unstable,
+    jovian,
+    lanzaboote,
     ...
   }:
     let
@@ -69,6 +80,17 @@
                 })
               ];
             }
+          ];
+        };
+
+        workhorse = nixpkgs-unstable.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/workhorse
+            disko.nixosModules.disko
+            agenix.nixosModules.default
+            jovian.nixosModules.default
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
 
