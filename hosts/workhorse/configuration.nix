@@ -9,12 +9,6 @@
 
     kernelPackages = pkgs.linuxPackages_latest;
 
-    plymouth = {
-      enable = true;
-      theme = "spinner";
-      logo = ./steam-logo.png;
-    };
-
     consoleLogLevel = 0;
     initrd.verbose = false;
     kernelParams = [
