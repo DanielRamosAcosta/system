@@ -1,8 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   time.timeZone = "Atlantic/Canary";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "unrar" ];
 
   environment.systemPackages = with pkgs; [
     bottom
@@ -33,6 +35,7 @@ shntool
     tcpdump
     tmux
     tree
+    unrar
     unzip
     usbutils
     util-linux

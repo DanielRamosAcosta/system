@@ -8,6 +8,7 @@
       clippy
       cloudflared
       deno
+      ffmpeg
       gh
       git-lfs
       gnupg
