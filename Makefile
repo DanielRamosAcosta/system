@@ -1,7 +1,8 @@
 .DEFAULT_GOAL := test
 
-.PHONY: docs test iso install \
+.PHONY: docs test iso install install-workhorse \
 	activate-nas dry-activate-nas \
+	activate-workhorse dry-activate-workhorse \
 	activate-siemens dry-activate-siemens \
 	activate-macbook dry-activate-macbook
 
@@ -20,6 +21,22 @@ dry-activate-nas:
 		--sudo \
 		--build-host nas \
 		--target-host nas
+
+activate-workhorse:
+	nixos-rebuild-ng switch \
+		--no-reexec \
+		--flake .#workhorse \
+		--sudo \
+		--build-host workhorse \
+		--target-host workhorse
+
+dry-activate-workhorse:
+	nixos-rebuild-ng dry-activate \
+		--no-reexec \
+		--flake .#workhorse \
+		--sudo \
+		--build-host workhorse \
+		--target-host workhorse
 
 activate-siemens:
 	nixos-rebuild-ng switch \
@@ -48,6 +65,12 @@ install:
 		--flake .#nas \
 		--generate-hardware-config nixos-generate-config ./hosts/nas/hardware-configuration.nix \
 		--target-host root@192.168.1.41
+
+install-workhorse:
+	nix run github:nix-community/nixos-anywhere -- \
+		--flake .#workhorse \
+		--extra-files /tmp/workhorse-install \
+		--target-host root@192.168.1.36
 
 iso:
 	nix build .#nixosConfigurations.iso.config.system.build.isoImage
