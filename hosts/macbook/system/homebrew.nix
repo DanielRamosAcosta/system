@@ -18,6 +18,7 @@
       "obsidian"
       "orbstack"
       "slack"
+      "steam"
       "telegram"
       "vlc"
     ];

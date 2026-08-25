@@ -15,6 +15,8 @@
         }
       ];
       userSettings = {
+        "update.mode" = "none";
+        "extensions.autoCheckUpdates" = false;
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "${pkgs.nixd}/bin/nixd";
         "nix.formatterPath" = "${pkgs.nixfmt}/bin/nixfmt";

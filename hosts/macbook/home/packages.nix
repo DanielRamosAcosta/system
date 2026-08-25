@@ -11,6 +11,7 @@
       ffmpeg
       gh
       git-lfs
+      glab
       gnupg
       gping
       jsonnet
