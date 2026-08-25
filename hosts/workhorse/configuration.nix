@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   boot = {
     loader = {
@@ -25,7 +25,7 @@
     networkmanager.enable = true;
   };
 
-  time.timeZone = "Atlantic/Canary";
+  time.timeZone = "Europe/Madrid";
   i18n.defaultLocale = "es_ES.UTF-8";
   console.keyMap = "es";
 
@@ -40,6 +40,11 @@
       PasswordAuthentication = false;
       PermitRootLogin = "prohibit-password";
     };
+  };
+
+  services.logind.settings.Login = {
+    HandlePowerKey = lib.mkForce "suspend";
+    HandlePowerKeyLongPress = "poweroff";
   };
 
   zramSwap.enable = true;
