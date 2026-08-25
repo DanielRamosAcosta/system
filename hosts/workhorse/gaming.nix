@@ -17,6 +17,15 @@
 
   programs.gamemode.enable = true;
 
+  security.rtkit.enable = true;
+
+  services.pipewire.wireplumber.extraConfig."51-bluez-aac" = {
+    "monitor.bluez.properties" = {
+      "bluez5.codecs" = [ "sbc" "sbc_xq" "aac" ];
+      "bluez5.enable-sbc-xq" = true;
+    };
+  };
+
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
