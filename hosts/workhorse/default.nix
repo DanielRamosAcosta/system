@@ -8,5 +8,6 @@
     ./gaming.nix
     ./plymouth-steam.nix
     ./secure-boot.nix
+    ./swap.nix
   ];
 }
