@@ -9,6 +9,7 @@
     ./snapper.nix
     ./services
     ./configuration.nix
+    ./boot-esp-mirror.nix
     ./hardware-configuration.nix
     ./kernel-modules
     ./hardware
