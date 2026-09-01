@@ -98,6 +98,7 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/siemens
+            disko.nixosModules.disko
             agenix.nixosModules.default
             stylix.nixosModules.stylix
             home-manager.nixosModules.home-manager
