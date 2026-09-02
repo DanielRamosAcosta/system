@@ -19,6 +19,7 @@
       "orbstack"
       "slack"
       "steam"
+      "tailscale-app"
       "telegram"
       "vlc"
     ];

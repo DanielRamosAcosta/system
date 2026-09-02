@@ -6,6 +6,8 @@
     ./secrets.nix
     ./users.nix
     ./gaming.nix
+    ./sunshine.nix
+    ./tailscale.nix
     ./plymouth-steam.nix
     ./secure-boot.nix
   ];
