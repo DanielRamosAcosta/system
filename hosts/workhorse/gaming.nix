@@ -13,9 +13,14 @@
   programs.steam = {
     enable = true;
     extraCompatPackages = [ pkgs.proton-ge-bin ];
+    remotePlay.openFirewall = true;
   };
 
+  hardware.steam-hardware.enable = true;
+
   programs.gamemode.enable = true;
+
+  powerManagement.cpuFreqGovernor = "performance";
 
   security.rtkit.enable = true;
 
@@ -24,6 +29,12 @@
       "bluez5.codecs" = [ "sbc" "sbc_xq" "aac" ];
       "bluez5.enable-sbc-xq" = true;
     };
+    "monitor.bluez.rules" = [
+      {
+        matches = [ { "node.name" = "~bluez_output.*"; } ];
+        actions.update-props."node.force-quantum" = 2048;
+      }
+    ];
   };
 
   hardware.graphics = {
