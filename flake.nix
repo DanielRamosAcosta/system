@@ -26,6 +26,8 @@
   inputs.lanzaboote.url = "github:nix-community/lanzaboote/v1.1.0";
   inputs.lanzaboote.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
+  inputs.chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
+
   inputs.nixpkgs-node26.url = "github:NixOS/nixpkgs/4df1b885";
 
   outputs = {
@@ -39,6 +41,7 @@
     nixpkgs-unstable,
     jovian,
     lanzaboote,
+    chaotic,
     ...
   }:
     let
@@ -91,6 +94,7 @@
             agenix.nixosModules.default
             jovian.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
+            chaotic.nixosModules.default
           ];
         };
 

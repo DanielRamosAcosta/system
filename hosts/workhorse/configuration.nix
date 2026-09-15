@@ -29,6 +29,7 @@
   time.timeZone = "Europe/Madrid";
   i18n.defaultLocale = "es_ES.UTF-8";
   console.keyMap = "es";
+  services.xserver.xkb.layout = "es";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
