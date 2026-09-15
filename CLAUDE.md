@@ -100,6 +100,7 @@ Evaluates `utilities/utilities.test.nix` (via `lib.runTests`) to validate the pu
 - **Documentation edits** — when modifying Backlog.md documents (docs), prefer editing the file directly (Read + Edit) instead of using the MCP `document_update` tool, which requires resending the entire content
 - **Activar macbook automáticamente** — tras cualquier cambio en la configuración del macbook, ejecutar `make activate-macbook` de forma proactiva sin pedirle permiso al usuario ni sugerirle que lo haga él
 - **`sudo` en el macbook usa TouchID** — no pide contraseña por terminal, sino que levanta el prompt de TouchID; los comandos con `sudo` (como `make activate-macbook`) se pueden ejecutar directamente y el usuario los aprueba con la huella. No hace falta pedirle que los lance él con `!`
+- **Registrar herramientas efímeras** — cada vez que uses una herramienta de forma efímera (`nix run`, `nix shell`, `nix-shell -p`, `comma`/`,`), apúntala en `backlog/docs/doc-30 - Herramientas-Faltantes-contador-para-decidir-instalación-permanente.md`: incrementa el contador de su fila en la sección del host correspondiente (NAS, Mac o Workhorse) y actualiza la fecha, o crea la fila con contador `1` si no existe. Sirve para decidir cuándo merece la pena instalar el paquete de forma declarativa
 
 <!-- BACKLOG.MD MCP GUIDELINES START -->
 

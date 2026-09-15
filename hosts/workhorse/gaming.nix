@@ -42,5 +42,12 @@
     enable32Bit = true;
   };
 
+  chaotic.mesa-git.enable = true;
+
+  systemd.tmpfiles.rules = [
+    "d /home/dani/.local/share/Steam/compatibilitytools.d 0755 dani users - -"
+    "L+ /home/dani/.local/share/Steam/compatibilitytools.d/GE-Proton - - - - ${pkgs.proton-ge-bin.steamcompattool}"
+  ];
+
   boot.initrd.kernelModules = [ "amdgpu" ];
 }
