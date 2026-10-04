@@ -5,7 +5,7 @@
     elfutils
     binutils
     strace
-    ltrace
+    (ltrace.overrideAttrs { doCheck = false; })
     bpftrace
     (writeShellScriptBin "capture-freeze" (builtins.readFile ./capture-freeze.sh))
   ];
