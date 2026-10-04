@@ -6,6 +6,10 @@
       autoStart = true;
       user = "dani";
       desktopSession = "gamescope-wayland";
+      environment = {
+        STEAM_GAMESCOPE_FORCE_HDR_DEFAULT = "1";
+        STEAM_GAMESCOPE_FORCE_OUTPUT_TO_HDR10PQ_DEFAULT = "1";
+      };
     };
     devices.steamdeck.enable = false;
   };

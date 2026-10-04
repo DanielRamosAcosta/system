@@ -27,12 +27,20 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 |---------|------|-----------|-------|
 | sshpass | 1 | 2026-09-13 | Login por contraseña al SystemRescue del rescate de discos (ssh-copy-id inicial) |
 | python3 + pydicom/numpy/pillow | 1 | 2026-09-13 | Convertir DICOM (RM columna lumbar) a PNG por series |
+| imagemagick | 1 | 2026-09-17 | Recortar/ampliar capturas de workhorse para leer sliders (calibración HDR de Hogwarts) |
 
 ## Workhorse
 
 | Paquete | Usos | Último uso | Notas |
 |---------|------|-----------|-------|
-| _(vacío)_ | | | |
+| drm_info | 1 | 2026-09-17 | Inspeccionar propiedades KMS del conector HDMI (Colorspace/HDR_OUTPUT_METADATA) al depurar HDR en la Sony |
+
+## Siemens
+
+| Paquete | Usos | Último uso | Notas |
+|---------|------|-----------|-------|
+| ddrescue | 1 | 2026-09-20 | Volcar a ISO el DVD-Video insertado en /dev/sr0 (label DVD_2) para llevarlo al Mac |
+| exfatprogs | 1 | 2026-09-20 | Formatear a exFAT un pendrive Toshiba TransMemory (mkfs.exfat); no hay soporte exFAT nativo en siemens |
 
 ## Graduados (ya instalados declarativamente)
 

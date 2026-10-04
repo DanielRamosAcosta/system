@@ -8,6 +8,7 @@
       clippy
       cloudflared
       deno
+      exiftool
       ffmpeg
       gh
       git-lfs

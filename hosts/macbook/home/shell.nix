@@ -13,6 +13,9 @@
         lt = "eza --tree";
       };
       shellInit = ''
+        if test -x /opt/homebrew/bin/brew
+          /opt/homebrew/bin/brew shellenv fish | source
+        end
         if test -r ${config.age.secrets.grafana-self-hosted-token.path}
           set -gx GRAFANA_SELF_HOSTED_TOKEN (cat ${config.age.secrets.grafana-self-hosted-token.path})
         end
