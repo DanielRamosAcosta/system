@@ -6,6 +6,7 @@
     ./secrets.nix
     ./users.nix
     ./gaming.nix
+    ./gamescope-patch.nix
     ./debug.nix
     ./sunshine.nix
     ./tailscale.nix
