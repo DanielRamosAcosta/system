@@ -25,12 +25,16 @@ Confirmado en vivo: reiniciar tailscaled restaura el DNS al instante.
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 El DNS se recupera automáticamente tras salir de suspensión sin intervención manual
-- [ ] #2 La corrección es declarativa en la configuración Nix del host
+- [x] #1 El DNS se recupera automáticamente tras salir de suspensión sin intervención manual
+- [x] #2 La corrección es declarativa en la configuración Nix del host
 <!-- AC:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Añadido en hosts/workhorse/tailscale.nix un servicio systemd oneshot `tailscaled-resume-dns` enganchado a post-resume.target (after + wantedBy) que ejecuta `systemctl restart tailscaled.service` al despertar. Validado con `make dry-activate-workhorse`, activado con `make activate-workhorse`, y verificado: symlink creado en post-resume.target.wants/, el servicio corre con Result=success/ExecMainStatus=0 y getent hosts resuelve. El estado de fallo actual también se corrigió en caliente reiniciando tailscaled.
+PRIMER INTENTO (ROTO): se añadió un servicio systemd oneshot `tailscaled-resume-dns` enganchado a `post-resume.target` (after + wantedBy). Resultó inútil: `post-resume.target` NO existe como unidad real en este systemd (`systemctl cat` → "No files found", sin WantedBy/After hacia sleep.target), así que el servicio solo corrió una vez al activar (10-sep) y nunca más en los resumes posteriores. El bug seguía reproduciéndose de forma intermitente.
+
+CAUSA RAÍZ (2026-10-16): workhorse va por WiFi; al salir de suspensión hay una carrera: si tailscaled relee su config DNS ANTES de que el WiFi complete el DHCP, latch-ea upstream vacío (`.:[]`) y devuelve SERVFAIL a todo (internet por IP pero nada resuelve nombres). Si lo hace después, coge bien los resolvers (`.:[80.58.61.250 80.58.61.254]`). Confirmado en el journal: resumes del 17:22, 09-oct y 11-oct quedaron rotos; otros se salvaron por suerte.
+
+FIX REAL (commit e69f2b6): se reemplazó el servicio por un dispatcher de NetworkManager (`networking.networkmanager.dispatcherScripts`) que reinicia `tailscaled` cuando una interfaz física pasa a `up`/`dhcp4-change`/`dhcp6-change`. La acción que NM emite en el resume es `dhcp4-change` (no `up`), que llega DESPUÉS de que el DHCP aplicó los resolvers → el tailscaled reiniciado los lee bien. Determinista, no depende del auto-heal racy. Verificado e2e con rtcwake (suspensión real S3 + auto-wake): 6/6 ciclos con DNS OK, tailscaled reiniciado en 6/6, upstreams siempre correctos.
 <!-- SECTION:FINAL_SUMMARY:END -->
