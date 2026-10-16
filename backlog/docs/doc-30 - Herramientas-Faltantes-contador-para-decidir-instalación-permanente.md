@@ -28,6 +28,7 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | sshpass | 1 | 2026-09-13 | Login por contraseña al SystemRescue del rescate de discos (ssh-copy-id inicial) |
 | python3 + pydicom/numpy/pillow | 1 | 2026-09-13 | Convertir DICOM (RM columna lumbar) a PNG por series |
 | imagemagick | 1 | 2026-09-17 | Recortar/ampliar capturas de workhorse para leer sliders (calibración HDR de Hogwarts) |
+| photocraft | 1 | 2026-10-07 | Editor de imágenes en Rust (reimpl. Photoshop); flake temporal envolviendo el .dmg macos-universal firmado. No está en nixpkgs ni brew |
 
 ## Workhorse
 
