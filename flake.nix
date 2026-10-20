@@ -30,7 +30,15 @@
 
   inputs.nixpkgs-node26.url = "github:NixOS/nixpkgs/4df1b885";
 
+  inputs.nixpkgs-2605.url = "github:NixOS/nixpkgs/nixos-26.05";
+
+  inputs.microvm.url = "github:microvm-nix/microvm.nix";
+  inputs.microvm.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
+  inputs.impermanence.url = "github:nix-community/impermanence";
+
   outputs = {
+    self,
     nixpkgs,
     disko,
     agenix,
@@ -42,6 +50,9 @@
     jovian,
     lanzaboote,
     chaotic,
+    nixpkgs-2605,
+    microvm,
+    impermanence,
     ...
   }:
     let
@@ -80,6 +91,7 @@
               nixpkgs.overlays = [
                 (_final: _prev: {
                   quadro-ctl = nasPkgs.callPackage ./packages/quadro-ctl.nix {};
+                  inherit (nixpkgs-unstable.legacyPackages.${nasSystem}) yt-dlp;
                 })
               ];
             }
@@ -88,6 +100,7 @@
 
         workhorse = nixpkgs-unstable.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = { inherit self; };
           modules = [
             ./hosts/workhorse
             disko.nixosModules.disko
@@ -95,6 +108,17 @@
             jovian.nixosModules.default
             lanzaboote.nixosModules.lanzaboote
             chaotic.nixosModules.default
+            microvm.nixosModules.host
+          ];
+        };
+
+        agenthorse = nixpkgs-2605.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/agenthorse
+            microvm.nixosModules.microvm
+            impermanence.nixosModules.impermanence
+            agenix.nixosModules.default
           ];
         };
 

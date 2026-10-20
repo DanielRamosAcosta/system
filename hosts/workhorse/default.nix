@@ -12,5 +12,6 @@
     ./tailscale.nix
     ./plymouth-steam.nix
     ./secure-boot.nix
+    ./microvm-agenthorse.nix
   ];
 }

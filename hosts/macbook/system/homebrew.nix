@@ -27,6 +27,7 @@
       "steam"
       "tailscale-app"
       "telegram"
+      "tigervnc-viewer"
       "vlc"
     ];
   };
