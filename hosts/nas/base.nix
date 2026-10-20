@@ -39,6 +39,7 @@ shntool
     unzip
     usbutils
     util-linux
+    yt-dlp
     zip
   ];
 
