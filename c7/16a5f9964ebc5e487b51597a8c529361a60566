@@ -1,0 +1,49 @@
+flake.lock
+  s_c134c983c5991e::t_9d0cde9a1a2ee5 313-352,398-418,475-490,524-539,609,612,614-615,642-657
+flake.nix
+  s_c134c983c5991e::t_cd066ba0816919 33-39,41,53-55,94,103,111-121
+hosts/agenthorse/default.nix
+  s_c134c983c5991e::t_846f39f893649f 1-13
+hosts/agenthorse/desktop.nix
+  s_c134c983c5991e::t_e4297c1ebdecf9 1-47
+hosts/agenthorse/docker.nix
+  s_c134c983c5991e::t_45c968ad597f0b 1-5
+hosts/agenthorse/microvm.nix
+  s_c134c983c5991e::t_6ea705f6194ed5 1-40
+hosts/agenthorse/persistence.nix
+  s_c134c983c5991e::t_d56682a6d6bae9 1-22
+hosts/agenthorse/secrets.nix
+  s_c134c983c5991e::t_3eeb2f44211399 1-4
+hosts/agenthorse/tailscale.nix
+  s_c134c983c5991e::t_edb4cb2e2a1e90 1-6
+hosts/agenthorse/users.nix
+  s_c134c983c5991e::t_38df4fa1f8dcdc 1-18
+hosts/agenthorse/vpn.nix
+  s_c134c983c5991e::t_2c2bccb47631b5 1-10
+hosts/macbook/system/homebrew.nix
+  s_c134c983c5991e::t_33e2ef0fb89127 30
+hosts/workhorse/default.nix
+  s_c134c983c5991e::t_9688ed5dbccdda 15
+hosts/workhorse/microvm-agenthorse.nix
+  s_c134c983c5991e::t_faca8989baa344 1-24
+hosts/agenthorse/configuration.nix
+  s_c134c983c5991e::t_c40916d4937cbe 1-36
+secrets/secrets.nix
+  s_c134c983c5991e::t_e8f29e676bb32e 5,9,20-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c716a5f9964ebc5e487b51597a8c529361a60566",
+  "prompts": {},
+  "sessions": {
+    "s_c134c983c5991e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d840b0f-80fe-4ae8-8bbf-64799e259696",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Daniel Ramos Acosta <danielrac@inditex.com>"
+    }
+  }
+}
