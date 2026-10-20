@@ -6,6 +6,8 @@
     secrets = {
       grafana-self-hosted-token.file = ../../../secrets/grafana-self-hosted-token.age;
       context7-api-key.file = ../../../secrets/context7-api-key.age;
+      spotify-client-id.file = ../../../secrets/spotify-client-id.age;
+      spotify-client-secret.file = ../../../secrets/spotify-client-secret.age;
     };
   };
 }

@@ -22,6 +22,12 @@
         if test -r ${config.age.secrets.context7-api-key.path}
           set -gx CONTEXT7_API_KEY (cat ${config.age.secrets.context7-api-key.path})
         end
+        if test -r ${config.age.secrets.spotify-client-id.path}
+          set -gx SPOTIFY_CLIENT_ID (cat ${config.age.secrets.spotify-client-id.path})
+        end
+        if test -r ${config.age.secrets.spotify-client-secret.path}
+          set -gx SPOTIFY_CLIENT_SECRET (cat ${config.age.secrets.spotify-client-secret.path})
+        end
       '';
     };
 
