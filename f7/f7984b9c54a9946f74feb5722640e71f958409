@@ -1,0 +1,45 @@
+hosts/agenthorse/default.nix
+  s_c134c983c5991e::t_bd3d5f6e6ea77d 11-13
+hosts/agenthorse/globalprotect.nix
+  s_2e44be843cd4ae::t_c688fa3f3071f5 1-93
+hosts/agenthorse/microvm.nix
+  s_c134c983c5991e::t_9c30bcc6b24a32 9-10,40-45
+hosts/agenthorse/persistence.nix
+  s_c134c983c5991e::t_1b75216c4a469e 11-12
+"backlog/docs/doc-30 - Herramientas-Faltantes-contador-para-decidir-instalación-permanente.md"
+  s_c134c983c5991e::t_55e6a9ea1c5bf3 38-43
+hosts/agenthorse/antivirus.nix
+  s_c134c983c5991e::t_e38eae34efc6aa 1-14
+hosts/agenthorse/configuration.nix
+  s_c134c983c5991e::t_0238781582c1f2 32
+hosts/agenthorse/corporate-ca.nix
+  s_c134c983c5991e::t_e8eaeb6440fffa 1-27
+packages/globalprotect.nix
+  s_c134c983c5991e::t_fcf1e711b95168 1-34
+secrets/secrets.nix
+  s_c134c983c5991e::t_4d8299a544d113 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f7f7984b9c54a9946f74feb5722640e71f958409",
+  "prompts": {},
+  "sessions": {
+    "s_2e44be843cd4ae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca525dfb-4eef-4696-9a6c-060b28029571",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Daniel Ramos Acosta <danielrac@inditex.com>"
+    },
+    "s_c134c983c5991e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d840b0f-80fe-4ae8-8bbf-64799e259696",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Daniel Ramos Acosta <danielrac@inditex.com>"
+    }
+  }
+}
