@@ -1,0 +1,19 @@
+hosts/nas/services/dnsmasq.nix
+  s_c134c983c5991e::t_2c69dd11270cf8 12-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5a150f96e8ef7f2cea116ec8c5759333851fabbd",
+  "prompts": {},
+  "sessions": {
+    "s_c134c983c5991e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2d840b0f-80fe-4ae8-8bbf-64799e259696",
+        "model": "unknown"
+      },
+      "human_author": "Daniel Ramos Acosta <danielrac@inditex.com>"
+    }
+  }
+}
