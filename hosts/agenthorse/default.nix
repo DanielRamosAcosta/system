@@ -6,8 +6,10 @@
     ./secrets.nix
     ./users.nix
     ./docker.nix
-    ./tailscale.nix
     ./desktop.nix
     ./vpn.nix
+    ./extra-ca.nix
+    ./antivirus.nix
+    ./globalprotect.nix
   ];
 }
