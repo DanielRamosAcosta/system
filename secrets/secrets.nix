@@ -19,4 +19,5 @@ in
   "context7-api-key.age".publicKeys = [ dani ];
   "spotify-client-id.age".publicKeys = [ dani ];
   "spotify-client-secret.age".publicKeys = [ dani ];
+  "corporate-certificate.age".publicKeys = [ agenthorse dani ];
 }

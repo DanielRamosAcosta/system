@@ -35,6 +35,12 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | Paquete | Usos | Último uso | Notas |
 |---------|------|-----------|-------|
 | drm_info | 1 | 2026-09-17 | Inspeccionar propiedades KMS del conector HDMI (Colorspace/HDR_OUTPUT_METADATA) al depurar HDR en la Sony |
+| tcpdump | 1 | 2026-10-20 | Capturar tráfico ESP de la VPN GlobalProtect de agenthorse (también usado dentro de la VM vía el store compartido) |
+| dnsutils (dig) | 1 | 2026-10-20 | Probar DNS corporativos desde agenthorse con la VPN levantada |
+| qemu | 1 | 2026-10-20 | VM Ubuntu 24.04 desechable para probar un cliente VPN oficial |
+| cloud-utils | 1 | 2026-10-20 | Generar el seed de cloud-init (cloud-localds) para esa VM |
+| openssl | 1 | 2026-10-20 | Verificar en agenthorse cadenas TLS contra el bundle de CAs del sistema |
+| age | 1 | 2026-10-20 | Cifrar un secreto agenix desde el Mac del trabajo (sin nix) vía workhorse |
 
 ## Siemens
 

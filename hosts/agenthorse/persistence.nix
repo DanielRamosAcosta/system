@@ -8,7 +8,8 @@
       "/home/dani"
       "/var/lib/nixos"
       "/var/lib/docker"
-      "/var/lib/tailscale"
+      "/var/lib/clamav"
+      "/opt/paloaltonetworks"
       "/var/lib/weston"
     ];
 
