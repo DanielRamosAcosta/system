@@ -6,7 +6,6 @@
     ./smart.nix
     ./cloudflared.nix
     ./dnsmasq.nix
-    ./strongswan.nix
     ./network-monitor.nix
     ./ups-watchdog.nix
     ./dvd-server.nix
