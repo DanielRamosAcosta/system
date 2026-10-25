@@ -31,7 +31,6 @@
     rustc
 shntool
     smartmontools
-    strongswan
     tcpdump
     tmux
     tree
