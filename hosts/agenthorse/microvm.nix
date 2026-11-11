@@ -8,15 +8,10 @@
 
     writableStoreOverlay = "/nix/.rw-store";
 
-    forwardPorts = [
-      { from = "host"; host.address = "0.0.0.0"; host.port = 5922; guest.port = 22; }
-      { from = "host"; host.address = "0.0.0.0"; host.port = 5900; guest.port = 5900; }
-    ];
-
     interfaces = [
       {
-        type = "user";
-        id = "agenthorse";
+        type = "tap";
+        id = "vm-agenthorse";
         mac = "02:00:00:00:a6:e0";
       }
     ];

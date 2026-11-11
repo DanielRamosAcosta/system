@@ -29,13 +29,16 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | python3 + pydicom/numpy/pillow | 1 | 2026-09-13 | Convertir DICOM (RM columna lumbar) a PNG por series |
 | imagemagick | 1 | 2026-09-17 | Recortar/ampliar capturas de workhorse para leer sliders (calibración HDR de Hogwarts) |
 | photocraft | 1 | 2026-10-07 | Editor de imágenes en Rust (reimpl. Photoshop); flake temporal envolviendo el .dmg macos-universal firmado. No está en nixpkgs ni brew |
+| yt-dlp | 1 | 2026-10-25 | Extraer cookies de Chrome (`--cookies-from-browser`) y listar formatos de un vídeo de Vimeo que exige login; la descarga final va en el nas (donde yt-dlp sí está instalado) |
 
 ## Workhorse
 
 | Paquete | Usos | Último uso | Notas |
 |---------|------|-----------|-------|
 | drm_info | 1 | 2026-09-17 | Inspeccionar propiedades KMS del conector HDMI (Colorspace/HDR_OUTPUT_METADATA) al depurar HDR en la Sony |
-| tcpdump | 1 | 2026-10-20 | Capturar tráfico ESP de la VPN GlobalProtect de agenthorse (también usado dentro de la VM vía el store compartido) |
+| tcpdump | 2 | 2026-11-11 | Capturar tráfico ESP/NAT-T de la VPN GlobalProtect en wlp58s0 del host y en el tap de agenthorse (confirmar retorno del gateway y conntrack del NAT) |
+| strace | 1 | 2026-11-11 | Diagnosticar por qué el cliente HIP de la VPN no detecta ClamAV en agenthorse: ver los execve (/bin/systemctl, clamscan) que fallan por rutas no-FHS |
+| conntrack-tools | 1 | 2026-11-11 | Verificar el tracking/DNAT del UDP 4501 (ESP NAT-T) de la VPN entre el tap de agenthorse y la WiFi del host |
 | dnsutils (dig) | 1 | 2026-10-20 | Probar DNS corporativos desde agenthorse con la VPN levantada |
 | qemu | 1 | 2026-10-20 | VM Ubuntu 24.04 desechable para probar un cliente VPN oficial |
 | cloud-utils | 1 | 2026-10-20 | Generar el seed de cloud-init (cloud-localds) para esa VM |
