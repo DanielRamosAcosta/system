@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   boot = {
+    kernelParams = [ "intel_idle.max_cstate=2" ];
+
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
