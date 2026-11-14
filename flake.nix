@@ -123,6 +123,13 @@
             microvm.nixosModules.microvm
             impermanence.nixosModules.impermanence
             agenix.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
+              home-manager.users.dani.imports = [ ./hosts/agenthorse/home ];
+            }
           ];
         };
 

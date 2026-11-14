@@ -11,10 +11,11 @@ in
   "monuser-password.age".publicKeys = [ nas dani ];
   "nas-tunnel-credentials.json.age".publicKeys = [ nas dani ];
   "dani-rclone-gdrive.age".publicKeys = [ nas dani ];
-  "grafana-self-hosted-token.age".publicKeys = [ dani ];
-  "context7-api-key.age".publicKeys = [ dani ];
+  "grafana-self-hosted-token.age".publicKeys = [ agenthorse dani ];
+  "context7-api-key.age".publicKeys = [ agenthorse dani ];
   "spotify-client-id.age".publicKeys = [ dani ];
   "spotify-client-secret.age".publicKeys = [ dani ];
   "extra-ca.age".publicKeys = [ agenthorse dani ];
   "agenthorse-luks.age".publicKeys = [ workhorse dani ];
+  "gpg-signing-key.age".publicKeys = [ agenthorse dani ];
 }

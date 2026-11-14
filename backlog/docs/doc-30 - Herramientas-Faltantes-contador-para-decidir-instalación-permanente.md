@@ -30,6 +30,8 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | imagemagick | 1 | 2026-09-17 | Recortar/ampliar capturas de workhorse para leer sliders (calibración HDR de Hogwarts) |
 | photocraft | 1 | 2026-10-07 | Editor de imágenes en Rust (reimpl. Photoshop); flake temporal envolviendo el .dmg macos-universal firmado. No está en nixpkgs ni brew |
 | yt-dlp | 1 | 2026-10-25 | Extraer cookies de Chrome (`--cookies-from-browser`) y listar formatos de un vídeo de Vimeo que exige login; la descarga final va en el nas (donde yt-dlp sí está instalado) |
+| age | 1 | 2026-11-14 | Rekey de secretos agenix (añadir recipient agenthorse a context7/grafana) y cifrar la clave GPG sin passphrase, con `age -d`/`age -r` directo en vez del editor de agenix |
+| git-filter-repo | 1 | 2026-11-14 | Reescribir toda la historia del repo para purgar ficheros y strings sensibles antes de un push --force |
 
 ## Workhorse
 
