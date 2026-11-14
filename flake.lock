@@ -268,6 +268,24 @@
         "type": "gitlab"
       }
     },
+    "herdr": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1792321476,
+        "narHash": "sha256-gryYfJQS2TADvjQzPxmSuJBDSIUZf4Aar86+U4B101I=",
+        "owner": "motionharvest",
+        "repo": "herdr",
+        "rev": "9ec969d61593c09a0e9f823495c3725a0dc7e039",
+        "type": "github"
+      },
+      "original": {
+        "owner": "motionharvest",
+        "repo": "herdr",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -334,7 +352,7 @@
     "impermanence": {
       "inputs": {
         "home-manager": "home-manager_3",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       },
       "locked": {
         "lastModified": 1769548169,
@@ -522,6 +540,22 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 1779357205,
+        "narHash": "sha256-cCO8aTqss5x9Ky8GWkpY0Hy5fyTZEbtifSUV8QjSzic=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "f83fc3c307e74bc5fd5adb7eb6b8b13ffd2a36e1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1768564909,
         "narHash": "sha256-Kell/SpJYVkHWMvnhqJz/8DqQg2b6PguxVWOuadbHCc=",
         "owner": "nixos",
@@ -536,7 +570,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_3": {
+    "nixpkgs_4": {
       "locked": {
         "lastModified": 1782847189,
         "narHash": "sha256-twXPFqFsrrY5r28Zh7Homgcp2gUMBgQ6WDS98Q/3xFI=",
@@ -605,13 +639,14 @@
         "agenix": "agenix",
         "chaotic": "chaotic",
         "disko": "disko",
+        "herdr": "herdr",
         "home-manager": "home-manager_2",
         "impermanence": "impermanence",
         "jovian": "jovian",
         "lanzaboote": "lanzaboote",
         "microvm": "microvm",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "nixpkgs-2605": "nixpkgs-2605",
         "nixpkgs-node26": "nixpkgs-node26",
         "nixpkgs-unstable": "nixpkgs-unstable",

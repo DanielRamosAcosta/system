@@ -15,6 +15,7 @@
       glab
       gnupg
       gping
+      jira-cli-go
       jsonnet
       jsonnet-bundler
       kubectl

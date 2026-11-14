@@ -1,15 +1,16 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   users = {
     mutableUsers = false;
 
     users.dani = {
       isNormalUser = true;
+      shell = pkgs.fish;
       extraGroups = [ "wheel" "video" "input" ];
       hashedPasswordFile = config.age.secrets.dani-hashed-password.path;
       openssh.authorizedKeys.keys = [
-        (builtins.readFile ../../keys/id_dani.pub)
-        (builtins.readFile ../../keys/id_dani_work.pub)
+        (builtins.readFile ../../../keys/id_dani.pub)
+        (builtins.readFile ../../../keys/id_dani_work.pub)
       ];
     };
   };

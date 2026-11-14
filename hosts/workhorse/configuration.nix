@@ -55,6 +55,7 @@
     git
     htop
     vim
+    socat
   ];
 
   system.stateVersion = "25.11";

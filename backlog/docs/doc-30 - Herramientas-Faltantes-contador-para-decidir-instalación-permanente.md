@@ -36,10 +36,10 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | Paquete | Usos | Último uso | Notas |
 |---------|------|-----------|-------|
 | drm_info | 1 | 2026-09-17 | Inspeccionar propiedades KMS del conector HDMI (Colorspace/HDR_OUTPUT_METADATA) al depurar HDR en la Sony |
-| tcpdump | 2 | 2026-11-11 | Capturar tráfico ESP/NAT-T de la VPN GlobalProtect en wlp58s0 del host y en el tap de agenthorse (confirmar retorno del gateway y conntrack del NAT) |
+| tcpdump | 3 | 2026-11-13 | Capturar en el bridge br0 el ESP UDP 4501 del VM↔gateway de la VPN y contar salida vs retorno (12 datos salen, solo vuelve 1 keepalive → política del gateway). En el VM `nix run tcpdump` NO funciona con la VPN up (sin internet por el túnel); capturar desde workhorse. Umbral superado: instalar declarativo en workhorse |
 | strace | 1 | 2026-11-11 | Diagnosticar por qué el cliente HIP de la VPN no detecta ClamAV en agenthorse: ver los execve (/bin/systemctl, clamscan) que fallan por rutas no-FHS |
 | conntrack-tools | 1 | 2026-11-11 | Verificar el tracking/DNAT del UDP 4501 (ESP NAT-T) de la VPN entre el tap de agenthorse y la WiFi del host |
-| dnsutils (dig) | 1 | 2026-10-20 | Probar DNS corporativos desde agenthorse con la VPN levantada |
+| dnsutils (dig) | 1 | 2026-10-20 | Probar DNS internos desde agenthorse con la VPN levantada |
 | qemu | 1 | 2026-10-20 | VM Ubuntu 24.04 desechable para probar un cliente VPN oficial |
 | cloud-utils | 1 | 2026-10-20 | Generar el seed de cloud-init (cloud-localds) para esa VM |
 | openssl | 1 | 2026-10-20 | Verificar en agenthorse cadenas TLS contra el bundle de CAs del sistema |

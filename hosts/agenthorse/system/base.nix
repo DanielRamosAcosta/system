@@ -10,17 +10,6 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
 
-  networking.useNetworkd = true;
-  systemd.network.networks."10-eth" = {
-    matchConfig.MACAddress = "02:00:00:00:a6:e0";
-    address = [ "10.0.0.2/32" ];
-    routes = [
-      { Destination = "10.0.0.1/32"; GatewayOnLink = true; }
-      { Destination = "0.0.0.0/0"; Gateway = "10.0.0.1"; GatewayOnLink = true; }
-    ];
-    networkConfig.DNS = [ "9.9.9.9" "1.1.1.1" ];
-  };
-
   services.openssh = {
     enable = true;
     settings = {
@@ -30,6 +19,8 @@
   };
 
   services.getty.autologinUser = "root";
+
+  environment.localBinInPath = true;
 
   environment.systemPackages = with pkgs; [
     git

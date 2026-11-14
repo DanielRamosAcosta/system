@@ -16,4 +16,5 @@ in
   "spotify-client-id.age".publicKeys = [ dani ];
   "spotify-client-secret.age".publicKeys = [ dani ];
   "extra-ca.age".publicKeys = [ agenthorse dani ];
+  "agenthorse-luks.age".publicKeys = [ workhorse dani ];
 }

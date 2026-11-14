@@ -9,8 +9,9 @@
       "/var/lib/nixos"
       "/var/lib/docker"
       "/var/lib/clamav"
-      "/opt/paloaltonetworks"
+      "/var/lib/tailscale"
       "/var/lib/weston"
+      "/root/.config/gpclient"
     ];
 
     files = [

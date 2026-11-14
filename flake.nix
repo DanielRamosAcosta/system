@@ -37,6 +37,8 @@
 
   inputs.impermanence.url = "github:nix-community/impermanence";
 
+  inputs.herdr.url = "github:motionharvest/herdr";
+
   outputs = {
     self,
     nixpkgs,
@@ -53,6 +55,7 @@
     nixpkgs-2605,
     microvm,
     impermanence,
+    herdr,
     ...
   }:
     let
@@ -114,6 +117,7 @@
 
         agenthorse = nixpkgs-2605.lib.nixosSystem {
           system = "x86_64-linux";
+          specialArgs = { inherit herdr; };
           modules = [
             ./hosts/agenthorse
             microvm.nixosModules.microvm
@@ -150,6 +154,7 @@
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
+          specialArgs = { inherit herdr; };
           modules = [
             ./hosts/macbook
             home-manager.darwinModules.home-manager

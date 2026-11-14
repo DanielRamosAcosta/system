@@ -21,6 +21,7 @@
       "fuse-t"
       "ghostty"
       "google-chrome"
+      "herdr-app"
       "obsidian"
       "orbstack"
       "slack"
@@ -29,6 +30,7 @@
       "telegram"
       "tigervnc-viewer"
       "vlc"
+      "zed"
     ];
   };
 }

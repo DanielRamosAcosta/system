@@ -5,5 +5,6 @@
     ./homebrew.nix
     ./defaults.nix
     ./packages.nix
+    ./herdr.nix
   ];
 }
