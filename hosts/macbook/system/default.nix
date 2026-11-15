@@ -6,5 +6,6 @@
     ./defaults.nix
     ./packages.nix
     ./herdr.nix
+    ./remote-access.nix
   ];
 }
