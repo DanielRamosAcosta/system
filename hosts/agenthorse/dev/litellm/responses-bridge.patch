@@ -1,0 +1,33 @@
+diff -ru a/litellm/responses/litellm_completion_transformation/streaming_iterator.py b/litellm/responses/litellm_completion_transformation/streaming_iterator.py
+--- a/litellm/responses/litellm_completion_transformation/streaming_iterator.py	2026-11-17 06:50:54.631281118 +0100
++++ b/litellm/responses/litellm_completion_transformation/streaming_iterator.py	2026-11-17 06:53:04.032032546 +0100
+@@ -794,6 +794,8 @@
+         # Change: Never return a value, just enqueue output item events
+         if self.sent_output_item_added_event:
+             return
++        if not chunk.choices:
++            return
+         delta = chunk.choices[0].delta
+ 
+         self._sequence_number += 1
+@@ -1150,6 +1152,8 @@
+ 
+         It's unclear how users expect litellm to translate multiple-choices-per-chunk to the responses API output.
+         """
++        if not choices:
++            return ""
+         choice = choices[0]
+         chat_completion_delta: ChatCompletionDelta = choice.delta
+         return chat_completion_delta.content or ""
+diff -ru a/litellm/responses/litellm_completion_transformation/transformation.py b/litellm/responses/litellm_completion_transformation/transformation.py
+--- a/litellm/responses/litellm_completion_transformation/transformation.py	2026-11-17 19:49:37.950172079 +0100
++++ b/litellm/responses/litellm_completion_transformation/transformation.py	2026-11-17 19:49:37.971219224 +0100
+@@ -1369,6 +1369,8 @@
+         ] = []
+         web_search_options: Optional[OpenAIWebSearchOptions] = None
+         for tool in tools:
++            if tool.get("type") == "namespace":
++                continue
+             if tool.get("type") == "mcp":
+                 chat_completion_tools.append(cast(OpenAIMcpServerTool, tool))
+             elif (

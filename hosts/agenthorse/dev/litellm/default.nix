@@ -11,7 +11,9 @@ let
 
   deployment = { slug, model }: {
     model_name = slug;
-    litellm_params.model = "github_copilot/${model.id}";
+    litellm_params = {
+      model = "github_copilot/${model.id}";
+    } // lib.optionalAttrs (!model.responses) { use_chat_completions_api = true; };
     model_info = {
       supports_vision = model.vision;
       max_input_tokens = model.maxInput;
@@ -79,12 +81,16 @@ in
 
   services.litellm = {
     enable = true;
+    package = pkgs.litellm.overridePythonAttrs (old: {
+      patches = (old.patches or [ ]) ++ [ ./responses-bridge.patch ];
+    });
     host = "127.0.0.1";
     port = 4000;
     environmentFile = masterKeyFile;
     environment.GITHUB_COPILOT_TOKEN_DIR = tokenDir;
     settings = {
       model_list = map deployment deployments;
+      litellm_settings.drop_params = true;
       general_settings.master_key = "os.environ/LITELLM_MASTER_KEY";
     };
   };

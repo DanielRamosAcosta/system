@@ -31,6 +31,8 @@ def catalog_entry(deployment: dict, bundled: dict[str, dict], priority: int) -> 
             "supports_search_tool": False,
             "experimental_supported_tools": [],
         }
+    if not model["responses"]:
+        entry["apply_patch_tool_type"] = None
     entry["supported_reasoning_levels"], entry["default_reasoning_level"] = reasoning_levels(entry, model["efforts"])
     entry["context_window"] = entry["max_context_window"] = model["maxInput"]
     return entry | {
