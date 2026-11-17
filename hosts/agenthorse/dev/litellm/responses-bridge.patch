@@ -21,8 +21,54 @@ diff -ru a/litellm/responses/litellm_completion_transformation/streaming_iterato
          return chat_completion_delta.content or ""
 diff -ru a/litellm/responses/litellm_completion_transformation/transformation.py b/litellm/responses/litellm_completion_transformation/transformation.py
 --- a/litellm/responses/litellm_completion_transformation/transformation.py	2026-11-17 19:49:37.950172079 +0100
-+++ b/litellm/responses/litellm_completion_transformation/transformation.py	2026-11-17 19:49:37.971219224 +0100
-@@ -1369,6 +1369,8 @@
++++ b/litellm/responses/litellm_completion_transformation/transformation.py	2026-11-17 19:58:21.776481456 +0100
+@@ -484,7 +484,44 @@
+                     continue
+ 
+                 messages.extend(chat_completion_messages)
+-        return messages
++        return LiteLLMCompletionResponsesConfig._merge_assistant_text_into_preceding_tool_calls(
++            messages
++        )
++
++    @staticmethod
++    def _merge_assistant_text_into_preceding_tool_calls(messages: List[Any]) -> List[Any]:
++        def _field(message: Any, key: str) -> Any:
++            return message.get(key) if isinstance(message, dict) else getattr(message, key, None)
++
++        def _text(content: Any) -> str:
++            if isinstance(content, str):
++                return content
++            if isinstance(content, list):
++                return "".join(
++                    str(_field(part, "text") or "") for part in content if _field(part, "text")
++                )
++            return ""
++
++        merged: List[Any] = []
++        for message in messages:
++            previous = merged[-1] if merged else None
++            if (
++                previous is not None
++                and _field(previous, "role") == "assistant"
++                and _field(previous, "tool_calls")
++                and _field(message, "role") == "assistant"
++                and not _field(message, "tool_calls")
++            ):
++                text = "\n".join(
++                    part for part in (_text(_field(previous, "content")), _text(_field(message, "content"))) if part
++                )
++                if isinstance(previous, dict):
++                    previous["content"] = text or None
++                else:
++                    setattr(previous, "content", text or None)
++                continue
++            merged.append(message)
++        return merged
+ 
+     @staticmethod
+     def _deduplicate_tool_call_output_messages(
+@@ -1369,6 +1406,8 @@
          ] = []
          web_search_options: Optional[OpenAIWebSearchOptions] = None
          for tool in tools:
