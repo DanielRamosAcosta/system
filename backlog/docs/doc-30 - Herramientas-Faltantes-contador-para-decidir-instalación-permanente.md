@@ -30,7 +30,8 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | imagemagick | 1 | 2026-09-17 | Recortar/ampliar capturas de workhorse para leer sliders (calibración HDR de Hogwarts) |
 | photocraft | 1 | 2026-10-07 | Editor de imágenes en Rust (reimpl. Photoshop); flake temporal envolviendo el .dmg macos-universal firmado. No está en nixpkgs ni brew |
 | yt-dlp | 1 | 2026-10-25 | Extraer cookies de Chrome (`--cookies-from-browser`) y listar formatos de un vídeo de Vimeo que exige login; la descarga final va en el nas (donde yt-dlp sí está instalado) |
-| age | 1 | 2026-11-14 | Rekey de secretos agenix (añadir recipient agenthorse a context7/grafana) y cifrar la clave GPG sin passphrase, con `age -d`/`age -r` directo en vez del editor de agenix |
+| age | 2 | 2026-11-16 | Rekey de secretos agenix (añadir recipient agenthorse a context7/grafana) y cifrar la clave GPG sin passphrase, con `age -d`/`age -r` directo en vez del editor de agenix. Cifrar la master key de LiteLLM con `age -r` |
+| litellm | 1 | 2026-11-16 | Probar el wildcard `github_copilot/*` en local: no compila en darwin (dependencia rota en nixos-26.05); la prueba se hizo en agenthorse |
 | git-filter-repo | 1 | 2026-11-14 | Reescribir toda la historia del repo para purgar ficheros y strings sensibles antes de un push --force |
 
 ## Workhorse
@@ -46,6 +47,11 @@ Cada vez que necesitemos una herramienta que no está en la configuración del h
 | cloud-utils | 1 | 2026-10-20 | Generar el seed de cloud-init (cloud-localds) para esa VM |
 | openssl | 1 | 2026-10-20 | Verificar en agenthorse cadenas TLS contra el bundle de CAs del sistema |
 | age | 1 | 2026-10-20 | Cifrar un secreto agenix desde el Mac del trabajo (sin nix) vía workhorse |
+| xorg.xwininfo | 1 | 2026-11-15 | Listar ventanas X de Steam en el Xwayland de gamescope (DISPLAY=:0) cuando la UI de Big Picture se quedó en blanco |
+| xorg.xprop | 1 | 2026-11-15 | Leer atoms GAMESCOPE_FOCUSED_WINDOW del root para ver qué ventana enfoca gamescope |
+| litellm | 1 | 2026-11-16 | En agenthorse: comprobar que `/v1/models` con wildcard `github_copilot/*` devuelve lista vacía |
+| nodejs_24 (npx) | 1 | 2026-11-16 | En agenthorse: probar `@jer-y/copilot-proxy` (auth device flow + `models --client all`) como alternativa a LiteLLM |
+| edid-decode | 2 | 2026-11-15 | Decodificar el EDID de la Sony en HDMI-A-1 (`nix run` falla: el mainProgram apunta a v4l-utils; usar `nix shell -c edid-decode`) |
 
 ## Siemens
 
