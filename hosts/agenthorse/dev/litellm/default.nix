@@ -34,7 +34,7 @@ let
     '';
   };
 
-  codexCatalog = "$HOME/.codex/litellm-models.json";
+  codexCatalog = "/home/dani/.codex/litellm-models.json";
 
   codexCatalogScript = pkgs.writeShellScript "codex-litellm-catalog" ''
     codex="$HOME/.local/bin/codex"
@@ -48,20 +48,10 @@ let
       "${codexCatalog}"
   '';
 
-  codexLitellm = pkgs.writeShellApplication {
-    name = "codex-litellm";
-    text = ''
-      ${codexCatalogScript}
-      LITELLM_MASTER_KEY="''${LITELLM_MASTER_KEY:-$(sed -n 's/^LITELLM_MASTER_KEY=//p' ${masterKeyFile})}"
-      export LITELLM_MASTER_KEY
-      exec "$HOME/.local/bin/codex" --profile litellm "$@"
-    '';
-  };
-
-  codexProfile = (pkgs.formats.toml { }).generate "litellm.config.toml" {
+  codexConfig = (pkgs.formats.toml { }).generate "codex-config.toml" {
     model = codexAutoReviewModel.id;
     model_provider = "litellm";
-    model_catalog_json = "/home/dani/.codex/litellm-models.json";
+    model_catalog_json = codexCatalog;
     approval_policy = "on-request";
     approvals_reviewer = "auto_review";
     sandbox_mode = "workspace-write";
@@ -69,7 +59,10 @@ let
       name = "LiteLLM local";
       base_url = "${baseUrl}/v1";
       wire_api = "responses";
-      env_key = "LITELLM_MASTER_KEY";
+      auth = {
+        command = "${pkgs.gnused}/bin/sed";
+        args = [ "-n" "s/^LITELLM_MASTER_KEY=//p" masterKeyFile ];
+      };
     };
   };
 in
@@ -111,7 +104,8 @@ in
   };
 
   environment = {
-    systemPackages = [ copilotModels codexLitellm ];
+    systemPackages = [ copilotModels ];
+    etc."codex/config.toml".source = codexConfig;
     persistence."/persist".directories = [
       {
         directory = cfg.stateDir;
@@ -123,12 +117,9 @@ in
   };
 
   home-manager.users.dani = { lib, ... }: {
-    home = {
-      file.".codex/litellm.config.toml".source = codexProfile;
-      activation.codexLitellmCatalog = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        run ${codexCatalogScript}
-      '';
-    };
+    home.activation.codexLitellmCatalog = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run ${codexCatalogScript}
+    '';
 
     programs.fish.shellInit = ''
       if test -r ${masterKeyFile}
