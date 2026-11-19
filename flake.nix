@@ -39,6 +39,13 @@
 
   inputs.herdr.url = "github:motionharvest/herdr";
 
+  inputs.llm-agents.url = "github:numtide/llm-agents.nix";
+
+  inputs.aicontext = {
+    url = "git+ssh://git@github.com/DanielRamosAcosta/clr-aicontext?ref=internal/codex-native-v3&shallow=1";
+    flake = false;
+  };
+
   outputs = {
     self,
     nixpkgs,
@@ -56,6 +63,8 @@
     microvm,
     impermanence,
     herdr,
+    llm-agents,
+    aicontext,
     ...
   }:
     let
@@ -117,7 +126,7 @@
 
         agenthorse = nixpkgs-2605.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit herdr; };
+          specialArgs = { inherit herdr llm-agents aicontext; };
           modules = [
             ./hosts/agenthorse
             microvm.nixosModules.microvm
@@ -161,7 +170,7 @@
       darwinConfigurations = {
         macbook = nix-darwin.lib.darwinSystem {
           system = "aarch64-darwin";
-          specialArgs = { inherit herdr; };
+          specialArgs = { inherit herdr llm-agents; };
           modules = [
             ./hosts/macbook
             home-manager.darwinModules.home-manager

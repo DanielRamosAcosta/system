@@ -5,6 +5,7 @@
     jira-cli-go
     snowflake-cli
     asdf-vm
+    bubblewrap
     jq
     unzip
     gnupg
