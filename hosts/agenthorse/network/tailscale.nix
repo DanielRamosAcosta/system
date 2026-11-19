@@ -3,6 +3,7 @@
     enable = true;
     openFirewall = true;
     extraUpFlags = [ "--accept-dns=false" ];
+    extraSetFlags = [ "--ssh=false" ];
   };
 
   systemd.network.networks."10-eth" = {
