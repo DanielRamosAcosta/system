@@ -18,5 +18,6 @@ in
   "extra-ca.age".publicKeys = [ agenthorse dani ];
   "agenthorse-luks.age".publicKeys = [ workhorse dani ];
   "gpg-signing-key.age".publicKeys = [ agenthorse dani ];
+  "work-gpg-signing-key.age".publicKeys = [ agenthorse dani ];
   "litellm-master-key.age".publicKeys = [ agenthorse dani ];
 }

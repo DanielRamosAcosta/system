@@ -14,6 +14,11 @@
       owner = "dani";
     };
 
+    work-gpg-signing-key = {
+      file = ../../../secrets/work-gpg-signing-key.age;
+      owner = "dani";
+    };
+
     gpg-signing-key = {
       file = ../../../secrets/gpg-signing-key.age;
       owner = "dani";
